@@ -1,0 +1,31 @@
+<div class="container">
+    <div class="row">
+        <div class="col sm-8">
+            <h4>Hi, {{systemUser.userFullName}}</h4>
+            <p>
+                Assessment of individual members as well as assessment of the overall team are essential to enhancing teamwork,
+improves goal attainment, enriches relationships, and enhances performance.
+Both team performance and team learning should be assessed
+Performance assessments measure success, help correct behaviors, and motivate performance improvements
+Learning assessments enable team members to share thoughts and increase control of their learning.
+            </p>
+        </div>
+        <div class="col-sm-4 card">
+            <h4>Department Statistics</h4>
+            <p>Head: {{systemUser.userFullName}}</p>
+            <p>Employees: </p>
+            <p>Assessments posted: </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 ">
+            <div class="w-100 d-flex buttons">
+                <button class="my-btn"  (click) = "openUnseen()">Unassessed Assessments</button>
+                <button class="my-btn"  (click) = "openSeen()">Assessed Assessments</button>
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <app-intro-pge [data]="dataToTranser"></app-intro-pge>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+<div class="container-fluid">
+    <div class="table">
+        <table class="table table-bordered table-striped" >
+            <thead class="thead-dark">
+                <th>#</th>
+                <th>PF Number</th>                
+                <th>Employee Name</th>
+                <th>Employee Type</th>
+                
+            </thead>
+            <tbody>
+                <tr *ngFor="let employee of managerEmployees; let i = index">
+                    <td> {{i+1}} </td>
+                    <td> {{employee.pfNo}} </td>
+                    <td> {{employee.userFullName}} </td>
+                    <td> {{employee.userType}} </td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <button class="btn btn-md btm-secondary text-center text-white" 
+            style="position: absolute; z-index: 50; bottom: 3px; right: 3px; color: white;" (click)="dialogClose()">Close</button>
+        </div>
+    </div>
+</div>

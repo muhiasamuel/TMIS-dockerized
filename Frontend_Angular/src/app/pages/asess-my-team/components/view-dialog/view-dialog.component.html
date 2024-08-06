@@ -1,0 +1,23 @@
+<div class="table-responsive">
+  <table class= "table " >
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Potential Attribute</th>
+        <th>Descriptor</th>
+        <th>Score</th>
+        <th>Manager Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let potential of potential">
+        <td>{{ potential.id }}</td>
+        <td>{{ potential.potentialattribute }}</td>
+        <td>{{ potential.descriptor }}</td>
+        <td>{{ potential.score }}</td>
+        <td>{{ potential.managerscore }}</td>
+        
+   </tr>
+   </tbody>
+   </table>
+   </div>    

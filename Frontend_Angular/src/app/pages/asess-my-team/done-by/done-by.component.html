@@ -1,0 +1,166 @@
+<div class="container" *ngIf="pageStatus ==='Not Done'">
+    <div class="row card">
+        <div class="col-sm-12 topHeader radii d-flex align-items-center justify-content-between">
+                <button class="btn" *ngIf="startQuiz">Back</button>
+                <p class="ms-3">Assess your potential Charles,</p>
+                <p>Assignment Deadline: 20/12/2024</p>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-sm-9">
+            <h1 class="my-2">{{assignment.assessmentName}}</h1>
+            <p class="text-justify my-5">{{assignment.assessmentDescription}}</p>
+        </div>
+        <div class="col-sm-3 card">
+            <h3>Timer </h3>
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iste autem quidem sunt accusamus eos iusto fuga assumenda nihil sint id.</p>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="startQuiz; else showQuests">
+        <div class="col-sm-9">
+            <div class="w-75 p-3 card">
+                <p>Hello there {{systemUser.userFullName}},</p>
+                <p>{{assignment.assessmentName}} instructions:</p>
+                <div class="quests" *ngIf="assQuestions.length > 0; else noQuests">
+                    <ul>
+                        <li>The assignment contains {{assQuestions.length}} questions</li>
+                        <li>Each question has choices to select from</li>
+                        <li>Have fun and enjoy</li>
+                    </ul>
+                    <p>Click the button below if you wish to start the assignment.</p>
+                    <div>
+                        <button class="btn btn-success" (click)="startAssignment()">Start</button>
+                    </div>
+                </div>
+                <ng-template #noQuests>
+                    <div class="insts">
+                        <ul>
+                            <li>The assignment contains NO questions</li>
+                            <li>Please wait for questions to be addedd in {{assignment.assessmentName}}</li>
+                            <li>Have fun and enjoy</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <button class="btn btn-success" >Back</button>
+                    </div>
+                </ng-template>
+            </div>
+            
+        </div>
+        <div class="col-sm-3 card">
+            <h5>Assignment Description</h5>
+            <p>Name: </p>
+            <p>Questions: </p>
+            <p>Target: </p>
+            <p>Timed duration: </p>
+        </div>
+    </div>
+
+    <ng-template #showQuests>
+    <div class="row">
+        <div class="col-sm-12 stepper">
+            <mat-stepper  #stepper>
+                <mat-step [stepControl]="questionForm"  *ngFor="let quest of assQuestions; let i = index">
+                  <form [formGroup]="questionForm">
+                    <ng-template matStepLabel>Question {{i + 1}}</ng-template>
+                    <h5 class="m-3"><b>{{i + 1}}. {{quest.assessmentQuestionDescription}}?</b></h5>
+                    <p *ngFor="let option of quest.choices; let j = index" class="ms-4">
+                        <input type="radio" [value]="option" [formControlName]="quest.assessmentQuestionId">
+                        <span class="ms-3">{{option.choiceName}}</span>
+                    </p>
+                    <div>
+                      <button mat-button matStepperPrevious *ngIf="i > 0">Back</button>
+                      <button mat-button matStepperNext>Next</button>
+                    </div>
+                  </form>
+                </mat-step>
+                <mat-step>
+                    <form>
+                    <ng-template matStepLabel>Completed</ng-template>
+
+                    <div class="w-100" *ngIf="notComplete; else complete">
+                        <p class="m-3" *ngIf="answerErrors.length == 0; else ansError">If you feel like you are through, click on the submit button to publish the work.</p>
+                    
+                        <div>
+                            <button mat-button matStepperPrevious>Back</button>
+                            <button mat-button (click)="collectUserInput()">Submit</button>
+                        </div>
+                      <ng-template #ansError>
+                        <ul>
+                            <li *ngFor="let error of answerErrors"><b>{{error}}</b></li>
+                        </ul>
+                      </ng-template>
+                    </div>
+                      <ng-template #complete>
+                        <div class="w-100 d-flex align-items-center justify-content-between">
+                            <div class="w-50 d-flex flex-column align-items-center">
+                                <p>Successfully done the assessment</p>
+                                <div class="w-100" *ngFor="let quest of userResponse; let i = index">
+                                    <p>{{i + 1}}. {{quest.question.assessmentQuestionDescription}}</p>
+                                    <p class="mx-3" style="font-size: 12px;"><b>Your choice: {{quest.userChoice.choiceName}}</b></p>
+                                </div>
+                                <button class="btn btn-primary" (click) = "goToAssessedAttributes()">Go back</button>
+
+                            </div>
+                            <div class="w-50">
+                                <img src="../../../../assets/img/success.png" alt="">
+                            </div>
+                        </div>
+                      </ng-template>
+                    </form>
+                </mat-step>
+            </mat-stepper>
+        </div>
+    </div>
+
+    </ng-template>
+
+
+
+</div>
+
+
+<div class="container" *ngIf="pageStatus ==='Done'">
+    <div class="row card">
+        <div class="col-sm-12 topHeader radii d-flex align-items-center justify-content-between">
+                <button class="btn">Back</button>
+                <p class="ms-3">{{assignment.assessmentName}} assessment</p>
+                <p>Assignment Deadline: 20/12/2024</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-9">
+            <h3>Hello, {{this.systemUser.userFullName}}</h3>
+            <p>{{assignment.assessmentDescription}}</p>
+        </div>
+        <div class="col-sm-3">
+            <div class="card p-2 w-100">
+                <h6>Statistics</h6>
+                <p>Total questions: {{assQuestions.length}}</p>
+                <p>Done: true</p>
+            </div>
+        </div>
+    </div>
+    <div class="row myCard" *ngIf="assQuestions.length > 0;">
+        <h3>{{assignment.assessmentName}} questions</h3>
+        <div class="col-sm-6" *ngFor="let quest of assQuestions; let i = index">
+            <p>{{i + 1}}. {{quest.assessmentQuestionDescription}}</p>
+            <ul>
+                <li *ngFor="let choice of quest.choices"> {{choice.choiceName}}</li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+<div class="container" *ngIf="pageStatus ==='UnassessedMan'">
+    <app-asess-my-team></app-asess-my-team>
+</div>
+
+<div class="container" *ngIf="pageStatus === 'AssessedMan'">
+    <!-- <app-attributes></app-attributes> -->
+    <app-dialog-view></app-dialog-view>
+</div>
+
+

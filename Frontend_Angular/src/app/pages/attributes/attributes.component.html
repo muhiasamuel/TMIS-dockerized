@@ -1,0 +1,56 @@
+<div class="container">
+    <div class="row card">
+        <div class="col-sm-12 topHeader radii d-flex align-items-center justify-content-between">
+                <button class="btn btn-success" >Back</button>
+                <p class="ms-3">{{assignment.assessmentName}}</p>
+                <p>Assignment Deadline: 20/12/2024</p>
+        </div>
+    </div>
+  
+    <div class="row d-flex align-items-center justify-content-between">
+        <div class="col-sm-8">
+            <p *ngIf="systemUser.roleId == 1; else employee">Dear {{managerName}}, <br > Below is a side by side results of {{employeeName}} {{assignment.assessmentName}} assessment</p>
+            <ng-template #employee>
+                <p *ngIf="systemUser.roleId == 1; else employee">Dear {{employeeName}}, <br > Below is a side by side of your {{assignment.assessmentName}} assessment results</p>
+            </ng-template>
+            <p class="text-justify">{{assignment.assessmentDescription}}</p>
+        </div>
+        <div class="col-sm-3 card">
+            <p class="text-center">Statistics </p>
+            <p *ngIf="systemUser.roleId == 1; else emp">Employee name: {{employeeName}}</p>
+            <ng-template #emp>
+                <p>Manager name: {{managerName}}</p>
+            </ng-template>
+            <p>Employee Average: {{employeeAverage}}</p>
+            <p>Manager Average: {{managerAverage}}</p>
+        </div>
+    </div>
+
+   <div class="row card">
+    <div class="col-sm-12">
+        <mat-tab-group>
+            <mat-tab label="Employee questions"> 
+                <div class="userAnswers" *ngFor="let quest of assQuestions; let i = index" >
+                    <p>{{i + 1}}. {{quest.questionDescription}}</p>
+                    <p>User choice: {{quest.employeeChoice.choiceName}}</p>
+
+                    <ul>
+                        <li *ngFor="let choice of quest.choices">{{choice.choiceName}}</li>
+                    </ul>
+                </div>
+                
+            </mat-tab>
+            <mat-tab label="Manager Assessement"> 
+                <div class="manAnswers" *ngFor="let quest of assQuestions; let i = index" >
+                    <p>{{i + 1}}. {{quest.questionDescription}}</p>
+                    <p>Manager choice: {{quest.managerChoice.choiceName}}</p>
+                    <ul>
+                        <li *ngFor="let choice of quest.choices">{{choice.choiceName}}</li>
+                    </ul>
+                </div>
+            </mat-tab>
+            
+          </mat-tab-group>
+    </div>
+   </div>
+</div>

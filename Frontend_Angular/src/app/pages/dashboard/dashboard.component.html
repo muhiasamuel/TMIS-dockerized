@@ -1,0 +1,127 @@
+<div class="row">
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card card-stats"  routerLink="/MyTeamsProfile">
+        <div class="card-body ">
+          <div class="row">
+            <div class="col-5 col-md-4">
+              <div class="icon-big text-center icon-warning">
+                <i class="nc-icon nc-globe text-warning"></i>
+              </div>
+            </div>
+            <div class="col-7 col-md-8">
+              <div class="numbers">
+                <p class="card-category">All Employees</p>
+                <p class="card-title">{{ noOfEmployees }}
+                  <p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer ">
+          <hr>
+          <div class="stats">
+            <i class="fa fa-refresh"></i> View Employees
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card card-stats" routerLink="/skills-view">
+        <div class="card-body ">
+          <div class="row">
+            <div class="col-5 col-md-4">
+              <div class="icon-big text-center icon-warning">
+                <i class="nc-icon nc-money-coins text-success"></i>
+              </div>
+            </div>
+            <div class="col-7 col-md-8">
+              <div class="numbers">
+                <p class="card-category">Critical Skills</p>
+                <p class="card-title">{{noOfCriticalSkills}}
+                  <p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer ">
+          <hr>
+          <div class="stats">
+            <i class="fa fa-calendar-o"></i> view
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card card-stats">
+        <div class="card-body ">
+          <div class="row">
+            <div class="col-5 col-md-4">
+              <div class="icon-big text-center icon-warning">
+                <i class="nc-icon nc-map-big text-danger"></i>
+              </div>
+            </div>
+            <div class="col-7 col-md-8">
+              <div class="numbers">
+                <p class="card-category">Previous Assessments</p>
+                <p class="card-title">2
+                  <p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer ">
+          <hr>
+          <div class="stats">
+            <i class="fa fa-clock-o"></i> As Per Today
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card card-stats">
+        <div class="card-body ">
+          <div class="row">
+            <div class="col-5 col-md-4">
+              <div class="icon-big text-center icon-warning">
+                <i class="nc-icon nc-favourite-28 text-primary"></i>
+              </div>
+            </div>
+
+            <div class="col-7 col-md-8">
+              <div class="numbers">
+                <p class="card-category">MVP's</p>
+                <p class="card-title">30
+                  <p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer ">
+          <hr>
+          <div class="stats">
+            <i class="fa fa-refresh"></i> Update now
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+    <!-- <canvas id="myChart"></canvas> -->
+<!-- </div> -->
+<div class="row">
+  <div class="col-md-6">
+    <app-bar-chart [criticalSkills]="criticalSkills" [items] = "items"></app-bar-chart>
+
+  </div>
+ 
+  <div class="col-md-6">
+    <app-critical-roles-bar></app-critical-roles-bar>
+  </div>
+ 
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <app-pie-chart></app-pie-chart>
+  </div>
+</div>

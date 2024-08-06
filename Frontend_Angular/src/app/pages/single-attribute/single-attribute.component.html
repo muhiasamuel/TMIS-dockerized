@@ -1,0 +1,109 @@
+<div class="container" *ngIf="pAttsAssess.length > 0; else noAssess">
+
+    <div class="row card">
+        <div class="col-sm-12 topHeader radii d-flex align-items-center justify-content-between">
+            <button class="btn">back</button>
+                <p class="ms-3">{{title}}</p>
+                <button class="btn btn-primary m-3" (click)="openDialog()" *ngIf="systemUser.roleId == 1; else noAdd">Add Assessment</button>
+                <ng-template #noAdd>
+                    <button class="btn btn-primary m-3">Assessments {{pAttsAssess.length}}</button>
+                </ng-template>
+        </div>
+    </div>
+    
+    <div class="row">
+
+        <div class="col-sm-8">
+            <div class="w-100">
+                <h3>{{attribute.name}}</h3>
+                <p>{{attribute.description}}</p>
+            </div>
+            <div class="col-sm-6 card d-flex align-items-center justify-content-between" *ngFor="let assess of pAttsAssess">
+                
+                <a [routerLink]="'/assQuests/' + assess.assessmentId">
+                    <p>{{assess.assessmentName}}</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-sm-4 card">
+            <div class="bestAttribute radii p-2">
+                <p class="text-center">Assessment statistics</p>
+                <p>Total Assessments: </p>
+                <p>Attempted by all:  </p>
+                <p>Attempted by none: </p>
+            </div>
+            <div class="bestAttribute radii p-2 mt-2">
+                <p class="text-center">Best performed Potential Attribute </p>
+                <p>Attribute name:  </p>
+                <p>Done by 10 employees</p>
+                <p>Employee Average score: </p>
+            </div>
+        
+            <div class="bestAttribute radii p-2 mt-2">
+                <p class="text-center">Poorly performed Potential Attribute </p>
+                <p>Attribute name:  </p>
+                <p>Done by 10 employees</p>
+                <p>Employee Average score: </p>
+            </div>
+        
+        </div>
+    </div>
+</div>
+
+<ng-template #noAssess>
+    <div class="container">
+        <div class="row card">
+            <div class="col-sm-12 topHeader radii d-flex align-items-center justify-content-between">
+                <button class="btn">back</button>
+                    <p class="ms-3">{{title}}</p>
+                    <button class="btn btn-primary m-3" (click)="openDialog()">Add Assessment</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8">
+                <h3 class="text-center">Ooops</h3>
+                <p>Dear {{systemUser.userFullName}} <br> You currently don't have any assessments.
+                    Potential attributes assessments will help you achieve the follwoing 
+                    </p>
+                <ul>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+                <p>Pleas click the button below to add some.</p>
+                <button class="btn btn-success">Add assessment</button>
+            </div>
+            
+            <div class="col-sm-4 card">
+                <div class="bestAttribute radii p-2">
+                    <p class="text-center">Assessment statistics</p>
+                    <p>Total Assessments: nil</p>
+                    <p>Attempted by all:  nil</p>
+                    <p>Attempted by none: nil</p>
+                </div>
+                <div class="bestAttribute radii p-2 mt-2">
+                    <p class="text-center">Best performed Potential Attribute </p>
+                    <p>Assessment name: nill </p>
+                    <p>Done by all employees: nil</p>
+                    <p>Employee Average score: nill</p>
+                </div>
+            
+                <div class="bestAttribute radii p-2 mt-2">
+                    <p class="text-center">Poorly performed Potential Attribute </p>
+                    <p>Assessment name: nill </p>
+                    <p>Done by all employees: nill</p>
+                    <p>Employee Average score: nill</p>
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</ng-template>

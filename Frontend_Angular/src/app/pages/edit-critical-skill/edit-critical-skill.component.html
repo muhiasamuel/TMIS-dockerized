@@ -1,0 +1,248 @@
+  <!-- <title>Assessment of Critical Skills</title> -->
+  <div class="container-fluid">
+    <!-- <div class="card"> -->
+      <h3>CRITICAL SKILL ASSESSEMENT</h3>
+      
+      <mat-dialog-actions class="close-dialogue">
+        <button mat-button (click)="closeDialog()"><mat-icon>close</mat-icon></button>
+      </mat-dialog-actions>
+
+      <P>Accessing critical skills in an organization refers to the process of identifying, acquiring, and leveraging the essential skills and competencies needed to achieve the organization's goals and objectives effectively.</P>
+    <!-- </div> -->
+  </div>
+  <hr>
+  <mat-stepper [linear]="isLinear" #stepper (selectionChange)="onStepChange($event)">
+  
+    <!-- Step 1: Skill Name -->
+    <mat-step [stepControl]="skillForm">
+      <form [formGroup]="skillForm">
+        <ng-template matStepLabel><span>Skill Name</span></ng-template>
+        <h5 class="skill-description">Add skills to access</h5>
+        <div class="row">
+          <div class="col-md-8">
+            
+          </div>
+        </div>
+        <span>
+          <mat-form-field style="width: 450px;">            
+            <input matInput formControlName="name" placeholder="Enter skill name" required >
+           
+           </mat-form-field>
+        
+        </span>
+       
+       
+        <div>        
+          <button matStepperNext class="btn btn-success text-white">Next</button>
+        </div>
+      </form>
+    </mat-step>
+    
+    <!-- Step 2: Business Priority -->
+    <mat-step [stepControl]="priorityForm">
+      <form [formGroup]="priorityForm" >
+        <ng-template matStepLabel><span>Business Priority</span></ng-template>
+        <h5  class="skill-description">select Business Priority level for added Skill</h5>
+        <p>
+          "Business priority" refers to the goals, objectives, or tasks that are deemed most important or urgent for an organization to achieve at a given time
+        </p>
+        <!-- <mat-form-field style="width: 450px;">           
+          <input matInput formControlName="priority" type="number" placeholder="Enter priority (1-5)" min="1" max="5" required>
+        </mat-form-field> -->
+        <mat-radio-group formControlName="priority">
+          <mat-radio-button *ngFor="let score of scores" [value]="score">{{score}}</mat-radio-button>
+        </mat-radio-group>
+        <div class="score-guide">
+          <h5 class="card-category mb-0 guide">Scoring Guide</h5>
+          <table class="table table-bordered">
+              <thead>
+                  
+                  <tr>
+                      <th>Score</th>
+                      <th>Meaning</th>
+                  </tr>
+
+              </thead>
+              <tbody>
+                  <tr>
+                      <td>0 - 2</td>
+                      <td>The skill is less critical</td>
+                  </tr>
+                  <tr>
+                      <td>3 - 4</td>
+                      <td>Modarate</td>
+                  </tr>
+                  <tr>
+                      <td>4 - 5</td>
+                      <td>high</td>
+                  </tr>
+              </tbody>
+          </table> 
+        </div>
+        <div>
+          <button matStepperPrevious class="btn btn-primary" >Back</button>
+          <button matStepperNext class="btn btn-success text-white">Next</button>
+        </div>
+      </form>
+    </mat-step>
+  
+    <!-- Step 3: Scarcity Parameter -->
+    <mat-step [stepControl]="scarcityForm">
+      <form [formGroup]="scarcityForm">
+        <ng-template matStepLabel><span>Scarcity Parameter</span></ng-template>
+        <h5  class="skill-description">select Scarcity Parameter level for added skill</h5>
+        <p>scarcity parameter refers to the fundamental concept of scarcity, which states that the skill is limited or finite relative to the wants and needs of organisation. </p>
+        <mat-radio-group formControlName="scarcity">
+          <mat-radio-button *ngFor="let score of scores" [value]="score">{{score}}</mat-radio-button>
+        </mat-radio-group>
+        <!-- <mat-form-field style="width: 450px;">
+          <mat-label>Scarcity Parameter</mat-label>
+          <input matInput formControlName="scarcity" type="number" placeholder="Enter scarcity parameter (1-5)" min="1" max="5" required>
+        </mat-form-field> -->
+        <div>
+          <button matStepperPrevious class="btn btn-primary" >Back</button>
+          <button matStepperNext class="btn btn-success text-white">Next</button>
+        </div>
+      </form>
+    </mat-step>
+  
+    <!-- Step 4: Development Cost & Time Commitment -->
+    <mat-step [stepControl]="costForm">
+      <form [formGroup]="costForm">
+        <ng-template matStepLabel><span>Development Cost & Time Commitment</span></ng-template>
+        <h5  class="skill-description">select Development Cost & Time Commitment level for added skill</h5>
+        <p>The development cost and time commitment for a Skill is the time and cost required to develop a certain skills untill it is ready in the market. It can vary depending on the skill.</p>
+        <mat-radio-group formControlName="cost">
+          <mat-radio-button *ngFor="let score of scores" [value]="score">{{score}}</mat-radio-button>
+        </mat-radio-group>
+        <!-- <mat-form-field style="width: 450px;">
+          <mat-label>Development Cost & Time Commitment</mat-label>
+          <input matInput formControlName="cost" type="number" placeholder="Enter cost and time commitment (1-5)" min="1" max="5" required>
+        </mat-form-field> -->
+        <div>
+          <button matStepperPrevious class="btn btn-primary" >Back</button>
+          <button matStepperNext class="btn btn-success text-white">Next</button>
+        </div>
+      </form>
+    </mat-step>
+  
+    <!-- Step 5: Market Fluidity -->
+    <mat-step [stepControl]="fluidityForm">
+      <form [formGroup]="fluidityForm">
+        <ng-template matStepLabel><span>Market Fluidity</span></ng-template>
+        <h5  class="skill-description">select Market Fluidity level for added Skill</h5>
+        <p>
+          "Market fluidity" is a term used to describe the dynamic and constantly changing nature of markets, where conditions can shift rapidly due to various factors such as supply and demand dynamics
+        </p>
+        <mat-radio-group formControlName="fluidity">
+          <mat-radio-button *ngFor="let score of scores" [value]="score">{{score}}</mat-radio-button>
+        </mat-radio-group>
+        <div>
+          <button matStepperPrevious class="btn btn-primary" >Back</button>
+          <button matStepperNext class="btn btn-success text-white">Next</button>
+        </div>
+      </form>
+    </mat-step>
+  
+    <!-- Step 6: Future Market / Technology Relevance -->
+    <mat-step [stepControl]="relevanceForm">
+      <form [formGroup]="relevanceForm">
+        <ng-template matStepLabel><span>Future Market / Technology Relevance</span></ng-template>
+        <h5  class="skill-description">select Future Market / Technology Relevence level for added skill</h5>
+        <p>
+          Understanding future market and technology relevance is crucial for individuals and organizations to stay competitive and innovative.
+        </p>
+        <mat-radio-group formControlName="relevance">
+          <mat-radio-button *ngFor="let score of scores" [value]="score">{{score}}</mat-radio-button>
+        </mat-radio-group>
+        <div>
+          <button matStepperPrevious class="btn btn-primary" >Back</button>
+          <button matStepperNext class="btn btn-success text-white">Next</button>
+        </div>
+      </form>
+    </mat-step>
+  
+    <!-- Step 7: Current State Skill Availability / Development Plan -->
+    <!-- <mat-step [stepControl]="availabilityForm">
+      <form [formGroup]="availabilityForm">
+        <ng-template matStepLabel><span>Current State Skill Availability / Development Plan</span></ng-template>
+        <h5  class="skill-description">select Current state skill availability level for added role</h5>
+        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Pariatur, earum quisquam dolore quod quas saepe, placeat reiciendis voluptate nostrum quae ex veniam sed debitis sint blanditiis eligendi ipsam provident ipsum!</p>
+        <!-- <mat-radio-group formControlName="availability">
+          <mat-radio-button *ngFor="let score of scores" [value]="score">{{score}}</mat-radio-button>
+        </mat-radio-group> 
+
+        <div>
+          <button matStepperPrevious class="btn btn-primary" >Back</button>
+          <button matStepperNext class="btn btn-success text-white">Next</button>
+        </div>
+      </form>
+    </mat-step> -->
+  
+    <!-- Step 8: Skill Development Strategy -->
+    <mat-step [stepControl]="strategyForm" *ngIf="average >= 3.5">
+      <form [formGroup]="strategyForm">
+        <ng-template matStepLabel><span>Skill Development Strategy</span></ng-template>
+        <h5  class="skill-description">select Skill Development Strategy level for added Skill</h5>
+        <p>
+          Developing skills is a lifelong process that requires dedication, persistence, and a strategic approach.
+        </p>
+        <mat-form-field style="width: 450px;">
+          <mat-label>Skill Development Strategy</mat-label>
+          <textarea matInput formControlName="strategy" placeholder="Enter skill development strategy" required></textarea>
+        </mat-form-field> 
+        <div>
+          <button matStepperPrevious class="btn btn-primary" >Back</button>
+          <button matStepperNext class="btn btn-success text-white">Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="currentAvailability" *ngIf="average >= 3.5">
+      <form [formGroup]="currentAvailability">
+        <ng-template matStepLabel><span>Current state</span></ng-template>
+        <h5  class="skill-description">select current state</h5>
+        <p>
+          Current state refers to how the organisation is prepared incase of the skill being critical
+        </p>
+        <mat-form-field>
+          <mat-label>Current state</mat-label>
+          <mat-select disableRipple formControlName="current">
+            <mat-option selected value="red">Red</mat-option>
+            <mat-option value="amber">Amber</mat-option>
+            <mat-option value="green">Green</mat-option>
+          </mat-select>
+        </mat-form-field>
+        
+        <!-- <mat-form-field style="width: 450px;">
+          <mat-label>Current state level</mat-label>
+          <textarea matInput formControlName="" required></textarea>
+        </mat-form-field>  -->
+        <div>
+          <button matStepperPrevious class="btn btn-primary" >Back</button>
+          <button matStepperNext class="btn btn-success text-white">Next</button>
+        </div>
+      </form>
+    </mat-step>
+  
+    <!-- Step 9: Done -->
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+      <p>You are now done.</p>
+      <div class="row">
+        <div class="col-md-4">
+          <button class="btn btn-warning" (click)="stepper.reset()">Reset</button>
+          <button matStepperPrevious class="btn btn-primary" >Back</button>
+          <ng-container *ngIf="isSubmiting; else elseTamplate">
+            <div class="spinner-border text-danger" role="status">
+            </div>
+          </ng-container>
+          <ng-template #elseTamplate>
+            <button class="btn btn-success text-white" type="submit" (click)="onEditing()">Submit</button>
+          </ng-template>
+        </div>
+        <div class="col-md-6">
+        </div>
+      </div>
+    </mat-step>
+  </mat-stepper>
+

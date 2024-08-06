@@ -1,0 +1,40 @@
+<div class="container">  
+    
+    <h5> Add Departments</h5>  
+      
+    <form [formGroup]="departmentForm" (ngSubmit)="onSubmit()" >
+        <table class="table table-striped" formArrayName="departments">  
+            <tr>  
+            <th colspan="2">Add Multiple Departments:</th> 
+            </tr>  
+            <tr *ngFor="let quantity of departments().controls; let i=index" [formGroupName]="i">  
+            <td>  
+                Department Name :  
+                <input type="text" formControlName="departmentName" class="form-control" required> 
+                </td>  
+            
+            <td class="my-2">  
+                Position Name:  
+                <input type="text" formControlName="positionName" class="form-control" required>  
+            </td>  
+            <td>  
+                <button (click)="removeDepartment(i)" style="background-color: brown;" class="btn btn-danger">Remove</button>  
+            </td>  
+            </tr>
+            <td><button  (click)=" addDepartment()" type="button" class="btn btn-md btn-primary my-4 ">Add More</button></td>  
+        </table>  
+        <ng-container *ngIf="isSubmitting; else elseTemplate">
+            <button class="btn btn-primary" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span class="sr-only">Submitting</span>
+              </button>
+        </ng-container>
+        <ng-template #elseTemplate>
+            <button class="btn btn-success btn-md" id="submit" type="submit" [disabled]="!departmentForm.valid">Submit</button>            
+        </ng-template>
+        
+      
+    </form>  
+    
+      
+</div>

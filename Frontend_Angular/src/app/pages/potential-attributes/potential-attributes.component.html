@@ -1,0 +1,108 @@
+<div class="container vh-100" *ngIf="potentialAttribute; else error">
+    <div class="row card topHeader radii d-flex align-items-center justify-content-between mb-4">
+        <div class="col-sm-12 d-flex align-items-center justify-content-between">
+            <p class="ms-3 title">{{title}}</p>
+            <button class="btn btn-primary m-3" (click)="openDialog()" *ngIf="systemUser.user.role.roleName == 'manager' || systemUser.user.role.roleName =='TopManager'; else showNumber">Add Attribute</button>
+            <ng-template #showNumber>
+                <p class="m-3">Total attributes: {{potentialAttribute.length}}</p>
+            </ng-template>
+        </div>
+    </div>
+
+    <div class="row vh-75 mt-3">
+        <div class="col-sm-8">
+            <div class="w-100">
+                <h3 class="section-title">Potential Attributes</h3>
+                <p class="section-info">Potential attributes are the traits you naturally have that make you unique and can determine your effectiveness in a certain job role. These qualities can be used to further enhance your suitability for a job when paired with skills that you've learned through experience.</p>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 mb-3" *ngFor="let att of potentialAttribute">
+                    <a [routerLink]="'/singleAtt/' + att.potentialAttributeId">
+                        <div class="card attribute-card d-flex flex-column align-items-center justify-content-between p-3">
+                            <p class="attribute-name">{{att.potentialAttributeName}}</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card bestAttribute radii p-3 mb-3">
+                <p class="text-center attribute-title">Attributes statistics</p>
+                <p>Total Attributes: </p>
+                <p>Attempted by all: </p>
+                <p>Attempted by none: </p>
+            </div>
+            <div class="card bestAttribute radii p-3 mb-3">
+                <p class="text-center attribute-title">Best performed Potential Attribute</p>
+                <p>Attribute name: </p>
+                <p>Done by 10 employees</p>
+                <p>Employee Average score: </p>
+            </div>
+            <div class="card bestAttribute radii p-3">
+                <p class="text-center attribute-title">Poorly performed Potential Attribute</p>
+                <p>Attribute name: </p>
+                <p>Done by 10 employees</p>
+                <p>Employee Average score: </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #error class="else">
+    <div class="container">
+        <div class="row card topHeader radii d-flex align-items-center justify-content-between mb-4">
+            <div class="col-sm-12 d-flex align-items-center justify-content-between">
+                <p class="ms-3 title">{{systemUser.userFullName}} {{title}}</p>
+                <button class="btn btn-primary m-3" (click)="openDialog()">Add Attribute</button>
+            </div>
+        </div>
+        <div class="row d-flex align-items-center justify-content-between">
+            <div class="col-sm-8">
+                <div class="w-100">
+                    <h3 class="section-title">Potential Attributes</h3>
+                    <p class="section-info">Potential attributes are the traits you naturally have that make you unique and can determine your effectiveness in a certain job role. These qualities can be used to further enhance your suitability for a job when paired with skills that you've learned through experience.</p>
+                </div>
+                <h3 class="text-center oops-title">Ooops</h3>
+                <p class="oops-message">Dear {{systemUser.userFullName}} <br> You currently don't have any potential attributes.
+                    Potential attributes will help you achieve the following:
+                </p>
+                <ul class="oops-list">
+                    <ul>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </ul>
+                <p class="oops-message">Please click the button below to add some.</p>
+                <button class="btn btn-success">Add Potential Attribute</button>
+            </div>
+            <div class="col-sm-4">
+                <div class="card bestAttribute radii p-3 mb-3">
+                    <p class="text-center attribute-title">Attributes statistics</p>
+                    <p>Total Attributes: </p>
+                    <p>Attempted by all: </p>
+                    <p>Attempted by none: </p>
+                </div>
+                <div class="card bestAttribute radii p-3 mb-3">
+                    <p class="text-center attribute-title">Best performed Potential Attribute</p>
+                    <p>Attribute name: </p>
+                    <p>Done by 10 employees</p>
+                    <p>Employee Average score: </p>
+                </div>
+                <div class="card bestAttribute radii p-3">
+                    <p class="text-center attribute-title">Poorly performed Potential Attribute</p>
+                    <p>Attribute name: </p>
+                    <p>Done by 10 employees</p>
+                    <p>Employee Average score: </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

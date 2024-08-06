@@ -1,0 +1,73 @@
+<h1 mat-dialog-title>Ready Now Details</h1>
+<div mat-dialog-content>
+  <form [formGroup]="readyNowForm">
+    <mat-form-field appearance="fill">
+      <mat-label>Name</mat-label>
+      <mat-select formControlName="name">
+        <mat-option *ngFor="let name of names" [value]="name">{{name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    
+    <mat-form-field appearance="fill">
+      <mat-label>Readiness Level</mat-label>
+      <mat-select formControlName="readinessLevel">
+        <mat-option value="inProgress">In Progress</mat-option>
+        <mat-option value="completed">Completed</mat-option>
+        <mat-option value="notStarted">Not Started</mat-option>
+      </mat-select>
+    </mat-form-field>
+    
+    <h2>Proposed Interventions</h2>
+    <div formArrayName="proposedInterventions">
+      <div *ngFor="let intervention of proposedInterventions.controls; let i = index" [formGroupName]="i">
+        <mat-form-field appearance="fill">
+          <mat-label>Type</mat-label>
+          <input matInput formControlName="type">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description"></textarea>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Status</mat-label>
+          <input matInput formControlName="status">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Start Date</mat-label>
+          <input matInput formControlName="startDate" type="date">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>End Date</mat-label>
+          <input matInput formControlName="endDate" type="date">
+        </mat-form-field>
+        <button mat-icon-button color="warn" (click)="removeIntervention(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <button mat-raised-button color="primary" (click)="addIntervention()">Add Intervention</button>
+    </div>
+
+    <h2>Development Needs</h2>
+    <div formArrayName="developmentNeeds">
+      <div *ngFor="let need of developmentNeeds.controls; let i = index" [formGroupName]="i">
+        <mat-form-field appearance="fill">
+          <mat-label>Need Type</mat-label>
+          <input matInput formControlName="needType">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description"></textarea>
+        </mat-form-field>
+        <button mat-icon-button color="warn" (click)="removeDevelopmentNeed(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <button mat-raised-button color="primary" (click)="addDevelopmentNeed()">Add Development Need</button>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button color="primary" (click)="onSaveClick()">Save</button>
+</div>
+

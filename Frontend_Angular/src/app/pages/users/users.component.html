@@ -1,0 +1,82 @@
+<div class="container">
+    <div class="row card">
+        <div class="col-sm-12 d-flex align-items-center justify-content-between">
+            <button class="btn btn-success">Back</button>
+            <h3 class="text-center">Potential Identification Matrix</h3>
+            <button class="btn btn-success">download</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-9">
+            <p>Dear {{systemUser.userFullName}}, </p>
+            <p>
+                High-potential identification is the scientific method of identifying an organization’s high-potential employees. It is a step-by-step process that involves determining core competencies, identifying tools for assessing employee potential and detailing the program’s goal. It could include training needs identification, retaining high-potential employees, leadership development or succession planning.
+            </p>
+        </div>
+        <div class="col-sm-3 card">
+            <p>Employee name: {{employeeName}}</p>
+            <p>Total Attributes: {{totalAttributes.length}}</p>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-sm-12">
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+                <!--- Note that these columns can be defined in any order.
+                      The actual rendered columns are set as a property on the row definition" -->
+              
+                <!-- Id Column -->
+                <ng-container matColumnDef="Potential Attribute">
+                  <th class="matrix" mat-header-cell *matHeaderCellDef> <b>Potential Attribute</b> </th>
+                  <td mat-cell *matCellDef="let att"> {{att.pattName}} </td>
+                </ng-container>
+            
+                 <!-- Pf Column -->
+                 <ng-container matColumnDef="userType">
+                    <th class="matrix" mat-header-cell *matHeaderCellDef>Behavioural Descriptors and Motivators </th>
+                    <td mat-cell *matCellDef="let att"> 
+                        <div class="w-100" *ngFor="let ass of att.assessments">
+                            <p>{{ass.assName}}</p>
+                            <ul>
+                                <li *ngFor="let quest of ass.assQuestions">{{quest.questionDescription}}</li>
+                            </ul>
+                        </div>
+                         </td>
+                  </ng-container>
+              
+                <!-- Name Column -->
+                <ng-container matColumnDef="username">
+                  <th mat-header-cell *matHeaderCellDef class="matrix"> Assessed score </th>
+                  <td mat-cell *matCellDef="let att"> 
+                    <div class="w-100" *ngFor="let ass of att.assessments">
+                        <p class="text-white"> {{ass.assName}} </p>
+                        <ul style="list-style-type: none;">
+                            <li *ngFor="let quest of ass.assQuestions">{{quest.managerChoice.choiceValue}}</li>
+                        </ul>
+                    </div>
+                  </td>
+                </ng-container>
+              
+                <!-- Department Column -->
+                <ng-container class="matrix" matColumnDef="userFullName">
+                  <th mat-header-cell *matHeaderCellDef> Sub totals </th>
+                  <td mat-cell *matCellDef="let employee"> {{employee.userFullName}} </td>
+                </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+              <!-- <mat-paginator 
+                class="bg-success"
+                [length]="100"
+                [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 20]"
+                showFirstLastButtons
+                aria-label="Select page of employee"></mat-paginator> -->
+                        
+             
+
+        </div>
+    </div>
+</div>

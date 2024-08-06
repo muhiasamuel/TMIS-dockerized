@@ -1,0 +1,165 @@
+# version: '3.8'
+
+# services:
+#   tmisapp:
+#     container_name: tmisFeContainer
+#     build:
+#       context: ./Frontend_Angular
+#       dockerfile: Dockerfile
+#     image: tmisapp
+#     ports:
+#       - "80:80"
+#     networks:
+#       - internalnet
+#     volumes:
+#       - ./Frontend_Angular:/app  # Mount local frontend code into the container
+
+#   springbootapp:
+#     container_name: springbootContainer
+#     build:
+#       context: ./Java-Backend
+#       dockerfile: Dockerfile
+#     image: springbootapp
+#     ports:
+#       - "8080:8080"
+#     environment:
+#       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/talentmanagement?createDatabaseIfNotExist=true
+#       SPRING_DATASOURCE_USERNAME: root
+#       SPRING_DATASOURCE_PASSWORD: samtec
+#     depends_on:
+#       - mysql
+#     networks:
+#       - internalnet
+#     # volumes:
+#     #   - ./Java-Backend:/app  # Mount local backend code into the container
+
+#   mysql:
+#     image: mariadb:latest
+#     container_name: mysqlContainer
+#     environment:
+#       MYSQL_ROOT_PASSWORD: samtec
+#       MYSQL_DATABASE: talentmanagement
+#     ports:
+#       - "3306:3306"
+#     volumes:
+#       - mysql_data:/var/lib/mysql
+#     networks:
+#       - internalnet
+
+# volumes:
+#   mysql_data:
+#     driver: local
+
+# networks:
+#   internalnet:
+#     driver: bridge
+version: '3.8'
+
+services:
+  tmisapp:
+    container_name: tmisFeContainer
+    build:
+      context: ./Frontend_Angular
+      dockerfile: Dockerfile
+    image: tmisapp
+    ports:
+      - "80:80"
+    networks:
+      - internalnet
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - ./Frontend_Angular:/app
+
+  springbootapp:
+    container_name: springbootContainer
+    build:
+      context: ./Java-Backend
+      dockerfile: Dockerfile
+    image: springbootapp
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/talentmanagement?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD_FILE: /run/secrets/db_password
+      SPRING_PROFILES_ACTIVE: prod
+    depends_on:
+      - mysql
+    networks:
+      - internalnet
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1024M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    secrets:
+      - db_password
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    # volumes:
+    #   - ./Java-Backend/target/talent_man-0.0.1-SNAPSHOT.jar:/app/app.jar
+
+  mysql:
+    image: mariadb:latest
+    container_name: mysqlContainer
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MYSQL_DATABASE: talentmanagement
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - internalnet
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1024M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    secrets:
+      - db_root_password
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+  db_root_password:
+    file: ./secrets/db_root_password.txt
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  internalnet:
+    driver: bridge

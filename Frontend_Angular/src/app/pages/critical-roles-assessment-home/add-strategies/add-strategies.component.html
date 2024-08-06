@@ -1,0 +1,30 @@
+<div class="container-fluid">
+  <form [formGroup]="talentStrategyFormGroup">
+    <!-- Other form controls -->
+    <ng-template matStepLabel>
+      <span> Talent Strategy</span>
+    </ng-template>
+    <p>
+      Talent Strategy is a comprehensive plan that outlines an organization's approach to attracting, developing,
+      engaging, and retaining top talent. It serves as a roadmap to ensure you have the right people in the right roles
+      at the right time to achieve your business goals.</p>
+
+    <!-- Role Development Strategies -->
+    <mat-label>
+      <span>Talent Strategy To Adopt</span>
+    </mat-label>
+    <div formArrayName="roleDevelopmentStrategies">
+      <div *ngFor="let strategy of roleDevelopmentStrategiesFormArray.controls; let i=index" [formGroupName]="i">
+        <input id="strategyInput" type="text" formControlName="strategyName" placeholder="Strategy Name">
+        <button (click)="removeStrategy(i)" class="btn btn-danger text-white"><mat-icon>delete</mat-icon></button>
+        <!-- You can add more form controls for other properties of the strategy -->
+      </div>
+    </div>
+    <div class="button-strategy">
+      <button type="button" class="btn btn-md btn-success text-white" (click)="addStrategy()">+ Strategy</button>
+    </div>
+    <div>
+      <button id="addstratbtn" class="btn btn-success text-white" (click)="onsubmit()">Add Strategies</button>
+    </div>
+  </form>
+</div>

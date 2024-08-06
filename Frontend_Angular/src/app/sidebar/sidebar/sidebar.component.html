@@ -1,0 +1,34 @@
+<div class="sidebar-wrapper">
+  <div class="logo">
+    <a routerLink="dashboard" class="simple-text logo-mini">
+      <div class="logo-image-small">
+        <!-- <img src="assets/img/eq.png"> -->
+      </div>
+    </a>
+    <a routerLink="dashboard" style="color: rgb(163,42,41); font: 1.3em; font-weight: 800;" class="simple-text logo-normal">
+      <!-- Talent&#64;equity -->Talking Talent
+      <br>
+    </a>
+  </div>
+  <ul class="nav">
+    <!-- Main sidebar content -->
+    <ng-container *ngIf="isSidebarVisible">
+      <li *ngFor="let menuItem of menuItems" routerLinkActive="active" class="{{menuItem.class}}">
+        <a [routerLink]="[menuItem.path]" *ngIf="menuItem.userType">
+          <i class="nc-icon {{menuItem.icon}}" style="color: white;"></i>
+          <p style="color: white; font-weight: 500;">{{menuItem.title}}</p>
+        </a>
+      </li>
+    </ng-container>
+  </ul>
+  <!-- Hidden sidebar content -->
+  <div class="sidebar-hidden active">
+    <!-- Place your additional sidebar content here -->
+    <li *ngFor="let menuItem of menuItems" routerLinkActive="active" class="{{menuItem.class}}">
+      <a [routerLink]="[menuItem.path]" *ngIf="menuItem.userType">
+        <i class="nc-icon {{menuItem.icon}}" style="color: white;"></i>
+      </a>
+    </li>
+  </div>
+  
+</div>

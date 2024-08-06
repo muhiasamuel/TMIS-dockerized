@@ -1,0 +1,30 @@
+<div class="container">  
+    
+    <h5> Add Development Interventions</h5>  
+      
+    <form [formGroup]="interventionForm" (ngSubmit)="onSubmit()">
+        <table class="table table-striped" formArrayName="interventions">  
+            <tr>  
+            <th colspan="2">Add Multiple Interventions</th> 
+            </tr>  
+            <tr *ngFor="let quantity of interventions().controls; let i=index" [formGroupName]="i">  
+            <td>  
+                Development Intervention:  
+                <input type="text" formControlName="developmentInterventions" class="form-control" required>  
+            </td>  
+            <td class="my-2">  
+                How To Achieve Intervention:  
+                <input type="text" formControlName="howToAchieveInterventions" class="form-control" required>  
+            </td>  
+            <td>  
+                <button (click)="removeinterventions(i)" style="background-color: brown;" class="btn btn-danger">Remove</button>  
+            </td>  
+            </tr>
+            <td><button type="button" (click)="addIntervention()" class="btn btn-md btn-primary my-4">Add More</button></td>  
+        </table>  
+        
+        <button class="btn btn-success btn-md" id="submit" type="submit">Submit</button>            
+    </form>  
+    
+      
+</div>

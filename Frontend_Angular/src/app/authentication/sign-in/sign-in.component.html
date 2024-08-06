@@ -1,0 +1,138 @@
+<!-- <section class="h-100 gradient-form" style="background-color: #e3e1e1;">
+    <div class="container py-5 h-80">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-xl-10">
+          <div class="card rounded-3 text-black">
+            <div class="row g-0">
+              <div class="col-lg-6">
+                <div class="card-body p-md-5 mx-md-4">
+  
+                  <div class="text-center">
+                    <!-- <img src = "../../assets/img/eq.png"
+                      style="width: 185px;" alt="logo"> 
+                    <h4 id="title" class="mt-1 mb-5 pb-1">TALKING TALENT</h4>
+                  </div>
+  
+                  <form  [formGroup]="loginForm">
+                    <p>Please login to your account</p>
+  
+                    <div class="form-outline mb-4">
+                      <input type="username" id="form2Example11" class="form-control"
+                        placeholder="Phone number or email address" formControlName="username"/>
+                      <label class="form-label" for="form2Example11">Username</label>
+                    </div>
+  
+                    <div class="form-outline mb-4">
+                      <input type="password" id="form2Example22" class="form-control"
+                       placeholder="Enter your password" formControlName="password"/>
+                      <label class="form-label" for="form2Example22"> Password</label>
+                    </div>
+  
+                    <div class="text-center pt-1 mb-5 pb-1">
+                      <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3 text-white" type="button" (click) = "login()">Log
+                        in</button>
+                      <a id="pass" href="#!">Forgot password?</a>
+                    </div>
+  
+  
+                  </form>
+  
+                </div>
+              </div>
+              <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
+                <div class="text-white px-3 py-4 p-md-5 mx-md-4">
+                  <h4 class="mb-4">Talent Management Information System</h4>
+                  <p class="small mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section> -->
+
+  <!-- <body style="background-color: #666666;"> -->
+	
+    <div class="limiter">
+      <div class="container-login100">
+        <div class="wrap-login100">
+          <form class="login100-form" [formGroup]="loginForm">
+            <div class="card-text my-4 text-center text-secondary">Talent Talking(TMIS)</div>
+            <span class="login100-form-title p-b-43">
+              Login to continue
+            </span>
+            <div class="wrap-input100 validate-input">
+              <Label class="form-label px-3" style="font-size:25px; font-family: sans-serif; color: rgb(170, 170, 170);">Email</Label>
+              <input class="input100" type="text" class="form-control"
+              placeholder="Enter Username" formControlName="username" style="color: rgb(111, 111, 111); height: 50px; background-color: white; padding: 5px 20px; font-size: 20px;">
+              <!-- <span class="focus-input100"></span> -->
+              
+            </div>
+            
+            
+            <div class="wrap-input100 validate-input">
+              <label class="form-label px-3" style="font-size:25px; font-family: sans-serif;color: rgb(172, 172, 172); ">Password</label>
+              <input class="input100" type="password" class="form-control"
+              placeholder="Enter your password" formControlName="password" style="color: rgb(111, 111, 111); height: 50px; background-color: white; padding: 5px 20px; font-size: 20px;">
+              <!-- <span class="focus-input100"></span> -->
+             
+            </div>
+  
+  
+              <div class="pt-3" >
+                <a href="#" class="txt1">
+                  Forgot Password?
+                </a>
+              </div>
+        
+  
+            <div class="container-login100-form-btn pt-3" *ngIf="!isLoading">
+              <button class="login100-form-btn" type="button" (click) = "login()">
+                Login
+              </button>
+            </div>
+
+            <div *ngIf="isLoading" class="d-flex justify-content-center mt-2">
+              <div class="spinner-grow bg " style="width: 3rem; height: 3rem; background-color: brown;" role="status">
+                <span class="sr-only"></span>
+              </div>
+              <div class="spinner-grow " style="width: 3rem; height: 3rem;  background-color: brown;" role="status">
+                <span class="sr-only"></span>
+              </div>
+              <div class="spinner-grow " style="width: 3rem; height: 3rem;  background-color: brown;" role="status">
+                <span class="sr-only"></span>
+              </div>
+              <div class="spinner-grow " style="width: 3rem; height: 3rem;  background-color: brown;" role="status">
+                <span class="sr-only"></span>
+              </div>
+            </div>
+  
+            <div class="login100-form-social flex-c-m">
+              <a href="#" class="login100-form-social-item flex-c-m bg1 m-r-5">
+                <i class="fa fa-facebook-f" aria-hidden="true"></i>
+              </a>
+  
+              <a href="#" class="login100-form-social-item flex-c-m bg2 m-r-5">
+                <i class="fa fa-twitter" aria-hidden="true"></i>
+              </a>
+            </div>
+          </form>
+  
+          <div class="login100-more">
+            <!-- <img src="../../assets/img/login picture.jpg" class="responsive" alt=""> -->
+            <img src="../../assets/Analysis-amico.png" class="responsive" alt="">
+           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C:\Users\sam\Desktop\Talent_Management_Info_System\Frontend_Angular\src\assets\Analysis-amico.png -->
+    
+    
+  
+    
+  
+  <!-- </body> -->

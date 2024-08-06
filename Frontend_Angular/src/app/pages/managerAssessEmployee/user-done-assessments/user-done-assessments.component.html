@@ -1,0 +1,61 @@
+<div class="container" *ngIf="assess.length > 0; else noAssess">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>{{data}} assessments </h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-8 d-flex flex-wrap justify-content-between">
+            <div class="col-sm-4" *ngFor="let ass of assess">
+                    <a class="card" [routerLink]="'/assess/' + ass.id + '/' + status">
+                        <p class="text-center m-1">{{ass.assessmentName}}</p>
+                        <!-- <p>{{ass.assessmentName.substring(0,50)}}...</p> -->
+                        <p class="ms-1">Done by: {{ass.doneBy}}</p>
+                        <p class="ms-1">Not done by: {{ass.notDoneBy}}</p>
+                    </a>
+                </div>
+        </div>
+        <!-- <div class="col-sm-4">
+            <h5>Total assessments</h5>
+            <p>Done by all</p>
+            <p>Not done at all</p>
+            <p>Best performed</p>
+            <p>Poorly perfomed</p>
+        </div> -->
+        
+    </div>
+</div>
+
+<ng-template #noAssess>
+    <div class="container" *ngIf="!isloading">
+        <div class="row d-flex align-items-center">
+            <div class="col-sm-8">
+                <h3 class="text-center">Oooops</h3>
+                <p>Dear {{systemUser.user.userFullName}}, {{message}}</p>
+            </div>
+            <!-- <div class="col-sm-4">
+                <h5>Total assessments</h5>
+                <p>Done by all</p>
+                <p>Not done at all</p>
+                <p>Best performed</p>
+                <p>Poorly perfomed</p>
+            </div> -->
+        </div>
+    </div>
+
+    <div style="display: flex; justify-content: center;" *ngIf="isloading">
+        <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only"></span>
+        </div>
+        <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only"></span>
+        </div>
+        <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only"></span>
+        </div>
+        <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only"></span>
+        </div>
+    </div>
+   
+</ng-template>

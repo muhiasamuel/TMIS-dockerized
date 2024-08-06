@@ -1,0 +1,39 @@
+<div class="container">
+    <div class="row">
+        <div class="col sm-8">
+            <h4 class="greeting">{{greeting}}, {{ systemUser.user.userFullName.toUpperCase() }}</h4>
+            <p class="assessment-info">Assessment helps monitor progress and contributes to enforcing the assessment triangle, i.e., observations, interpretations of that observation, and understanding of that observation. Any breakdown can be noted by professors when reviewing their students' work.</p>
+        </div>
+        <div class="col-sm-4 card department-stats">
+            <h4>Department Statistics</h4>
+            <p *ngIf="systemUser.user.role.id == 1">Head: <b>{{ systemUser.user.userFullName.toUpperCase() }}</b></p>
+            <p *ngIf="systemUser.user.role.id == 2">Head: <b>{{ systemUser.user.manager.userFullName.toUpperCase() }}</b> </p>
+            <p>Employees: <b>8</b> </p>
+            <p>Assessments posted: <b>2</b> </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="buttons-container">
+                <div class="row">
+                    <div class="col-12 col-md-4 mb-2">
+                        <button class="my-btn w-100" [ngClass]="{'active': activeButton === 'done'}" (click)="openDone()">Done Assessments</button>
+                    </div>
+                    <div class="col-12 col-md-4 mb-2">
+                        <button class="my-btn w-100" [ngClass]="{'active': activeButton === 'notDone'}" (click)="openNotDone()">Not done Assessments</button>
+                    </div>
+                    <div class="col-12 col-md-4 mb-2">
+                        <button class="my-btn w-100" [ngClass]="{'active': activeButton === 'assessed'}" (click)="openAssessed()">Assessed Assessments</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <app-user-done-assessments [data]="dataToTranser"></app-user-done-assessments>
+        </div>
+    </div>
+</div>
+
+
+
+

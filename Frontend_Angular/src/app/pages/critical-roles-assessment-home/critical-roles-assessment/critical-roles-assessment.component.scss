@@ -1,0 +1,123 @@
+// .mat-mdc-form-field {
+//     margin-top: 16px;
+//   }
+
+// /* Stepper container */
+// .mat-stepper-horizontal {
+//     background-color: #d6d4d4;  /* Dark background color */
+//   }
+  
+//   /* Stepper labels and content */
+//   span{
+//     font-weight: bold;
+//     font: 1em;
+//     color: rgb(161, 42, 43); /* White dark */
+//   }
+  
+//   /* Optional - Styling for focused state */
+//   .mat-step-header .mat-step-label.cdk-keyboard-focused, 
+//   .mat-step-header .mat-step-label.cdk-program-focused {
+//     color: #f4f3f3; /* Slightly off-white for better contrast */
+//   }
+
+// .example-radio-group {
+//     display: flex;
+//     flex-direction: column;
+//     margin: 15px 0;
+//     align-items: flex-start;
+//   }
+  
+  .example-radio-button {
+    margin: 5px;
+    color: rgb(17, 17, 17);
+  }
+  .container{
+    background-color: white;
+  }
+
+  #example-radio-group-label{
+    font-weight: bolder;
+    font-size: 1.3em;
+    margin: 5px;
+  }
+//   #matinput{
+//     background-color: rgb(255, 255, 255);
+    
+//     width: 50vw;
+//     input{
+//         background-color: white;
+//         color: #151515;
+//         padding: 0.5em 0.7em;
+//         border: none;
+//         border-radius: 10px;
+//     }
+//   }
+//   ::ng-deep .mat-focused .mat-form-field-label {
+//     /*change color of label*/
+//     color:black !important;
+//    }
+  
+//    ::ng-deep.mat-form-field-underline {
+//     /*change color of underline*/
+//     background-color: black !important;
+//   } 
+  
+//   ::ng-deep.mat-form-field-ripple {
+//    /*change color of underline when focused*/
+//    background-color:black !important;
+//   }
+  #matinput{
+    
+    width: 30vw;
+    input{
+        padding: 0.5em 0.7em;
+        border: none;
+        border-radius: 10px;
+    }
+  }
+
+    span{
+    font-weight: bold;
+    font: 1em;/* White dark */
+
+  }
+  #strategyInput{
+    width: 90%;
+    padding: 15px 8px;
+    border: 0.3px solid rgb(230, 230, 230);
+    border-radius: 5px;
+    margin: 4px;
+}
+  #closeRole{
+
+    background-color: transparent;
+    border: 1px solid grey;
+    border-radius: 5px;
+  }
+  #closeclear{
+    position: absolute;
+    right: 5px;
+ 
+    border-radius: 5px;
+    border: 1px solid grey;
+    background-color: transparent;
+  }
+  .dialog-close{
+    position: absolute;
+    bottom: 3px;
+    left: 3px;
+    
+  }
+  #strategyInput{
+    width: 90%;
+    padding: 15px 8px;
+    border: 0.3px solid rgb(226, 226, 226);
+    border-radius: 5px;
+  }
+  .table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  .table tbody tr:nth-child(odd) {
+    background-color: #fff;
+  }

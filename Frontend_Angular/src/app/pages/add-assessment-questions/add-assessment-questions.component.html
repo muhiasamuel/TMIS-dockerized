@@ -1,0 +1,183 @@
+<div class="container-fluid">
+<button (click)="closeDialog()" class="close">
+  <mat-icon>close</mat-icon>
+</button>
+      <mat-stepper
+        class="example-stepper"
+        [orientation]="(stepperOrientation | async)!">
+        <!-- <mat-step label="Add Attributes for this assessment">
+          <app-add-potential-descriptor (newItemEvent)="getAddedAttributes($event)"></app-add-potential-descriptor>
+          <div id="attrNext" class="mx-5 row">
+            <h6 class="col-md-6">Or Continue To Assessment With Already Created Attributes</h6>
+            <button class="btn btn-success text-white col-md-2"id="btnAttr" matStepperNext>Next</button>
+          </div>
+        </mat-step> -->
+
+        <mat-step label="Add Details and Question for this assessment">
+          <h6>Assessment Details Section</h6>
+          <div class="justify-content-center">
+            <div class="header-nav mt-4 mb-2 justify-content-center ">
+              <form [formGroup]="assessmentForm">
+                  <table class="example-full-width" cellspacing="10"><tr>
+                    <td><mat-form-field class="example-full-width mx-1"  style="width: 18vw;">
+                      <mat-label>Target Group for this assessment</mat-label>
+                      <mat-select
+                       formControlName="target">
+                        <mat-option *ngFor="let targetgrp of targetGroup" [value]="targetgrp">
+                          {{targetgrp}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field></td>
+                    <td><mat-form-field class="example-full-width mx-1"  style="width: 15vw;">
+                      <mat-label>Attribute to test in this assessment</mat-label>
+                      <mat-select
+                       formControlName="potentialAttributeId">
+                        <mat-option *ngFor="let attr of assessmentAttributes" [value]="attr.potentialAttributeId">
+                          {{attr.potentialAttributeName}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field></td>
+                    <td><mat-form-field class="example-full-width mx-1"  style="width: 15vw;">
+                      <mat-label>Assessment Name</mat-label>
+                      <input matInput placeholder="Add Assessment Name" formControlName="assessmentName">
+                    </mat-form-field></td>
+                    <td><mat-form-field>
+                      <mat-label>Assessment Expiration Date</mat-label>
+                      <input matInput [matDatepicker]="picker1" formControlName="endDate">
+                      <mat-hint>MM/DD/YYYY</mat-hint>
+                      <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field></td>                    
+                  </tr>
+                  <tr></tr>
+                </table>
+                  <div class="">
+                    <mat-form-field style="width: 65vw;" class="example-full-width">
+                      <mat-label>Assessment Description</mat-label>
+                      <textarea matInput formControlName="assessmentDescription"></textarea>
+                    </mat-form-field>
+                  </div>
+              </form>
+            </div>
+            <br>
+            <h6>Assessment Descriptors Section</h6>
+              <form [formGroup]="questionForm" (ngSubmit)="getFormData()" class="mt-1">
+            
+                <div class="" formArrayName="questionList">
+            
+                  <div *ngFor="let student of questionListArray().controls; let i = index">
+            
+                    <div [formGroupName]="i" id="border" class=" my-2 p-3">
+                      <input type="text" id="addQuestion" placeholder="Add Question" formControlName="question_description"/>            
+                      <button type="button" 
+                      *ngIf="questionListArray().length > 1" 
+                      (click)="removeQuestion(i)" 
+                      class="btn btn-sm btn-danger text-white">
+                      <span class="material-icons white600">delete</span>
+                      </button>            
+                      <!-- <div [formGroup]="choicesFormGroup(i)">
+            
+                        <div formArrayName="questionChoicesArray" class="row">
+            
+                          <div *ngFor="let choicesub of choicesArray(i).controls; let j = index;">
+            
+                            <div [formGroupName]="j" class="">
+                              <input type="text" class="choice" placeholder="Choice Name, eg choice 1" formControlName="choice_name" />
+                              <input type="text" class="choice mx-3"  placeholder="Choice Value" formControlName="choice_value" />
+                              <button type="button"
+                               *ngIf="choicesArray(i).length > 1" 
+                               (click)="removeNewChoice(i, j)" 
+                               class="btn btn-sm btn-danger text-white">
+                               <span class="material-icons white600">delete</span></button>
+                            </div>
+                          </div>
+                        </div>
+                      </div> -->
+                      <!-- <button type="button" 
+                        (click)="addNewSubject(i)" 
+                        class="btn btn-sm btn-primary mt-2 d-flex align-items-center text-white">
+                        <span class="material-icons white600">add</span>
+                         option
+                      </button> -->
+                    </div>
+                  </div>
+                </div>
+                <button type="button" (click)="addQuestion()" 
+                  class="btn btn-sm btn-primary mt-2 mb-2 d-flex align-items-center text-white">
+                  <span class="material-icons">add</span>New Descriptor</button>
+                <button type="submit" id="qstnsubmit" class="btn btn-md btn-success text-white">Submit</button>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button matStepperNext>Next</button>
+              </form>            
+            </div>
+   
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>Done</ng-template>
+          <p>You are now done.</p>
+          <div>
+            <button mat-button matStepperPrevious>Add Another one</button>
+          </div>
+        </mat-step>
+      </mat-stepper>
+
+      <!-- <div class="row my-3">
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title" >Assessment Creation History</h5>
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let assessment of assessmentAttributes; let i = index">
+                    <th scope="row">{{i+1}}</th>
+
+                    <td *ngIf="assessment.assessments[0]">{{assessment.potentialAttributeName}}</td>
+                    <td >
+                      <tr *ngFor="let attr of assessment.assessments">
+                        <td>{{attr.assessmentName}}</td>
+                        <td>
+                          <tr *ngFor="let assQstn of attr.assessmentQuestions; let i = index">
+                            <td>{{(i+1) +"  " + assQstn.assessmentQuestionDescription}}</td>
+                          </tr>
+                        </td>
+                      </tr>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Attributes Creation History</h5>
+                <table class="table table-stripped">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Attribute Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let assessment of assessmentAttributes;let i = index">
+                      <td>{{i+1}}</td>
+                      <td>{{assessment.potentialAttributeName}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+          </div>
+        </div>
+      </div> -->
+</div>
+

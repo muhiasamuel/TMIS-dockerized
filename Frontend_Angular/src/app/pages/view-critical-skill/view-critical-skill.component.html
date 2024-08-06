@@ -1,0 +1,47 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-sm-4">
+        <div class="p-4">
+          <!-- {
+            "skillAssessmentId": 9,
+            "skillName": "coding",
+            "skillDescription": "coding",
+            "skillDevelopmentStrategy": "wwwwww",
+            "businessPriority": "4",
+            "currentSkillState": "red",
+            "scarcityParameter": "5",
+            "marketFluidity": "4",
+            "developmentCostAndTimeCommitment": "5",
+            "futureMarketAndTechRelevance": "1",
+            "averageRating": "3.8"
+        } -->
+          <div class="card-body">
+            <h5 class="card-title mb-2" style="color: rgb(57, 187, 115);"> Skill Information</h5>
+            <p class="card-text"><span class="card-Category" style="font-weight: bold;">Development Cost And Time Commitment:</span> {{dataView?.developmentCostAndTimeCommitment}} </p>
+            <p class="card-text" style="font-weight: bold;"><span class="card-Category">Business Priority:</span>{{dataView?.businessPriority}} </p>
+            <p class="card-text" style="font-weight: bold;"><span class="card-Category">FutureMarket And Tech Relevance:</span>{{dataView?.futureMarketAndTechRelevance}} </p>
+            <p class="card-text" style="font-weight: bold;"><span class="card-Category">Scarcity Parameter:</span>{{dataView?.scarcityParameter}} </p>
+            <p class="card-text" style="font-weight: bold;"><span class="card-Category">Market Fluidity:</span>{{dataView?.marketFluidity}} </p>
+            <p class="card-text" style="font-weight: bold;"><span class="card-Category">Average Rating:</span> {{dataView.averageRating}} </p>
+            <p class="card-text" style=" font-weight: bold;" [ngStyle]="{color:dataView.currentSkillState=== 'red' ? 'red': dataView.currentSkillState === 'green' ? 'green' : 'rgba(255, 191, 0, 1)'}"><span class="card-Category" >Current State:</span>{{dataView.currentSkillState}} </p>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-sm-8">
+        <div class="p-4">
+          <button class="closclear" (click)="closeDialog()" ><mat-icon>clear</mat-icon></button>
+          <div class="card-body">
+            <h5 class="card-title" style="color: rgb(57, 187, 115);" *ngIf="dataView.averageRating >= 3.5">Strategies Information: </h5>
+            <div style="font-weight: bold;" >{{dataView.skillDevelopmentStrategy}}</div>
+            <!-- <div class="strategies" *ngFor="let role of criticalRole?.strategies; let i = index"> -->
+              <!-- <h6 class="card-category"><span class="card-text ">{{i+1}}: </span>{{role.strategyName}}</h6> -->
+            </div>
+           
+            <a  class="btn btn-primary" *ngIf="dataView.averageRating >= 3.5">+ Strategies</a>
+          </div>
+        </div>
+    </div>
+    
+    <button id="closebtn" class="btn btn-md" (click)="closeDialog()">close</button>
+</div>

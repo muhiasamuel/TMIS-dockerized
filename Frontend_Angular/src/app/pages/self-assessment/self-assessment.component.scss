@@ -1,0 +1,49 @@
+.mat-stepper-horizontal {
+    margin-top: 8px;
+  }
+  
+  .mat-mdc-form-field {
+    margin-top: 16px;
+  }
+    
+.custom-select {
+    padding: 7px 12px;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: 300;
+    color: #434242;
+    background-color: #fefcf8;
+    border: 0.2px solid #dddada;
+    margin-right: 1em;
+    border-radius: 2%;
+  }
+  .custom-control-input:checked ~ .custom-control-label::before {
+    border-color: #e91e63;
+    background-color: #e91e63;
+  }
+  .custom-control-input:focus ~ .custom-control-label::before {
+    box-shadow: none;
+  }
+  .custom-control-label {
+    cursor: pointer;
+  }
+  #addQuestion{
+    border: 0.2px solid #dddbdb;
+    padding: 7px 12px;
+    border-radius: 2%;
+    max-width: 100vw;
+    width: 50vw;
+  }
+  .choice{
+    border: 0.2px solid #d5d3d3;
+    padding: 7px 12px;
+    margin: 0;
+    border-radius: 6%;
+    max-width: 100vw;
+
+  }
+  #border{
+    border: 1px solid #d5d3d3;
+    background: rgb(235, 235, 235);
+    border-radius: 10px;
+  }

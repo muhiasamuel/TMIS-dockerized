@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.container {
+    background-color: #f0f4f8;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.greeting {
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 1.5em;
+}
+
+.assessment-info {
+    color: #7f8c8d;
+    font-size: 1.1em;
+    margin-top: 10px;
+}
+
+.department-stats {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+}
+
+.department-stats h4 {
+    color: #2980b9;
+    font-weight: 500;
+}
+
+.department-stats p {
+    color: #34495e;
+    margin: 5px 0;
+}
+
+.buttons-container {
+    margin-top: 20px;
+}
+
+.my-btn {
+    padding: 10px 20px;
+    border: 2px solid #dfe6e9;
+    border-radius: 20px;
+    background-color: #ffffff;
+    color: #2c3e50;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.my-btn.active {
+    background-color: #2980b9;
+    color: white;
+}
+
+.my-btn:hover {
+    background-color: #3498db;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.mb-2 {
+    margin-bottom: 0.5rem;
+}

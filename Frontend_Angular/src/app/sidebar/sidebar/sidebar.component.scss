@@ -1,0 +1,25 @@
+.logo{
+    background: white;
+}
+
+p i {
+    color: aliceblue;
+}
+.simple-text{
+    font-weight: bold;
+}
+/* sidebar.component.scss */
+
+.sidebar-hidden {
+    display: none; /* Initially hide the hidden sidebar content */
+  }
+  
+  .sidebar-wrapper {
+    position: relative; /* Ensure the wrapper maintains its position */
+  }
+  
+  .sidebar-visible .sidebar-hidden {
+    display: block; /* Show the hidden sidebar content when the sidebar is visible */
+  }
+  
+  

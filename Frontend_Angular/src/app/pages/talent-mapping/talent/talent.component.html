@@ -1,0 +1,50 @@
+<mat-form-field>
+  <mat-label>Filter</mat-label>
+  <input matInput [(ngModel)]="filterValue" (keyup)="filterTalents()" placeholder="Ex. Mia" />
+</mat-form-field>
+
+<table class="table mat-elevation-z8" mat-table [dataSource]="dataSource">
+
+  <!-- Index Column -->
+  <ng-container matColumnDef="index">
+    <th mat-header-cell *matHeaderCellDef>#</th>
+    <td mat-cell *matCellDef="let element; let i = index">{{i + 1}}</td>
+  </ng-container>
+
+  <!-- Full Name Column -->
+  <ng-container matColumnDef="userFullName">
+    <th mat-header-cell *matHeaderCellDef>Full Name</th>
+    <td mat-cell *matCellDef="let element">{{element.userFullName}}</td>
+  </ng-container>
+
+  <!-- Performance Column -->
+  <ng-container matColumnDef="averagePerformance">
+    <th mat-header-cell *matHeaderCellDef>Performance</th>
+    <td mat-cell *matCellDef="let element">{{element.averagePerformance.toFixed(1)}}</td>
+  </ng-container>
+
+  <!-- Talent Rating Column -->
+  <ng-container matColumnDef="talentRating">
+    <th mat-header-cell *matHeaderCellDef>Talent rating</th>
+    <td mat-cell *matCellDef="let element">{{element.talentRating}}</td>
+  </ng-container>
+
+  <!-- Average Potential Rating Column -->
+  <ng-container matColumnDef="manAssessmentAvg">
+    <th mat-header-cell *matHeaderCellDef>Average potential rating</th>
+    <td mat-cell *matCellDef="let element">{{element.manAssessmentAvg}}</td>
+  </ng-container>
+
+  <!-- Talent Mapping Column -->
+  <ng-container matColumnDef="talentMapping">
+    <th mat-header-cell *matHeaderCellDef>Talent mapping</th>
+    <td mat-cell *matCellDef="let element">{{getTalentMapping(element.talentRating)}}</td>
+  </ng-container>
+
+  <!-- Header and Row Declarations -->
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  
+</table>
+
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

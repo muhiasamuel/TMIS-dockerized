@@ -1,0 +1,119 @@
+<div class="container-fluid">
+
+    <ol class=" breadcrumb-arrow align-items-center">
+      <li><a>Critical </a></li>
+      <li><a>Skills</a></li>
+      <li><a>Assessment</a></li>
+      <li style="float:right"><button type="button" class="btn btn-sm btn-primary"(click)="assessCriticalSkills()"  >Add Skill</button></li>
+      
+      
+    
+    </ol>
+  
+
+  <mat-form-field>
+    <mat-label>Filter</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+  </mat-form-field>
+  <div class="row">
+    <div class="mat-elevation-z8 col-sm-9">
+      <table mat-table [dataSource]="dataSource" matSort>
+    
+        <!-- ID Column -->
+        <div>
+          <ng-container matColumnDef="index">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> # </th>
+            <td mat-cell *matCellDef="let row; let i = index"> {{i+1}} </td>
+          </ng-container>
+      
+          <!-- Progress Column -->
+          <ng-container matColumnDef="skillName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Skill Name </th>
+            <td mat-cell *matCellDef="let row"> {{row.skillName}}</td>
+          </ng-container>
+      
+          <!-- Name Column -->
+    
+          <ng-container matColumnDef="averageRating">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Average Rating </th>
+            <td mat-cell *matCellDef="let row" style="width: 5px;" >{{row.averageRating}} </td>
+          </ng-container>
+          <ng-container matColumnDef="businessPriority">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Business Priority </th>
+            <td mat-cell *matCellDef="let row"> {{row.businessPriority}} </td>
+          </ng-container>
+      
+          <!-- Fruit Column -->
+          <ng-container matColumnDef="currentSkillState">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Current Skill State </th>
+            <td mat-cell *matCellDef="let row" [ngStyle]="{color: row.currentSkillState=== 'red' ? 'red':row.currentSkillState === 'amber' ? 'rgba(255, 191, 0, 1)': 'green'}" style="font-weight: bold; font-size: 17px;"> {{row.currentSkillState}} </td>
+          </ng-container>
+      
+                <!-- Fruit Column -->
+          <ng-container matColumnDef="scarcityParameter">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Scarcity Parameter </th>
+            <td mat-cell *matCellDef="let row"> {{row.scarcityParameter}} </td>
+          </ng-container>
+          <ng-container matColumnDef="marketFluidity">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Market Fluidity </th>
+            <td mat-cell *matCellDef="let row"> {{row.marketFluidity}} </td>
+          </ng-container>
+          <ng-container matColumnDef="developmentCostAndTimeCommitment">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Development Cost </th>
+            <td mat-cell *matCellDef="let row"> {{row.developmentCostAndTimeCommitment}} </td>
+          </ng-container>
+          <ng-container matColumnDef="futureMarketAndTechRelevance">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Future Market </th>
+            <td mat-cell *matCellDef="let row"> {{row.futureMarketAndTechRelevance}} </td>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Actions </th>
+            <td mat-cell *matCellDef="let row">
+              <button type="button" class="btn btn-secondary text-white" (click)="viewSkill(row)">View</button>
+              <button type="button" class="btn btn-secondary text-white" (click)="editSkill(row)">Edit</button>
+              <button type="button" class="btn btn-secondary text-white">Strategy </button>
+            </td>
+          </ng-container>
+        </div>
+
+       
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+        </tr>
+      </table>
+    
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+    </div>
+    <div class="col-md-3 bg-light"> 
+      <div class="card" style="background: rgb(237, 237, 237);">   
+          <div class="card-header">
+              <h5 class="card-Category">Critical Roles Overview</h5>
+          </div>
+      </div>
+      <div class="card">               
+          <div class="card-body"  >
+            <div class="critical w-100 primary-background">
+                <p class="title text-white py-3"><span class="card-Category">Total Assessed Skills:</span>{{userData?.length}}</p>
+            </div>
+            <div class="critical w-100 primary-background">
+                <p class="title text-white py-3">Critical Skills:<span class="card-Category">{{critical.length}}</span> </p>
+            </div>
+            <div class="critical w-100 primary-background">
+                <p class="title text-white py-3">Medium Skills:<span class="card-Category">{{medium?.length}}</span></p>
+            </div>
+            <div class="critical w-100 primary-background">
+                <p class="title text-white py-3">Low Skills:<span class="card-Category">{{low.length}}</span></p>
+            </div>
+          </div>
+      </div>
+     </div>
+
+  </div>
+
+</div>
+
+

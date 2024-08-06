@@ -1,0 +1,45 @@
+
+<!-- <button mat-raised-button (click)="isOptional = !isOptional">
+    {{!isOptional ? 'Enable optional steps' : 'Disable optional steps'}}
+  </button> -->
+  <div>
+
+  </div > 
+   <mat-stepper linear #stepper style="background-color: rgb(224, 220, 220);">
+     <mat-step [stepControl]="aspirationForm" [optional]="isOptional" *ngFor="let attr of potential_attributes; let i = index">
+       <form [formGroup]="aspirationForm" (ngSubmit)="onSubmit()">
+         <ng-template matStepLabel>{{attr.potential_attributes_name | uppercase}}</ng-template>
+         <br>
+         <div *ngFor="let potential of potentials">
+             <span>{{potential.Descriptor}}</span>
+             <br><br>
+             <span *ngFor="let option of options">
+               <input
+               type="radio"
+               [value]="option"
+               [formControlName]="potential.Descriptor"
+              >
+               <span style="letter-spacing: 10px;">{{option}}</span>
+             </span>
+         </div>
+ 
+         <div style="color: black;">
+           <button mat-button matStepperNext style="color: black;">Next</button>
+         </div>
+         <button type="submit">Submit</button>
+       </form>
+     </mat-step>
+    
+     <mat-step>
+       <ng-template matStepLabel>Done</ng-template>
+       <p>You are now done.</p>
+       <div>
+         <button mat-button matStepperPrevious>Back</button>
+         <button mat-button (click)="stepper.reset()">Reset</button>
+       </div>
+     </mat-step>
+   </mat-stepper>
+ 
+ 
+   
+ 

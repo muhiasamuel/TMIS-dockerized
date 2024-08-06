@@ -1,0 +1,21 @@
+<div class="container-fluid m-4">
+        <form [formGroup]="RetentionStrategyFormGroup">
+          <!-- Role Development Strategies -->
+        
+          <div formArrayName="mvpRetentionStrategies" class="pt-3">
+            <div *ngFor="let strategy of mvpRetentionStrategiesFormArray.controls; let i=index" [formGroupName]="i">
+              <input id="strategyInput" type="text" formControlName="retentionStrategies" placeholder="Strategy Name">
+              <button id="deleteStrategy" class="btn btn-danger text-white"
+                (click)="removeStrategy(i)"><mat-icon>delete</mat-icon></button>
+              <!-- You can add more form controls for other properties of the strategy -->
+            </div>
+          </div>
+          <div class="button-strategy">
+            <button type="button" class="btn btn-md btn-success" (click)="addStrategy()">Add Strategy</button>
+  
+          </div>
+          <div class="send">
+            <button class="btn btn-primary" type="submit" (click)="submit()">Save</button>
+          </div>
+        </form>
+</div>

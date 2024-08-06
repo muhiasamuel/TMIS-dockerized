@@ -1,0 +1,45 @@
+<div class="container">
+    <div class="row card">
+        <div class="col-sm-12 d-flex align-items-center justify-content-between">
+            <button class="btn btn-success" >Back</button>
+                <p class="ms-3">{{assessment?.assessmentName}}</p>
+                <button class="btn btn-success m-3" (click)="openDialog()" *ngIf="systemUser.user.role.id == 1; else isUser">Edit Assessment</button>
+                <ng-template #isUser>
+                    <button class="btn btn-success m-3" (click)="openDialog()">Questions {{assessment?.assessmentQuestions?.length}}</button>
+                </ng-template>
+            </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-9 ">
+            <p>Dear {{systemUser.user.userFullName}}, </p>
+            <p>{{assessment.assessmentDescription}}</p>
+            <div class="w-100 card ps-2">
+                <h3 class="text-center">Questions</h3>
+                <div class="w-100" *ngFor="let quest of assessment.assessmentQuestions; let i = index">
+                    <p>{{i + 1}}. {{quest.assessmentQuestionDescription}}</p>
+                    <ul>
+                        <li *ngFor="let choice of quest.choices">{{choice.choiceName}}</li>
+                    </ul>
+                </div>
+            </div>
+            
+
+        </div>
+        <div class="col-sm-3 d-flex flex-column align-items-center">
+            <div class="w-100 myCard mb-3">
+                <h4 class="text-center">Statistics</h4>
+                <p>Posted By: {{managerName}}</p>
+                <p>Posted on: {{dateOf(assessment.createdAt)}}</p>
+                <p>Deadline: {{dateOf(assessment.endDate)}}</p>
+            </div>
+            <div class="w-100 myCard">
+                <h4 class="text-center">Assessment statistics</h4>
+                <p>Attempted by: {{pageAssessment?.doneBy}}</p>
+                <p>Not attempted by: {{pageAssessment?.notDoneBy}}</p>
+                <p>Average score: {{pageAssessment?.averageScore}}</p>
+            </div>
+        </div>
+    </div>
+    
+</div>
