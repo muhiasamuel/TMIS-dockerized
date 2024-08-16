@@ -84,3 +84,67 @@ body {
 .mb-2 {
     margin-bottom: 0.5rem;
 }
+/* Styling for question text */
+.question-container {
+    margin-bottom: 1rem;
+  }
+  
+  .question-text {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333; /* Dark grey color for readability */
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Styling for choices */
+  .choice-option {
+    font-weight: 800;
+    display: flex;
+    margin-top: 0.5rem;
+  }
+  
+  mat-radio-button {
+    display: flex;
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #555; /* Slightly lighter grey color */
+  }
+  
+  /* Styling for stepper buttons */
+  .mat-stepper-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+  
+  .nav-button-next {
+    background-color: #3498db;
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  .nav-button-prev {
+    background-color: #848484;
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  
+  .submit-button {
+    background-color: #4caf50; /* Green color for submit button */
+    color: white;
+  }
+  
+  .reset-button {
+    background-color: #f44336; /* Red color for reset button */
+    color: white;
+  }
+  
+  /* Optional: Add some padding around the stepper */
+  mat-horizontal-stepper {
+    margin: 1rem 0;
+  }
+  
+  

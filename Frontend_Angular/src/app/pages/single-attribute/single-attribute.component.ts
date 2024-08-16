@@ -19,6 +19,7 @@ export class SingleAttributeComponent {
   }
   systemUser: any
   pAttsAssess: any[] = []
+  attrQuestions:any
   currentAtt: any
   att: any
   atts: any
@@ -34,11 +35,13 @@ export class SingleAttributeComponent {
   }
   ngOnInit(){
     this.systemUser = JSON.parse(localStorage.getItem("user"))
+    console.log(this.systemUser);
+    
     this.route.params.subscribe(params => {
       this.attId = params['id']; // Access the 'id' parameter from the URL
       console.log('Test ID:', this.attId);
     });
-    this.getAssessments(this.attId);
+    this.getAttrQuestions(this.attId);
   }
 
   openDialog(){
@@ -53,22 +56,18 @@ export class SingleAttributeComponent {
       height: '85%' })
   }
 
-  getAssessments(attId:any){
-    const url = `${this.server.serverUrl}getAttribute?attId=${attId}`
-    console.log(url)
-    const res = this.http.get(url)
-
-    res.subscribe(
-      (data:any )=> {
-        this.attribute.name = data.item.potentialAttributeName
-        this.attribute.description = data.item.potentialAttributeDescription
-        this.pAttsAssess = data.item.assessments
-        this.title = `${data.item.potentialAttributeName} assessments`
-        console.log("Attribute questions",data)
-      },
-      (error: any) =>{
-        console.log("Attribute questions errors",error)
-      }
+  getAttrQuestions(attId:any){
+    this.server.getQuestionsByAttribute(attId).subscribe(
+      ((res) =>{
+        console.log("response",res.item);
+        this.attrQuestions = res.item
+        
+      }),
+      ((error) => {
+        console.error(error);
+        
+      }),
+      () => {}
     )
   }
 

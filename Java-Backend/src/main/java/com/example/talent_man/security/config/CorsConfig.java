@@ -18,7 +18,7 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://192.168.90.112", "http://192.168.90.104")); // Allow frontend URL
+        config.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://192.168.1.112", "http://192.168.90.104","http://192.168.88.199","http://192.168.89.88","http://localhost")); // Allow frontend URL
         config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowCredentials(true); // Allow credentials if needed

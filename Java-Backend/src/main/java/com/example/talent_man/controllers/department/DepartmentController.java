@@ -6,6 +6,7 @@ import com.example.talent_man.repos.DepartmentRepo;
 import com.example.talent_man.service_imp.DepServiceImp;
 import com.example.talent_man.utils.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -20,35 +21,35 @@ public class DepartmentController {
     private DepServiceImp dService;
 
     @PostMapping("/addDepartment")
-    public ApiResponse<Department> addDepartment(@RequestBody DepDto dep){
-        try{
-            if(dep.getDepName().isEmpty()){
-                return new ApiResponse<>(301, "department should have a name");
-            }else if(dep.getPositionList().isEmpty()){
-                return new ApiResponse<>(301, "department should have a positions");
-            }else{
+    public ApiResponse<Department> addDepartment(@RequestBody DepDto dep) {
+        try {
+            if (dep.getDepName().isEmpty()) {
+                return new ApiResponse<>(301, "Department should have a name");
+            } else if (dep.getPositionList().isEmpty()) {
+                return new ApiResponse<>(301, "Department should have positions");
+            } else {
                 Department department = new Department();
                 department.setDepName(dep.getDepName());
                 Set<Position> positions = new HashSet<>();
 
-                for (PositionDto p: dep.getPositionList()){
-                    if(p.getPName() == null){
-                        return new ApiResponse<>(301, "department position should have a name");
+                for (PositionDto p : dep.getPositionList()) {
+                    if (p.getPName() == null) {
+                        return new ApiResponse<>(301, "Department position should have a name");
                     }
                     Position position = new Position();
                     position.setPositionName(p.getPName());
+                    position.setDepartment(department); // Set the department for the position
                     positions.add(position);
                 }
                 department.setDepartmentPositions(positions);
                 Department dbDep = dService.addDepartment(department);
-                ApiResponse<Department> response = new ApiResponse<>(200, "successful");
+                ApiResponse<Department> response = new ApiResponse<>(200, "Successful");
                 response.setItem(dbDep);
                 return response;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             return new ApiResponse<>(500, e.getMessage());
         }
-
     }
 
     @PostMapping("/addDepartmentPositions")

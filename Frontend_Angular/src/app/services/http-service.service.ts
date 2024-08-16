@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { url } from 'node:inspector';
 import { Url } from 'node:url';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
@@ -269,6 +269,24 @@ getDepartment(departId:number):Observable<any> {
    return this.http.get<any>(url )
 }
 
+//get questions by attribute id
+getQuestionsByAttribute(attrId: number):Observable<any> {
+  const url = `${this.serverUrl}getQuestionsByAttributeId?attributeId=${attrId}`;
+  return this.http.get<any>(url);
+}
+
+//get not done asesments
+getNotDoneAssesments(userId:number):Observable<any>{
+  const url = `${this.serverUrl}active/not-attempted/${userId}`
+  return this.http.get<any>(url);
+}
+
+// submitUserAnswers
+postUsersAnswers(data:any): Observable<any>{
+  //http://localhost:8080/v1/api/answers/user
+  const url =`${this.serverUrl}answers/user`
+  return this.http.post<any>(url, data)
+}
 
 }
 

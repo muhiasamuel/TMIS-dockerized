@@ -1,32 +1,27 @@
-<div class="container" *ngIf="pAttsAssess.length > 0; else noAssess">
+<div class="container-fluid">
 
     <div class="row card">
         <div class="col-sm-12 topHeader radii d-flex align-items-center justify-content-between">
             <button class="btn">back</button>
                 <p class="ms-3">{{title}}</p>
-                <button class="btn btn-primary m-3" (click)="openDialog()" *ngIf="systemUser.roleId == 1; else noAdd">Add Assessment</button>
-                <ng-template #noAdd>
-                    <button class="btn btn-primary m-3">Assessments {{pAttsAssess.length}}</button>
-                </ng-template>
+                <button class="btn btn-primary m-3" (click)="openDialog()" *ngIf="systemUser.user.role.id == 1;">Add Assessment</button>
+            
         </div>
     </div>
     
     <div class="row">
-
-        <div class="col-sm-8">
-            <div class="w-100">
-                <h3>{{attribute.name}}</h3>
-                <p>{{attribute.description}}</p>
+         
+            <div class="col-sm-10 card d-flex justify-content-between"*ngFor="let question of attrQuestions; let i = index">
+                <div class="p-3">
+                    <p > <span>{{i+1}}: </span>{{question.assessmentQuestionDescription}}</p>
+                </div>
+                <div class="d-flex px-5 py-2" *ngFor="let choice of question.choices">
+                   <p>{{choice.choiceName}}: <span>{{choice.choiceValue}}</span></p> 
+                </div>
+                    
             </div>
-            <div class="col-sm-6 card d-flex align-items-center justify-content-between" *ngFor="let assess of pAttsAssess">
-                
-                <a [routerLink]="'/assQuests/' + assess.assessmentId">
-                    <p>{{assess.assessmentName}}</p>
-                </a>
-            </div>
-        </div>
 
-        <div class="col-sm-4 card">
+        <!-- <div class="col-sm-3 card">
             <div class="bestAttribute radii p-2">
                 <p class="text-center">Assessment statistics</p>
                 <p>Total Assessments: </p>
@@ -47,7 +42,7 @@
                 <p>Employee Average score: </p>
             </div>
         
-        </div>
+        </div> -->
     </div>
 </div>
 

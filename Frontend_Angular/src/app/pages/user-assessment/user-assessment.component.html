@@ -1,10 +1,24 @@
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <div class="col sm-8">
+        <div class="col sm-5 card mx-2">
             <h4 class="greeting">{{greeting}}, {{ systemUser.user.userFullName.toUpperCase() }}</h4>
             <p class="assessment-info">Assessment helps monitor progress and contributes to enforcing the assessment triangle, i.e., observations, interpretations of that observation, and understanding of that observation. Any breakdown can be noted by professors when reviewing their students' work.</p>
+            <div class="buttons-container">
+                <div class="row">
+                    <div class="col-12 col-md-4 mb-2">
+                        <button class="my-btn w-100" [ngClass]="{'active': activeButton === 'notDone'}" (click)="openNotDone()">Not done Assessments</button>
+                    </div>
+                    <div class="col-12 col-md-4 mb-2">
+                        <button class="my-btn w-100" [ngClass]="{'active': activeButton === 'done'}" (click)="openDone()">Done Assessments</button>
+                    </div>
+                  
+                    <div class="col-12 col-md-4 mb-2">
+                        <button class="my-btn w-100" [ngClass]="{'active': activeButton === 'assessed'}" (click)="openAssessed()">Assessed Assessments</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-sm-4 card department-stats">
+        <div class="col-sm-3 card department-stats">
             <h4>Department Statistics</h4>
             <p *ngIf="systemUser.user.role.id == 1">Head: <b>{{ systemUser.user.userFullName.toUpperCase() }}</b></p>
             <p *ngIf="systemUser.user.role.id == 2">Head: <b>{{ systemUser.user.manager.userFullName.toUpperCase() }}</b> </p>
@@ -13,25 +27,75 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-12">
-            <div class="buttons-container">
-                <div class="row">
-                    <div class="col-12 col-md-4 mb-2">
-                        <button class="my-btn w-100" [ngClass]="{'active': activeButton === 'done'}" (click)="openDone()">Done Assessments</button>
+        <div class="col-sm-12 card">
+          <ng-container *ngIf="notDoneAssessments; else elseTemplate">
+            <div class="px-3 py-2" *ngFor="let assessment of notDoneAssessments; let i=index">
+              <h5>{{assessment.assessment.assessmentName}}</h5>
+              <p>{{assessment.assessment.assessmentDescription}}</p>
+      
+              <div class="card">
+                <mat-horizontal-stepper [linear]="isLinear" #stepper>
+                  <mat-step *ngFor="let attrFormGroup of firstFormGroups[i].get('attributes')['controls']; let attrIndex=index" [stepControl]="attrFormGroup">
+                    <ng-template matStepLabel>{{getAttributeName(i, attrIndex)}}</ng-template>
+      
+                    <div class="row">
+                      <ng-container *ngFor="let questionGroup of attrFormGroup.get('questions')['controls']; let qIndex=index">
+                        <div class="col-sm-6">
+                          <form [formGroup]="questionGroup">
+                            <div class="question-container">
+                              <label class="question-text">
+                                {{qIndex + 1}}. {{getQuestionText(i, attrIndex, qIndex)}}
+                              </label>
+                              <mat-radio-group class="choice-option" formControlName="choiceId">
+                                <mat-radio-button *ngFor="let choice of getChoices(i, attrIndex, qIndex)" [value]="choice.choiceId">
+                                  {{choice.choiceValue}}
+                                </mat-radio-button>
+                              </mat-radio-group>
+                            </div>
+                          </form>
+                        </div>
+                      </ng-container>
                     </div>
-                    <div class="col-12 col-md-4 mb-2">
-                        <button class="my-btn w-100" [ngClass]="{'active': activeButton === 'notDone'}" (click)="openNotDone()">Not done Assessments</button>
+      
+                    <div class="mat-stepper-buttons">
+                      <button mat-button matStepperPrevious class="nav-button-prev">Back</button>
+                      <button mat-button matStepperNext class="nav-button-next">Next</button>
                     </div>
-                    <div class="col-12 col-md-4 mb-2">
-                        <button class="my-btn w-100" [ngClass]="{'active': activeButton === 'assessed'}" (click)="openAssessed()">Assessed Assessments</button>
+                  </mat-step>
+      
+                  <mat-step>
+                    <ng-template matStepLabel>Done</ng-template>
+                    <p>You have completed this assessment.</p>
+                    <div class="mat-stepper-buttons">
+                      <button mat-button matStepperPrevious class="nav-button-prev">Back</button>
+                      <button mat-button class="reset-button" (click)="stepper.reset()">Reset</button>
+                      <button mat-button class="submit-button" (click)="submit()">Submit</button>
                     </div>
-                </div>
+                  </mat-step>
+                </mat-horizontal-stepper>
+              </div>
             </div>
+          </ng-container>
+          <ng-template #elseTemplate>
+            <h1>No assessments Found</h1>
+          </ng-template>
         </div>
         <div class="col-sm-12">
-            <app-user-done-assessments [data]="dataToTranser"></app-user-done-assessments>
+          <!-- <app-user-done-assessments [data]="dataToTranser"></app-user-done-assessments> -->
         </div>
-    </div>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
 </div>
 
 

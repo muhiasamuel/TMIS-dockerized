@@ -1,7 +1,9 @@
 package com.example.talent_man.models;
 
 import com.example.talent_man.models.user.User;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +19,7 @@ import java.util.Set;
 @Table(name = "assessments")
 @NoArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
+
 public class Assessment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +45,14 @@ public class Assessment implements Serializable {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "assessment_id")
     private Set<AssessmentQuestion> assessmentQuestions;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "assessment_attributes",
+            joinColumns = @JoinColumn(name = "assessment_id"),
+            inverseJoinColumns = @JoinColumn(name = "potential_attribute_id")
+    )
+    private Set<PotentialAttribute> potentialAttributes;
 
     @ManyToMany(mappedBy = "completeAssessments",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<User> users;

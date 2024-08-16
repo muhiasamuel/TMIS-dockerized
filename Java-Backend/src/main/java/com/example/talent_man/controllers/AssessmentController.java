@@ -1,9 +1,8 @@
 package com.example.talent_man.controllers;
 
+
 import com.example.talent_man.dto.DoneAssessmentDto;
-import com.example.talent_man.dto.assessment.AllAssDto;
-import com.example.talent_man.dto.assessment.AssQuestionDto;
-import com.example.talent_man.dto.assessment.UserDoneAssessmentDto;
+import com.example.talent_man.dto.assessment.*;
 import com.example.talent_man.models.Assessment;
 import com.example.talent_man.models.AssessmentQuestion;
 import com.example.talent_man.models.Choice;
@@ -101,6 +100,72 @@ public class AssessmentController {
             return new ApiResponse<>(500, e.getMessage());
         }
     }
+    @PostMapping("/addQuestionsToAttributes")
+    public ApiResponse<List<PotentialAttribute>> addQuestionsToAttributes(@RequestBody List<AttributeQuestionDto> attributeQuestionDtos) {
+        try {
+            List<PotentialAttribute> updatedAttributes = new ArrayList<>();
+
+            for (AttributeQuestionDto dto : attributeQuestionDtos) {
+                PotentialAttribute potentialAttribute = pService.getPotentialAttributeById(dto.getAttributeId());
+
+                if (potentialAttribute == null) {
+                    return new ApiResponse<>(300, "Potential attribute not found for ID: " + dto.getAttributeId());
+                }
+
+                // Initialize a set to hold existing questions for comparison
+                Set<AssessmentQuestion> existingQuestions = potentialAttribute.getQuestions() != null ?
+                        new HashSet<>(potentialAttribute.getQuestions()) :
+                        new HashSet<>();
+
+                // Iterate over the incoming questions
+                for (AttributeQuestionDto.QuestionDto questionDto : dto.getQuestions()) {
+                    // Check if the question already exists
+                    boolean questionExists = existingQuestions.stream()
+                            .anyMatch(q -> q.getAssessmentQuestionDescription().equals(questionDto.getAssessmentQuestionDescription()));
+
+                    if (questionExists) {
+                        // Log a message indicating the question is being skipped
+                        System.out.println("Skipping existing question: " + questionDto.getAssessmentQuestionDescription());
+                        continue; // Skip to the next question
+                    }
+
+                    // Create a new AssessmentQuestion
+                    AssessmentQuestion question = new AssessmentQuestion();
+                    question.setAssessmentQuestionDescription(questionDto.getAssessmentQuestionDescription());
+                    question.setPotentialAttribute(potentialAttribute); // Set the potential attribute
+
+                    // Create a set for choices
+                    Set<Choice> choices = new HashSet<>();
+                    for (AttributeQuestionDto.ChoiceDto choiceDto : questionDto.getChoices()) {
+                        Choice choice = new Choice();
+                        choice.setChoiceValue(choiceDto.getChoiceValue());
+                        choice.setChoiceName(choiceDto.getChoiceName());
+                        choice.setAssessmentQuestion(question); // Set the reference to the assessment question
+                        choices.add(choice);
+                    }
+                    question.setChoices(choices);
+
+                    // Add the new question to the existing questions
+                    existingQuestions.add(question);
+                }
+
+                // Update the potential attribute with the new questions
+                potentialAttribute.setQuestions(existingQuestions);
+
+                // Persist the updated potential attribute
+                PotentialAttribute updatedAttribute = pService.addPotentialAttribute(potentialAttribute);
+                updatedAttributes.add(updatedAttribute);
+            }
+
+            ApiResponse<List<PotentialAttribute>> response = new ApiResponse<>(200, "Successfully added questions to attributes");
+            response.setItem(updatedAttributes);
+            return response;
+
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the exception stack trace for better debugging
+            return new ApiResponse<>(500, e.getMessage());
+        }
+    }
 
     @PostMapping("/addAQuestionList")
     public ApiResponse<Assessment> addQuestionList(@RequestParam Integer assId, @RequestBody List<AssessmentQuestion> quests){
@@ -145,6 +210,31 @@ public class AssessmentController {
         }catch (Exception e){
             return new ApiResponse<>(500, e.getMessage());
         }
+    }
+
+    @GetMapping("/getAssessmentByAttr")
+    public ApiResponse<List<Assessment>> getAttributeAssessments(@RequestParam int attId) {
+        // Validate the provided ID
+        if (attId == 0) {
+            return new ApiResponse<>(300, "Enter a valid id");
+        }
+
+        // Retrieve the PotentialAttribute by ID
+        PotentialAttribute att = pService.getPotentialAttributeById(attId);
+        if (att == null) {
+            return new ApiResponse<>(300, "Id not found");
+        }
+
+        // Retrieve assessments associated with this attribute
+        List<Assessment> assess = service.findAssessmentsByPotentialAttribute(att);
+        if (assess.isEmpty()) {
+            return new ApiResponse<>(401, "No assessments found");
+        }
+
+        // Return the assessments in the response
+        ApiResponse<List<Assessment>> response = new ApiResponse<>(200, "Successful");
+        response.setItem(assess);
+        return response;
     }
 
     @GetMapping("/getAssessment")
@@ -840,7 +930,7 @@ public class AssessmentController {
         int maximumScore = 6 * quests.size();
 
         for (AssQuestionDto q : quests) {
-            count += q.getEmployeeChoice().getChoiceValue();
+            count = count + q.getEmployeeChoice().getChoiceValue();
         }
 
         float average = ((float) count) / maximumScore;

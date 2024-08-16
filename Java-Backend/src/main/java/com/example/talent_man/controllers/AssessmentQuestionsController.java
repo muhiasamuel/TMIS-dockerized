@@ -1,18 +1,21 @@
 package com.example.talent_man.controllers;
 
+import com.example.talent_man.dto.assessment.AssessmentDto;
+import com.example.talent_man.dto.assessment.AssessmentResponse;
+import com.example.talent_man.dto.assessment.QuestionDto;
 import com.example.talent_man.models.Assessment;
 import com.example.talent_man.models.AssessmentQuestion;
 import com.example.talent_man.service_imp.AssessmentQuestionServiceImp;
 import com.example.talent_man.service_imp.AssessmentServiceImp;
 import com.example.talent_man.service_imp.PotentialAttributeServiceImp;
+import com.example.talent_man.services.AssessmentService;
 import com.example.talent_man.utils.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequestMapping("/v1/api")
 @RestController
@@ -21,6 +24,9 @@ public class AssessmentQuestionsController {
     private AssessmentQuestionServiceImp qService;
     @Autowired
     private AssessmentServiceImp aService;
+
+    @Autowired
+    private AssessmentService assessmentService;
     @Autowired
     private PotentialAttributeServiceImp pService;
 
@@ -75,5 +81,90 @@ public class AssessmentQuestionsController {
         }
     }
 
+    @GetMapping("/getQuestionsByAttributeId")
+    public ApiResponse<List<QuestionDto>> getQuestionsByAttributeId(@RequestParam int attributeId) {
+        try {
+            if (attributeId < 1) {
+                return new ApiResponse<>(300, "Enter a valid attribute ID");
+            }
+
+            List<QuestionDto> questionDtos = pService.getQuestionsByAttributeId(attributeId);
+            if (questionDtos == null || questionDtos.isEmpty()) {
+                return new ApiResponse<>(300, "No questions found for this potential attribute");
+            }
+
+            ApiResponse<List<QuestionDto>> response = new ApiResponse<>(200, "Successful");
+            response.setItem(questionDtos);
+            return response;
+
+        } catch (Exception e) {
+            return new ApiResponse<>(500, e.getMessage());
+        }
+    }
+    @GetMapping("/getAssessmentWithAttributesAndQuestions")
+    public ApiResponse<AssessmentDto> getAssessmentWithAttributesAndQuestions(@RequestParam int assessmentId) {
+        try {
+            if (assessmentId < 1) {
+                return new ApiResponse<>(300, "Enter a valid assessment ID");
+            }
+
+            AssessmentDto assessmentDto = assessmentService.getAssessmentWithAttributesAndQuestions(assessmentId);
+            if (assessmentDto == null) {
+                return new ApiResponse<>(300, "Assessment not found");
+            }
+
+            ApiResponse<AssessmentDto> response = new ApiResponse<>(200, "Successful");
+            response.setItem(assessmentDto);
+            return response;
+
+        } catch (Exception e) {
+            return new ApiResponse<>(500, e.getMessage());
+        }
+    }
+
+    @GetMapping("/activeAssessments")
+    public ApiResponse<List<AssessmentDto>> getActiveAssessments() {
+        try {
+            List<AssessmentDto> activeAssessments = assessmentService.getActiveAssessments();
+
+            if (activeAssessments.isEmpty()) {
+                return new ApiResponse<>(300, "No active assessments found");
+            }
+
+            ApiResponse<List<AssessmentDto>> response = new ApiResponse<>(200, "Successfully retrieved active assessments");
+            response.setItem(activeAssessments);
+            return response;
+        } catch (Exception e) {
+            return new ApiResponse<>(500, e.getMessage());
+        }
+    }
+
+    @GetMapping("/active/not-attempted/{userId}")
+    public ApiResponse<List<AssessmentResponse>> getActiveAssessmentsNotAttempted(@PathVariable int userId) {
+
+        // Check if the user exists in the system
+        if (!assessmentService.doesUserExist(userId)) {
+            return new ApiResponse<>(404, "User not found.");
+        }
+        List<AssessmentResponse> assessmentResponses = assessmentService.getActiveAssessmentsNotAttemptedByUser(userId);
+
+        // Filter to get only assessments that have not been attempted
+        List<AssessmentResponse> notAttemptedAssessmentResponses = assessmentResponses.stream()
+                .filter(response -> !response.isAttempted()) // Check if the assessment is not attempted
+                .collect(Collectors.toList());
+
+        // Check if the filtered list is empty and return a 404 response if no assessments are found
+        if (notAttemptedAssessmentResponses.isEmpty()) {
+            return new ApiResponse<>(404, "No active assessments found that have not been attempted.");
+        }
+
+        // Create a new ApiResponse object with status and message
+        ApiResponse<List<AssessmentResponse>> response = new ApiResponse<>(200, "Active assessments retrieved successfully.");
+
+        // Set the list of AssessmentResponse items
+        response.setItem(notAttemptedAssessmentResponses);
+
+        return response;
+    }
 
 }

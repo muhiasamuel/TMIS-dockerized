@@ -9,6 +9,7 @@ public class UserRequestDto {
     private String username;
     private String email;
     private Long roleId;
+    private Integer departmentId;
     private Integer positionId;
     private Boolean locked;
     private Boolean enabled;

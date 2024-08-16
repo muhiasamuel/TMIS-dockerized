@@ -108,4 +108,5 @@ public abstract class User implements Serializable, UserDetails {
 
     public void setManager(Manager man) {
     }
+
 }

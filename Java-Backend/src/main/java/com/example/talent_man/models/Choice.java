@@ -1,7 +1,9 @@
 package com.example.talent_man.models;
 
 import com.example.talent_man.models.composite_keys.UserAnswerKey;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +16,8 @@ import java.util.Set;
 @Table(name = "choices")
 @NoArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "choiceId")
+
 public class Choice implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,11 +26,11 @@ public class Choice implements Serializable {
 
     @Column(name = "choice_name", columnDefinition = "VARCHAR(255)")
     private String choiceName;
+
     @Column(name = "choice_value", columnDefinition = "VARCHAR(255)")
-    private String choiceValue; //Rem to convert back to ints.
+    private String choiceValue;
 
-   // @OneToMany(mappedBy = "choice")
-   // Set<UserQuestionAnswer> userAnswers;
-
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assessment_question_id", nullable = false) // Foreign key to AssessmentQuestion
+    private AssessmentQuestion assessmentQuestion; // Reference to AssessmentQuestion
 }

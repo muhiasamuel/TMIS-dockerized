@@ -1,6 +1,7 @@
 package com.example.talent_man.controllers;
 
 import com.example.talent_man.dto.AssessmentDto;
+import com.example.talent_man.dto.PotentialReqAttributeDto;
 import com.example.talent_man.dto.assessment.AssQuestionDto;
 import com.example.talent_man.dto.assessment.ChoiceDto;
 import com.example.talent_man.dto.assessment.UserDoneAssessmentDto;
@@ -18,6 +19,7 @@ import com.example.talent_man.repos.PotentialAttributeRepo;
 import com.example.talent_man.service_imp.PotentialAttributeServiceImp;
 import com.example.talent_man.service_imp.UserQuestionAnswerImp;
 import com.example.talent_man.service_imp.UserServiceImp;
+import com.example.talent_man.services.AssessmentService;
 import com.example.talent_man.utils.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -40,7 +43,41 @@ public class PotentialAttributesController {
     private UserServiceImp userService;
 
     @Autowired
+    private AssessmentService assessmentService;
+    @Autowired
     private PotentialAttributeRepo potentialAttributeRepo;
+
+
+    @PostMapping(value = "/addAssignment", consumes = "application/json")
+    public ApiResponse<Assessment> addAssessment(@RequestBody AssessmentDto ass) {
+        try {
+            if (ass.getAssessmentName() == null || ass.getAssessmentName().isEmpty()) {
+                return new ApiResponse<>(300, "Assessment should have a name");
+            } else if (ass.getAssessmentDescription() == null || ass.getAssessmentDescription().isEmpty()) {
+                return new ApiResponse<>(300, "Please tell us more about the assessment, what to expect and what is required");
+            } else {
+                Assessment assessment = new Assessment();
+                assessment.setAssessmentName(ass.getAssessmentName());
+                assessment.setAssessmentDescription(ass.getAssessmentDescription());
+                assessment.setTarget(ass.getTarget());
+                assessment.setCreatedAt(ass.getCreatedAt());
+                assessment.setEndDate(ass.getEndDate());
+
+                // Retrieve all potential attributes
+                Set<PotentialAttribute> potentialAttributes = new HashSet<>(service.getAllPotentialAttributes());
+                assessment.setPotentialAttributes(potentialAttributes);
+
+                // Save the assessment
+                Assessment savedAssessment = assessmentService.addAss(assessment);
+                ApiResponse<Assessment> newSet = new ApiResponse<>(200, "Assessment created successfully");
+                newSet.setItem(savedAssessment);
+                return newSet;
+            }
+        } catch (Exception e) {
+            return new ApiResponse<>(403, e.getMessage());
+        }
+    }
+
     @PostMapping(value = "/addAssessments", consumes = "application/json")
     public ApiResponse<PotentialAttribute> addAssessment(@RequestParam Integer attributeId, @RequestBody AssessmentDto ass){
 
@@ -88,27 +125,56 @@ public class PotentialAttributesController {
     }
 
     //getting all atrributes
-    @GetMapping("/getManagerAttributes")
-    public ApiResponse<List<PotentialAttribute>> getManagerAttributes(@RequestParam int managerId){
-        Manager manager;
-        try{
-            if(managerId < 1){
-                return new ApiResponse<>(300, "Enter a valid id");
-            }else if((manager = userService.getManagerById(managerId))== null){
-                return new ApiResponse<>(300, "Manager doesn't exist");
+//    @GetMapping("/getManagerAttributes")
+//    public ApiResponse<List<PotentialAttribute>> getManagerAttributes(@RequestParam int managerId){
+//        Manager manager;
+//        try{
+//            if(managerId < 1){
+//                return new ApiResponse<>(300, "Enter a valid id");
+//            }else if((manager = userService.getManagerById(managerId))== null){
+//                return new ApiResponse<>(300, "Manager doesn't exist");
+//
+//            }else if(manager.getPotentialAttributeSet().isEmpty() || manager.getPotentialAttributeSet() == null){
+//                return new ApiResponse<>(300, "Manager doesn't have attributes");
+//            }else{
+//                List<PotentialAttribute> atts = new ArrayList<>(manager.getPotentialAttributeSet());
+//                ApiResponse<List<PotentialAttribute>> response = new ApiResponse<>(200, "Successful");
+//                response.setItem(atts);
+//                return response;
+//            }
+//
+//        }catch(Exception e){
+//            return new ApiResponse<>(500, e.getMessage());
+//
+//        }
+//    }
 
-            }else if(manager.getPotentialAttributeSet().isEmpty() || manager.getPotentialAttributeSet() == null){
-                return new ApiResponse<>(300, "Manager doesn't have attributes");
-            }else{
-                List<PotentialAttribute> atts = new ArrayList<>(manager.getPotentialAttributeSet());
-                ApiResponse<List<PotentialAttribute>> response = new ApiResponse<>(200, "Successful");
-                response.setItem(atts);
+
+    @GetMapping("/getManagerAttributes")
+    public ApiResponse<List<PotentialReqAttributeDto>> getAllAttributes() {
+        try {
+            List<PotentialAttribute> allAttributes = potentialAttributeRepo.findAll();
+
+            if (allAttributes.isEmpty()) {
+                return new ApiResponse<>(300, "No potential attributes found");
+            } else {
+                List<PotentialReqAttributeDto> attributeDtos = allAttributes.stream()
+                        .map(attribute -> {
+                            PotentialReqAttributeDto dto = new PotentialReqAttributeDto();
+                            dto.setPotentialAttributeId(attribute.getPotentialAttributeId());
+                            dto.setPotentialAttributeName(attribute.getPotentialAttributeName());
+                            dto.setPotentialAttributeDescription(attribute.getPotentialAttributeDescription());
+                            dto.setCreatedAt(attribute.getCreatedAt()); // Include createdAt if needed
+                            return dto;
+                        })
+                        .collect(Collectors.toList());
+
+                ApiResponse<List<PotentialReqAttributeDto>> response = new ApiResponse<>(200, "Successful");
+                response.setItem(attributeDtos);
                 return response;
             }
-
-        }catch(Exception e){
+        } catch (Exception e) {
             return new ApiResponse<>(500, e.getMessage());
-
         }
     }
 

@@ -1,4 +1,6 @@
 package com.example.talent_man.service_imp;
+import com.example.talent_man.models.Department;
+import com.example.talent_man.repos.DepartmentRepo;
 import org.apache.poi.ss.usermodel.*;
 import com.example.talent_man.dto.user.AuthRequest;
 import com.example.talent_man.dto.user.UserRequestDto;
@@ -54,6 +56,9 @@ public class UserServiceImp implements UserService {
 
      @Autowired
     PositionRepo positionRepo;
+
+    @Autowired
+    DepartmentRepo departmentRepo;
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -199,8 +204,16 @@ public class UserServiceImp implements UserService {
         Role role = roleRepo.findById(userDto.getRoleId())
                 .orElseThrow(() -> new RuntimeException("Role Not Found: " + userDto.getRoleId()));
         manager.setRole(role);
+        Department department = departmentRepo.findById(userDto.getDepartmentId())
+                .orElseThrow(() -> new RuntimeException("department Not Found: " + userDto.getDepartmentId()));
+        manager.setDepartment(department);
         Position position = positionRepo.findById(userDto.getPositionId())
                 .orElseThrow(() -> new RuntimeException("Position Not Found: " + userDto.getRoleId()));
+        if (!position.getDepartment().equals(department)) {
+            throw new RuntimeException("Position does not belong to the specified Department.");
+        }
+
+        // Assign the Position to the Manager
         manager.setPosition(position);
         manager.setRole(role);
         manager.setLocked(userDto.getLocked() != null ? userDto.getLocked() : false);
@@ -234,10 +247,15 @@ public class UserServiceImp implements UserService {
         Role role = roleRepo.findById(userDto.getRoleId())
                 .orElseThrow(() -> new RuntimeException("Role Not Found: " + userDto.getRoleId()));
         manager.setRole(role);
+        Department department = departmentRepo.findById(userDto.getDepartmentId())
+                .orElseThrow(() -> new RuntimeException("department Not Found: " + userDto.getDepartmentId()));
+        manager.setDepartment(department);
         Position position = positionRepo.findById(userDto.getPositionId())
                 .orElseThrow(() -> new RuntimeException("Position Not Found: " + userDto.getRoleId()));
         manager.setRole(role);
-
+        if (!position.getDepartment().equals(department)) {
+            throw new RuntimeException("Position does not belong to the specified Department.");
+        }
         manager.setPosition(position);
         manager.setLocked(userDto.getLocked() != null ? userDto.getLocked() : false);
         manager.setEnabled(userDto.getEnabled() != null ? userDto.getEnabled() : false);
@@ -276,8 +294,14 @@ public class UserServiceImp implements UserService {
         Role role = roleRepo.findById(userDto.getRoleId())
                 .orElseThrow(() -> new RuntimeException("Role Not Found: " + userDto.getRoleId()));
         employee.setRole(role);
+        Department department = departmentRepo.findById(userDto.getDepartmentId())
+                .orElseThrow(() -> new RuntimeException("department Not Found: " + userDto.getDepartmentId()));
+        employee.setDepartment(department);
         Position position = positionRepo.findById(userDto.getPositionId())
                 .orElseThrow(() -> new RuntimeException("Position Not Found: " + userDto.getPositionId()));
+        if (!position.getDepartment().equals(department)) {
+            throw new RuntimeException("Position does not belong to the specified Department.");
+        }
         employee.setPosition(position);
         employee.setRole(role);
         employee.setLocked(userDto.getLocked() != null ? userDto.getLocked() : false);

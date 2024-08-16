@@ -1,5 +1,6 @@
 package com.example.talent_man.services;
 
+import com.example.talent_man.dto.assessment.QuestionDto;
 import com.example.talent_man.models.PotentialAttribute;
 
 import java.util.List;
@@ -15,4 +16,5 @@ public interface PotentialAttributeService {
     //delete
     PotentialAttribute deletePotentialAttributeById(int id);
 
+    List<QuestionDto> getQuestionsByAttributeId(int attributeId);
 }
