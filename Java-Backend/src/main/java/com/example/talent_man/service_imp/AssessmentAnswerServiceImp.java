@@ -115,8 +115,10 @@ public class AssessmentAnswerServiceImp implements AssessmentAnswerService {
             averageScoreEntity.setAssessment(assessmentRepo.findById(userAnswerDTO.getAssessmentId()).orElse(null)); // Set assessment
             averageScoreEntity.setPotentialAttribute(potentialAttributeRepo.findById(attributeId).orElse(null)); // Set potential attribute
             averageScoreEntity.setAverageScore(averageScore);
+            averageScoreEntity.setAssessmentType(AverageScore.AssessmentType.USER_ASSESSMENT); // Set as user assessment
 
             averageScoreRepo.save(averageScoreEntity);
+
         }
 
         // Wrap the saved answers in an ApiResponse and return it
@@ -132,7 +134,8 @@ public class AssessmentAnswerServiceImp implements AssessmentAnswerService {
         Map<Integer, Employee> assessedEmployees = new HashMap<>();
 
         // Retrieve the manager who is submitting the answers
-        Manager manager = (Manager) userRepository.findById(managerAnswerDTO.getManagerId()).orElseThrow(() -> new IllegalArgumentException("Manager not found"));
+        Manager manager = (Manager) userRepository.findById(managerAnswerDTO.getManagerId())
+                .orElseThrow(() -> new IllegalArgumentException("Manager not found"));
 
         // Validate that answers are provided
         if (managerAnswerDTO.getAnswers().isEmpty()) {
@@ -144,7 +147,16 @@ public class AssessmentAnswerServiceImp implements AssessmentAnswerService {
 
         for (ManagerAnswerDTO.ManagerAnswer answerDTO : managerAnswerDTO.getAnswers()) {
             // Retrieve the user being assessed
-            Employee employee = (Employee) userRepository.findById(answerDTO.getUserId()).orElseThrow(() -> new IllegalArgumentException("Employee not found"));
+            // Ensure that you're fetching the correct type (Employee)
+            User user = userRepository.findById(answerDTO.getUserId())
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+            // Check if the user is an instance of Employee
+            if (!(user instanceof Employee)) {
+                return new ApiResponse<>(400, "User " + user.getUserFullName() + " is not an employee.");
+            }
+
+            Employee employee = (Employee) user; // Safe cast after checking
 
             // Check if the employee belongs to the manager
             if (!employee.getManager().equals(manager)) {
@@ -194,15 +206,12 @@ public class AssessmentAnswerServiceImp implements AssessmentAnswerService {
         if (potentialAttributes.isEmpty()) {
             return new ApiResponse<>(400, "No potential attributes found for the assessment.");
         }
-        // Check if all questions have been assessed
-        // Retrieve assessment questions based on the potential attributes
-        List<AssessmentQuestion> assessmentQuestions = assessmentQuestionRepository.findByPotentialAttributeIn(potentialAttributes);
 
         // Check if the number of answers matches the number of questions
+        List<AssessmentQuestion> assessmentQuestions = assessmentQuestionRepository.findByPotentialAttributeIn(potentialAttributes);
         if (assessmentQuestions.size() != managerAnswerDTO.getAnswers().size()) {
             return new ApiResponse<>(400, "Incomplete assessment. Please answer all questions.");
         }
-
 
         // Calculate average scores per attribute for manager's assessment
         for (ManagerAnswerDTO.ManagerAnswer answerDTO : managerAnswerDTO.getAnswers()) {
@@ -220,10 +229,12 @@ public class AssessmentAnswerServiceImp implements AssessmentAnswerService {
             Employee employee = assessedEmployees.get(answerDTO.getUserId());
 
             AverageScore averageScoreEntity = new AverageScore();
+
             averageScoreEntity.setUser(employee);
             averageScoreEntity.setAssessment(assessmentRepo.findById(managerAnswerDTO.getAssessmentId()).orElseThrow());
             averageScoreEntity.setPotentialAttribute(potentialAttribute);
             averageScoreEntity.setAverageScore(averageScore);
+            averageScoreEntity.setAssessmentType(AverageScore.AssessmentType.MANAGER_ASSESSMENT); // Set as manager assessment
 
             averageScoreRepo.save(averageScoreEntity);
         }

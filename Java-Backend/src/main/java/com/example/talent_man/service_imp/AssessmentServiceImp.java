@@ -5,8 +5,10 @@ import com.example.talent_man.models.Assessment;
 import com.example.talent_man.models.AssessmentQuestion;
 import com.example.talent_man.models.Choice;
 import com.example.talent_man.models.PotentialAttribute;
+import com.example.talent_man.models.answers.AverageScore;
 import com.example.talent_man.models.user.User;
 import com.example.talent_man.repos.AssessmentRepo;
+import com.example.talent_man.repos.AverageScoreRepo;
 import com.example.talent_man.repos.PotentialAttributeRepo;
 import com.example.talent_man.repos.UserManSelectedQuestionAnswerRepository;
 import com.example.talent_man.repos.user.UserRepo;
@@ -16,9 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +29,8 @@ public class AssessmentServiceImp implements AssessmentService {
     @Autowired
     UserRepo userRepo;
 
+    @Autowired
+    AverageScoreRepo averageScoreRepo;
     @Autowired
     private UserManSelectedQuestionAnswerRepository userManSelectedQuestionAnswerRepo;
     @Override
@@ -186,7 +188,9 @@ public class AssessmentServiceImp implements AssessmentService {
         List<Assessment> activeAssessments = repo.findActiveAssessments(now); // Repository method to get active assessments
 
         // Retrieve the IDs of assessments the user has already attempted
-        List<Integer> attemptedAssessmentIds = userManSelectedQuestionAnswerRepo.findAssessmentIdsByUserId(userId);
+        List<Integer> attemptedAssessmentIds = userManSelectedQuestionAnswerRepo.findAssessmentIdsByUserId(userId, activeAssessments.stream()
+                .map(Assessment::getAssessmentId)
+                .collect(Collectors.toList()));
 
         // Debugging: log attempted assessment IDs
         System.out.println("Attempted Assessment IDs for User ID " + userId + ": " + attemptedAssessmentIds);
@@ -379,32 +383,133 @@ public class AssessmentServiceImp implements AssessmentService {
 
 //check if manager has assessed an employee
     @Override
-public List<ManagerUserAssessmentStatusDto> getManagerUsersAssessmentStatus(int managerId) {
-    // Get the list of users managed by the manager
-    List<User> managerUsers = userRepo.findUsersByManagerId(managerId);
-    List<ManagerUserAssessmentStatusDto> response = new ArrayList<>();
+    public List<ManagerUserAssessmentStatusDto> getManagerUsersAssessmentStatus(int managerId) {
+        // Get the list of users managed by the manager
+        List<User> managerUsers = userRepo.findUsersByManagerId(managerId);
 
-    // Loop through each user and check their self-assessment and manager assessment status
-    for (User user : managerUsers) {
-        ManagerUserAssessmentStatusDto dto = new ManagerUserAssessmentStatusDto();
-        dto.setUserId(user.getUserId());
-        dto.setUsername(user.getUsername());
-        dto.setUserFullName(user.getUserFullName());
-        dto.setPf(user.getPf());
+        // Get the list of active assessments
+        LocalDate now = LocalDate.now();
+        List<Assessment> activeAssessments = repo.findActiveAssessments(now);
 
-        // Check if the user has self-assessed in any active assessment
-        int selfAssessmentCount = userManSelectedQuestionAnswerRepo.isSelfAssessedInActiveAssessment(user.getUserId());
-        dto.setSelfAssessed(selfAssessmentCount > 0);
+        // Prepare the response
+        List<ManagerUserAssessmentStatusDto> response = new ArrayList<>();
 
-        // Check if the manager has assessed the user in any active assessment
-        int managerAssessmentCount = userManSelectedQuestionAnswerRepo.isManagerAssessedInActiveAssessment(user.getUserId(), managerId);
-        dto.setManagerAssessed(managerAssessmentCount > 0);
+        // For each active assessment, get the status of all users
+        for (Assessment assessment : activeAssessments) {
+            ManagerUserAssessmentStatusDto assessmentDto = new ManagerUserAssessmentStatusDto();
+            assessmentDto.setAssessmentId(assessment.getAssessmentId());
+            assessmentDto.setAssessmentName(assessment.getAssessmentName());
+            assessmentDto.setAssessmentDescription(assessment.getAssessmentDescription());
+            assessmentDto.setAssessmentExpiry(assessment.getEndDate().toString());
 
-        // Add the user's assessment status to the response list
-        response.add(dto);
+            List<ManagerUserAssessmentStatusDto.AssessmentStatus> userStatuses = new ArrayList<>();
+
+            for (User user : managerUsers) {
+                ManagerUserAssessmentStatusDto.AssessmentStatus statusDto = new ManagerUserAssessmentStatusDto.AssessmentStatus();
+                statusDto.setUserId(user.getUserId());
+                statusDto.setUsername(user.getUsername());
+                statusDto.setUserFullName(user.getUserFullName());
+                statusDto.setPf(user.getPf());
+
+                // Check if the user has self-assessed in the current assessment
+                // Check if the user has self-assessed in any active assessment
+                int selfAssessmentCount = userManSelectedQuestionAnswerRepo.isSelfAssessedInActiveAssessment(user.getUserId());
+                statusDto.setSelfAssessed(selfAssessmentCount > 0);
+
+                // Check if the manager has assessed the user in any active assessment
+                int managerAssessmentCount = userManSelectedQuestionAnswerRepo.isManagerAssessedInActiveAssessment(user.getUserId(), managerId);
+                statusDto.setManagerAssessed(managerAssessmentCount > 0);
+
+
+                userStatuses.add(statusDto);
+            }
+
+            assessmentDto.setAssessmentStatuses(userStatuses);
+            response.add(assessmentDto);
+        }
+
+        return response;
     }
 
-    return response;
-}
-}
+
+        @Override
+
+        public List<UserScoringHistoryDto> getUserScoringHistory(int userId) {
+            // Retrieve user and manager scores
+            List<AverageScore> userScores = averageScoreRepo.findByUserUserIdAndAssessmentType(userId, AverageScore.AssessmentType.USER_ASSESSMENT);
+            List<AverageScore> managerScores = averageScoreRepo.findByUserUserIdAndAssessmentType(userId, AverageScore.AssessmentType.MANAGER_ASSESSMENT);
+
+            // Map to store average manager scores by assessment and potential attribute
+            Map<String, List<Double>> attributeManagerScores = new HashMap<>();
+
+            // Populate the manager scores map
+            for (AverageScore managerScore : managerScores) {
+                String key = managerScore.getAssessment().getAssessmentId() + "-" + managerScore.getPotentialAttribute().getPotentialAttributeId();
+                attributeManagerScores
+                        .computeIfAbsent(key, k -> new ArrayList<>())
+                        .add(managerScore.getAverageScore());
+            }
+
+            // Map to store user scoring history DTOs by assessment ID
+            Map<Integer, UserScoringHistoryDto> assessmentMap = new HashMap<>();
+
+            // Populate the user scoring history DTOs
+            for (AverageScore userScore : userScores) {
+                int assessmentId = userScore.getAssessment().getAssessmentId();
+                String attributeKey = assessmentId + "-" + userScore.getPotentialAttribute().getPotentialAttributeId();
+
+                // Create or update the DTO for the assessment
+                UserScoringHistoryDto dto = assessmentMap.computeIfAbsent(assessmentId, id -> {
+                    UserScoringHistoryDto newDto = new UserScoringHistoryDto();
+                    newDto.setAssessmentId(id);
+                    newDto.setAssessmentName(userScore.getAssessment().getAssessmentName());
+                    newDto.setAssessmentDescription(userScore.getAssessment().getAssessmentDescription());
+                    newDto.setAssessmentDate(userScore.getAssessment().getEndDate()); // Adjust as needed
+                    newDto.setAssessmentStatuses(new ArrayList<>());
+                    return newDto;
+                });
+
+                // Add scoring details
+                UserScoringHistoryDto.scoring scoring = new UserScoringHistoryDto.scoring();
+                scoring.setUserScore(userScore.getAverageScore());
+                scoring.setPotentialAttributeName(userScore.getPotentialAttribute().getPotentialAttributeName());
+
+                // Find and set the manager score
+                List<Double> managerScoresList = attributeManagerScores.get(attributeKey);
+                if (managerScoresList != null && !managerScoresList.isEmpty()) {
+                    double averageManagerScore = managerScoresList.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+                    scoring.setManagerScore(averageManagerScore);
+                } else {
+                    scoring.setManagerScore(null); // No manager score available
+                }
+
+                // Check if the manager has assessed at least one attribute
+                dto.setManagerAssessed(managerScoresList != null && !managerScoresList.isEmpty());
+
+                dto.getAssessmentStatuses().add(scoring);
+            }
+
+            // Calculate overall scores
+            for (UserScoringHistoryDto dto : assessmentMap.values()) {
+                double totalScore = 0;
+                int count = 0;
+
+                for (UserScoringHistoryDto.scoring scoring : dto.getAssessmentStatuses()) {
+                    if (scoring.getUserScore() != null) {
+                        totalScore += scoring.getUserScore();
+                        count++;
+                    }
+                    if (scoring.getManagerScore() != null) {
+                        totalScore += scoring.getManagerScore();
+                        count++;
+                    }
+                }
+
+                dto.setOverallScore(count > 0 ? totalScore / count : 0.0);
+            }
+
+            return new ArrayList<>(assessmentMap.values());
+        }
+    }
+
 

@@ -14,8 +14,8 @@ public interface UserManSelectedQuestionAnswerRepository extends JpaRepository<U
     // Additional query methods (if needed) can be defined here
     boolean existsByUserAndAssessmentId(User user, int assessmentId);
 
-    @Query(value = "SELECT DISTINCT u.assessment_question_id FROM user_manager_question_answers u WHERE u.user_id = :userId", nativeQuery = true)
-    List<Integer> findAssessmentIdsByUserId(@Param("userId") int userId);
+    @Query(value = "SELECT DISTINCT u.assessment_question_id FROM user_manager_question_answers u WHERE u.user_id = :userId AND assessment_id = :assessmentId", nativeQuery = true)
+    List<Integer> findAssessmentIdsByUserId(@Param("userId") int userId, @Param("assessmentId") List<Integer> assessmentId);
 
 
 
@@ -66,6 +66,9 @@ public interface UserManSelectedQuestionAnswerRepository extends JpaRepository<U
             "  WHERE a.end_date > CURRENT_DATE)",
             nativeQuery = true)
     int isManagerAssessedInActiveAssessment(@Param("userId") int userId, @Param("managerId") int managerId);
+
+
+
 
 
 }

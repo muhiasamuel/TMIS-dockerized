@@ -42,6 +42,10 @@ import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch, with
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatTabsModule} from '@angular/material/tabs';
 import { DialogViewComponent } from './pages/dialog-view/dialog-view.component';
+import { MatCardModule } from '@angular/material/card';
+import {MatListModule} from '@angular/material/list';
+import {MatExpansionModule} from '@angular/material/expansion';
+
 
 
 import { MatOptionModule } from '@angular/material/core';
@@ -88,6 +92,8 @@ import { DepartmentComponent } from './pages/department/department.component';
 import { AddDepartmentComponent } from './pages/department/add-department/add-department.component';
 import { TalentComponent } from './pages/talent-mapping/talent/talent.component';
 import { ReadyNowDialogComponent } from './succession-plan/ready-now-dialog/ready-now-dialog.component';
+import { MatBreadcrumbModule } from 'mat-breadcrumb';
+import { AssessmentHistoryInfoComponent } from './assessment-history-info/assessment-history-info.component';
 
 
 
@@ -125,6 +131,7 @@ import { ReadyNowDialogComponent } from './succession-plan/ready-now-dialog/read
     AttributesComponent,
     TimerDialogComponent,
     ManagerAssessComponent,
+    AssessmentHistoryInfoComponent,
     ManagerAssessEmployeeComponent,
     AddAttributeComponent,
     MyAssessmentsComponent,
@@ -154,6 +161,7 @@ import { ReadyNowDialogComponent } from './succession-plan/ready-now-dialog/read
     DepartmentComponent,
     AddDepartmentComponent,
     TalentComponent,
+    AssessmentHistoryInfoComponent,
     
    
   ],
@@ -170,6 +178,8 @@ import { ReadyNowDialogComponent } from './succession-plan/ready-now-dialog/read
     MatPaginatorModule,
     MatTableModule,
     FormsModule,
+    MatListModule,
+    MatExpansionModule,
     MatSelectModule,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -177,6 +187,7 @@ import { ReadyNowDialogComponent } from './succession-plan/ready-now-dialog/read
     MatButtonModule,
     MatPaginator,
     MatTableModule,
+    MatCardModule,
     NgbModule,
     MatIconModule,
     MatSelectModule,

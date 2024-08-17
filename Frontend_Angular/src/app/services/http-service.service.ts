@@ -288,5 +288,10 @@ postUsersAnswers(data:any): Observable<any>{
   return this.http.post<any>(url, data)
 }
 
+postManagerAnswers(data:any):Observable<any>{
+  const url = `${this.serverUrl}answers/manager`
+  return this.http.post<any>(url, data)
+}
+
 }
 

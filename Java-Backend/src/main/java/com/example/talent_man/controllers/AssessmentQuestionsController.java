@@ -212,4 +212,27 @@ public class AssessmentQuestionsController {
 
         return response;
     }
+
+    @GetMapping("/user/{userId}/scoring-history")
+    public ApiResponse<List<UserScoringHistoryDto>> getUserScoringHistory(@PathVariable("userId") int userId) {
+        // Check if the user exists
+        if (!assessmentService.doesUserExist(userId)) {
+            return new ApiResponse<>(404, "User not found.");
+        }
+
+        // Retrieve the scoring history for the user
+        List<UserScoringHistoryDto> historyList = assessmentService.getUserScoringHistory(userId);
+
+        // Check if there is any scoring history
+        if (historyList.isEmpty()) {
+            return new ApiResponse<>(404, "No scoring history found for the given user ID.");
+        }
+
+        // Create a new ApiResponse object with status, message, and data
+        ApiResponse<List<UserScoringHistoryDto>> response = new ApiResponse<>(200, "Scoring history retrieved successfully.");
+        response.setItem(historyList);
+
+        return response;
+    }
+
 }

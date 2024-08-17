@@ -1,0 +1,40 @@
+<div class="d-flex">
+    <div class="col-sm-7">
+        <mat-card *ngFor="let assessment of assessments" class="assessment-card">
+            <mat-card-header>
+              <mat-card-title>{{ assessment.assessmentName }}</mat-card-title>
+              <mat-card-subtitle>{{ assessment.assessmentDate | date:'yyyy-MM-dd' }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p><strong>Description:</strong> {{ assessment.assessmentDescription }}</p>
+              <p><strong>Overall Score:</strong> {{ assessment.overallScore | number:'1.2-2' }}</p>
+              
+              <mat-expansion-panel *ngIf="assessment.assessmentStatuses.length">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Details by Attribute
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                
+                <mat-list>
+                  <mat-list-item *ngFor="let status of assessment.assessmentStatuses">
+                    <div>
+                      <h3>{{ status.potentialAttributeName }}</h3>
+                      <p><strong>User Score:</strong> {{ status.userScore | number:'1.2-2' }}</p>
+                      <p><strong>Manager Score:</strong> {{ status.managerScore | number:'1.2-2' }}</p>
+                    </div>
+                  </mat-list-item>
+                </mat-list>
+              </mat-expansion-panel>
+            </mat-card-content>
+          </mat-card>
+    </div>
+    <div class="col-sm-3">
+        <div class="card">
+            <h4> hello there guys</h4>
+        </div>
+    </div>
+</div>
+
+  
+  

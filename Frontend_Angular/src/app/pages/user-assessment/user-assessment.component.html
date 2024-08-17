@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col sm-5 card mx-2">
             <h4 class="greeting">{{greeting}}, {{ systemUser.user.userFullName.toUpperCase() }}</h4>
-            <p class="assessment-info">Assessment helps monitor progress and contributes to enforcing the assessment triangle, i.e., observations, interpretations of that observation, and understanding of that observation. Any breakdown can be noted by professors when reviewing their students' work.</p>
+            <p class="assessment-info">Assessment  jkjkjdds helps monitor progress and contributes to enforcing the assessment triangle, i.e., observations, interpretations of that observation, and understanding of that observation. Any breakdown can be noted by professors when reviewing their students' work.</p>
             <div class="buttons-container">
                 <div class="row">
                     <div class="col-12 col-md-4 mb-2">
@@ -27,7 +27,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-12 card">
+        <div class="col-sm-12 card"  *ngIf="activeButton === 'notDone'">
           <ng-container *ngIf="notDoneAssessments; else elseTemplate">
             <div class="px-3 py-2" *ngFor="let assessment of notDoneAssessments; let i=index">
               <h5>{{assessment.assessment.assessmentName}}</h5>
@@ -80,8 +80,9 @@
             <h1>No assessments Found</h1>
           </ng-template>
         </div>
-        <div class="col-sm-12">
-          <!-- <app-user-done-assessments [data]="dataToTranser"></app-user-done-assessments> -->
+        <div class="col-sm-12" *ngIf="activeButton === 'assessed'">
+          <h2>hjbjhdsjjds xjhhduiu duisioids diioisoi disidi</h2>          
+          <app-assessment-history-info></app-assessment-history-info>
         </div>
       </div>
       

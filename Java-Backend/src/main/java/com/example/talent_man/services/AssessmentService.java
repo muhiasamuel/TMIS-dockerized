@@ -1,9 +1,6 @@
 package com.example.talent_man.services;
 
-import com.example.talent_man.dto.assessment.AssessmentDto;
-import com.example.talent_man.dto.assessment.AssessmentResponse;
-import com.example.talent_man.dto.assessment.ManagerAssessmentResponse;
-import com.example.talent_man.dto.assessment.ManagerUserAssessmentStatusDto;
+import com.example.talent_man.dto.assessment.*;
 import com.example.talent_man.models.Assessment;
 import com.example.talent_man.models.PotentialAttribute;
 
@@ -24,6 +21,7 @@ public interface AssessmentService {
 
     List<ManagerAssessmentResponse> getAssessmentsNotAssessedByManager(int managerId);
 
+    List<UserScoringHistoryDto> getUserScoringHistory(int userId);
     boolean doesUserExist(int userId);
     List<Assessment> findAssessmentsByPotentialAttribute(PotentialAttribute attribute);
     //REad all assignments of an attribute

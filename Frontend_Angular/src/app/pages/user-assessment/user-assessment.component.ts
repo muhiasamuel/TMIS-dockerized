@@ -129,7 +129,7 @@ export class UserAssessmentComponent implements OnInit {
 
   openAssessed() {
     this.activeButton = 'assessed'; // Set active button
-    this.notDoneAssessments = ''; // Clear not done assessments
+    //this.notDoneAssessments = ''; // Clear not done assessments
     // You can add logic here to fetch assessed assessments if needed
   }
 
@@ -138,6 +138,7 @@ export class UserAssessmentComponent implements OnInit {
     this.http.get(url).subscribe(
       (value: any) => {
         console.log(value);
+        this.ngOnInit()
         // Logic to filter or handle done assessments
       },
       (error: any) => {

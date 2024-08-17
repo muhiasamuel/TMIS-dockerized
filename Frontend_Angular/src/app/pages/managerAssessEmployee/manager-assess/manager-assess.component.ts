@@ -1,61 +1,79 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpServiceService } from '../../../services/http-service.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { HttpServiceService } from '../../../services/http-service.service';
+
+// Define the ApiResponse interface
+interface ApiResponse {
+  item: AssessmentStatusDto[];
+  status: number;
+  message: string;
+}
+
+export interface AssessmentStatusDto {
+  assessmentName: string;
+  assessmentId:number;
+  assessmentDescription: string;
+  assessmentExpiry: string;
+  assessmentStatuses: UserAssessment[];
+}
+
+export interface UserAssessment {
+  userId: number;
+  username: string;
+  userFullName: string;
+  pf: string;
+  selfAssessed: boolean;
+  managerAssessed: boolean;
+}
 
 @Component({
   selector: 'app-manager-assess',
   templateUrl: './manager-assess.component.html',
-  styleUrl: './manager-assess.component.scss'
+  styleUrls: ['./manager-assess.component.scss']
 })
-export class ManagerAssessComponent implements OnInit{
+export class ManagerAssessComponent implements OnInit {
+  greeting = "Welcome to the Manager Assessments Page!";
+  title = "Manager Assess";
+  systemUser: any;
+  assessmentInfo: AssessmentStatusDto | null = null;
+  dataSource = new MatTableDataSource<UserAssessment>([]);
+  displayedColumns: string[] = ['userId', 'username', 'userFullName', 'pf', 'selfAssessed', 'managerAssessed', "Actions"];
 
-  
-  greeting: string; // Holds greeting message
-  title = "Manager Assess" 
-  dataToTranser = "All"
-  assessments: any[] = []
-  systemUser: any
-managerEmployees: any;
-  constructor(private server: HttpServiceService, private http: HttpClient){}
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
-  openDialog(){}
+  constructor(private http: HttpClient, private server: HttpServiceService) { }
 
-  ngOnInit(){
-    this.setGreeting(); // Set the greeting message
-    this.systemUser = JSON.parse(localStorage.getItem("user"))
+  ngOnInit(): void {
+    this.systemUser = JSON.parse(localStorage.getItem('user') || '{}');
+    this.fetchUserAssessments();
   }
 
+  fetchUserAssessments(): void {
+    const url = `${this.server.serverUrl}${this.systemUser.user.userId}/assessment-status`;
+    this.http.get<ApiResponse>(url).subscribe(response => {
+      if (response.status === 200) {
+        // Flatten the assessmentStatuses into a single array for the table
+        const flattenedData = response.item.flatMap(assessment => assessment.assessmentStatuses);
 
-  getUserDoneAssements(){
-    const url = `${this.server.serverUrl}/getDoneAssessments`
-    const response = this.http.get(url);
-    response.subscribe(
-      (value: any) => {
-        console.log(value)
-        for(let i = 0; i < value.item.length; i++){
-          if(value.item[i].managerId == this.systemUser.userId){
-            this.assessments.push(value.item);
-          }
-        }
-      },
-      (error: any) => {
-        console.log(error)
+        // Set assessment info and data source
+        this.assessmentInfo = response.item[0]; // Assuming there's at least one assessment
+        this.dataSource.data = flattenedData;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      } else {
+        console.error('Error fetching data:', response.message);
       }
-    )
+    }, error => {
+      console.error('HTTP Error:', error);
+    });
   }
 
-
-  setGreeting(): void {
-    const currentHour = new Date().getHours(); // Get current hour
-    // Set greeting message based on time of day
-    if (currentHour >= 5 && currentHour < 12) {
-      this.greeting = 'Good morning';
-    } else if (currentHour >= 12 && currentHour < 18) {
-      this.greeting = 'Good afternoon';
-    } else if (currentHour >= 18 && currentHour < 22) {
-      this.greeting = 'Good evening';
-    } else {
-      this.greeting = 'Good night';
-    }
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.dataSource.filter = filterValue;
   }
 }
