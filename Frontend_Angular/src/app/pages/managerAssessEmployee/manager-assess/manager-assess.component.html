@@ -1,31 +1,43 @@
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <div class="col sm-8">
-            <h4>Hi, {{systemUser.userFullName}}</h4>
-            <p>
-                Assessment of individual members as well as assessment of the overall team are essential to enhancing teamwork,
-improves goal attainment, enriches relationships, and enhances performance.
-Both team performance and team learning should be assessed
-Performance assessments measure success, help correct behaviors, and motivate performance improvements
-Learning assessments enable team members to share thoughts and increase control of their learning.
-            </p>
+        <div class="col sm-5 card mx-2">
+            <h4 class="greeting">{{greeting}}, {{ systemUser.user.userFullName.toUpperCase() }}</h4>
+            <p class="assessment-info">The table below contains a table of assesed assesments and unassesed assesments</p>
         </div>
-        <div class="col-sm-4 card">
+        <div class="col-sm-3 card department-stats">
             <h4>Department Statistics</h4>
-            <p>Head: {{systemUser.userFullName}}</p>
-            <p>Employees: </p>
-            <p>Assessments posted: </p>
+            <p *ngIf="systemUser.user.role.id == 1">Head: <b>{{ systemUser.user.userFullName.toUpperCase() }}</b></p>
+            <p *ngIf="systemUser.user.role.id == 2">Head: <b>{{ systemUser.user.manager.userFullName.toUpperCase() }}</b> </p>
+            <p>Employees: <b>8</b> </p>
+            <p>Assessments posted: <b>2</b> </p>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-12 ">
-            <div class="w-100 d-flex buttons">
-                <button class="my-btn"  (click) = "openUnseen()">Unassessed Assessments</button>
-                <button class="my-btn"  (click) = "openSeen()">Assessed Assessments</button>
-            </div>
-        </div>
-        <div class="col-sm-12">
-            <app-intro-pge [data]="dataToTranser"></app-intro-pge>
-        </div>
+
+    <div class="table">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <th>#</th>
+                <th>PF Number</th>
+                <th>Employee Name</th>
+                <th>Employee Type</th>
+                <th>Action</th>
+
+            </thead>
+            <tbody>
+                <tr *ngFor="let employee of managerEmployees; let i = index">
+                    <td> {{i+1}} </td>
+                    <td> {{employee.pf}} </td>
+                    <td> {{employee.userFullName}} </td>
+                    <td> {{employee.userType}} </td>
+                    <td>
+                        <button  class="btn btn-md d-flex align-items-center">
+                            <mat-icon> visibility </mat-icon> view profile
+                        </button>
+                       
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
     </div>
 </div>

@@ -8,15 +8,20 @@ import { HttpClient } from '@angular/common/http';
   styleUrl: './manager-assess.component.scss'
 })
 export class ManagerAssessComponent implements OnInit{
+
+  
+  greeting: string; // Holds greeting message
   title = "Manager Assess" 
   dataToTranser = "All"
   assessments: any[] = []
   systemUser: any
+managerEmployees: any;
   constructor(private server: HttpServiceService, private http: HttpClient){}
 
   openDialog(){}
 
   ngOnInit(){
+    this.setGreeting(); // Set the greeting message
     this.systemUser = JSON.parse(localStorage.getItem("user"))
   }
 
@@ -40,12 +45,17 @@ export class ManagerAssessComponent implements OnInit{
   }
 
 
-  openUnseen(){
-    this.dataToTranser = "UnassessedMan"
-  }
-
-  openSeen(){
-    this.dataToTranser = "AssessedMan"
-
+  setGreeting(): void {
+    const currentHour = new Date().getHours(); // Get current hour
+    // Set greeting message based on time of day
+    if (currentHour >= 5 && currentHour < 12) {
+      this.greeting = 'Good morning';
+    } else if (currentHour >= 12 && currentHour < 18) {
+      this.greeting = 'Good afternoon';
+    } else if (currentHour >= 18 && currentHour < 22) {
+      this.greeting = 'Good evening';
+    } else {
+      this.greeting = 'Good night';
+    }
   }
 }
