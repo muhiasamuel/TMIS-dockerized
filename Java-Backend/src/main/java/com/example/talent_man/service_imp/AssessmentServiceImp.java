@@ -5,6 +5,7 @@ import com.example.talent_man.models.Assessment;
 import com.example.talent_man.models.AssessmentQuestion;
 import com.example.talent_man.models.Choice;
 import com.example.talent_man.models.PotentialAttribute;
+import com.example.talent_man.models.user.User;
 import com.example.talent_man.repos.AssessmentRepo;
 import com.example.talent_man.repos.PotentialAttributeRepo;
 import com.example.talent_man.repos.UserManSelectedQuestionAnswerRepository;
@@ -261,6 +262,149 @@ public class AssessmentServiceImp implements AssessmentService {
 
         return assessmentResponses;
     }
+    //  manager assessment for his employees
+    @Override
+    public List<ManagerAssessmentResponse> getAssessmentsNotAssessedByManager(int managerId) {
+        LocalDate now = LocalDate.now();
+        List<Assessment> activeAssessments = repo.findActiveAssessments(now);
+        List<Integer> userIds = userRepo.findUserIdsByManagerId(managerId);
+        List<Integer> attemptedQuestionIds = userManSelectedQuestionAnswerRepo.findAssessmentIdsByUserIds(userIds);
 
+        System.out.println("Active Assessments: " + activeAssessments);
+        System.out.println("User IDs: " + userIds);
+        System.out.println("Attempted Question IDs: " + attemptedQuestionIds);
+
+        List<ManagerAssessmentResponse> response = new ArrayList<>();
+
+        for (Assessment assessment : activeAssessments) {
+            ManagerAssessmentResponse.AssessmentDto assessmentDto = new ManagerAssessmentResponse.AssessmentDto();
+            assessmentDto.setAssessmentId(assessment.getAssessmentId());
+            assessmentDto.setAssessmentName(assessment.getAssessmentName());
+            assessmentDto.setAssessmentDescription(assessment.getAssessmentDescription());
+            assessmentDto.setEndDate(assessment.getEndDate());
+
+            List<ManagerAssessmentResponse.AssessmentDto.PotentialAttributeDto> potentialAttributes = assessment.getPotentialAttributes().stream()
+                    .map(attribute -> {
+                        ManagerAssessmentResponse.AssessmentDto.PotentialAttributeDto attributeDto = new ManagerAssessmentResponse.AssessmentDto.PotentialAttributeDto();
+                        attributeDto.setPotentialAttributeId(attribute.getPotentialAttributeId());
+                        attributeDto.setAttributeName(attribute.getPotentialAttributeName());
+
+                        List<ManagerAssessmentResponse.AssessmentDto.QuestionResponseDto> questions = attribute.getQuestions().stream()
+                                .map(question -> {
+                                    ManagerAssessmentResponse.AssessmentDto.QuestionResponseDto questionDto = new ManagerAssessmentResponse.AssessmentDto.QuestionResponseDto();
+                                    questionDto.setAssessmentQuestionId(question.getAssessmentQuestionId());
+                                    questionDto.setAssessmentQuestionDescription(question.getAssessmentQuestionDescription());
+
+                                    List<UserManSelectedQuestionAnswerRepository.ChoiceProjection> choiceProjections = userManSelectedQuestionAnswerRepo.findSelectedChoiceByQuestionIdAndUserIds(question.getAssessmentQuestionId(), userIds);
+                                    Set<ManagerAssessmentResponse.AssessmentDto.ChoiceDto> choiceDtos = choiceProjections.stream()
+                                            .map(choice -> {
+                                                ManagerAssessmentResponse.AssessmentDto.ChoiceDto choiceDto = new ManagerAssessmentResponse.AssessmentDto.ChoiceDto();
+                                                choiceDto.setChoiceId(choice.getChoiceId());
+                                                choiceDto.setChoiceValue(choice.getChoiceValue());
+                                                choiceDto.setChoiceName(choice.getChoiceName());
+                                                return choiceDto;
+                                            })
+                                            .collect(Collectors.toSet());
+
+                                    questionDto.setChoices(choiceDtos);
+
+                                    UserManSelectedQuestionAnswerRepository.ChoiceProjection selectedChoiceProjection = userManSelectedQuestionAnswerRepo.findSelectedChoiceByQuestionIdAndUserId(question.getAssessmentQuestionId(), userIds.get(0));
+                                    if (selectedChoiceProjection != null) {
+                                        ManagerAssessmentResponse.AssessmentDto.ChoiceDto selectedChoiceDto = new ManagerAssessmentResponse.AssessmentDto.ChoiceDto();
+                                        selectedChoiceDto.setChoiceId(selectedChoiceProjection.getChoiceId());
+                                        selectedChoiceDto.setChoiceValue(selectedChoiceProjection.getChoiceValue());
+                                        selectedChoiceDto.setChoiceName(selectedChoiceProjection.getChoiceName());
+                                        questionDto.setSelectedChoice(selectedChoiceDto);
+                                    }
+
+                                    return questionDto;
+                                })
+                                .collect(Collectors.toList());
+
+                        attributeDto.setQuestions(questions);
+                        return attributeDto;
+                    })
+                    .collect(Collectors.toList());
+
+            assessmentDto.setPotentialAttributes(potentialAttributes);
+
+            // Debugging statements to trace values
+            boolean isAttempted = attemptedQuestionIds.contains(assessment.getAssessmentId());
+            System.out.println("Assessment ID: " + assessment.getAssessmentId() + " isAttempted: " + isAttempted);
+
+            List<Integer> assessmentsForUsers = userManSelectedQuestionAnswerRepo.findAssessmentIdsByUserIds(userIds);
+            boolean isAssessed = assessmentsForUsers.contains(assessment.getAssessmentId());
+            System.out.println("Assessment ID: " + assessment.getAssessmentId() + " isAssessed: " + isAssessed);
+
+            if (isAttempted && !isAssessed) {
+                for (Integer userId : userIds) {
+                    ManagerAssessmentResponse userResponse = new ManagerAssessmentResponse();
+                    userResponse.setAssessment(assessmentDto);
+
+                    User user = userRepo.findById(userId).orElse(null);
+                    if (user != null) {
+                        userResponse.setUserId(user.getUserId());
+                        userResponse.setUsername(user.getUsername());
+                        userResponse.setUserFullName(user.getUserFullName());
+
+                        List<ManagerAssessmentResponse.AssessmentDto.QuestionResponseDto> userQuestions = assessment.getPotentialAttributes().stream()
+                                .flatMap(attribute -> attribute.getQuestions().stream())
+                                .map(question -> {
+                                    ManagerAssessmentResponse.AssessmentDto.QuestionResponseDto questionResponseDto = new ManagerAssessmentResponse.AssessmentDto.QuestionResponseDto();
+                                    questionResponseDto.setAssessmentQuestionId(question.getAssessmentQuestionId());
+                                    questionResponseDto.setAssessmentQuestionDescription(question.getAssessmentQuestionDescription());
+
+                                    UserManSelectedQuestionAnswerRepository.ChoiceProjection selectedChoiceProjection = userManSelectedQuestionAnswerRepo.findSelectedChoiceByQuestionIdAndUserId(question.getAssessmentQuestionId(), user.getUserId());
+                                    if (selectedChoiceProjection != null) {
+                                        ManagerAssessmentResponse.AssessmentDto.ChoiceDto selectedChoiceDto = new ManagerAssessmentResponse.AssessmentDto.ChoiceDto();
+                                        selectedChoiceDto.setChoiceId(selectedChoiceProjection.getChoiceId());
+                                        selectedChoiceDto.setChoiceValue(selectedChoiceProjection.getChoiceValue());
+                                        selectedChoiceDto.setChoiceName(selectedChoiceProjection.getChoiceName());
+                                        questionResponseDto.setSelectedChoice(selectedChoiceDto);
+                                    }
+
+                                    return questionResponseDto;
+                                })
+                                .collect(Collectors.toList());
+
+                        userResponse.setQuestions(userQuestions);
+                    }
+
+                    response.add(userResponse);
+                }
+            }
+        }
+        return response;
+    }
+
+//check if manager has assessed an employee
+    @Override
+public List<ManagerUserAssessmentStatusDto> getManagerUsersAssessmentStatus(int managerId) {
+    // Get the list of users managed by the manager
+    List<User> managerUsers = userRepo.findUsersByManagerId(managerId);
+    List<ManagerUserAssessmentStatusDto> response = new ArrayList<>();
+
+    // Loop through each user and check their self-assessment and manager assessment status
+    for (User user : managerUsers) {
+        ManagerUserAssessmentStatusDto dto = new ManagerUserAssessmentStatusDto();
+        dto.setUserId(user.getUserId());
+        dto.setUsername(user.getUsername());
+        dto.setUserFullName(user.getUserFullName());
+        dto.setPf(user.getPf());
+
+        // Check if the user has self-assessed in any active assessment
+        int selfAssessmentCount = userManSelectedQuestionAnswerRepo.isSelfAssessedInActiveAssessment(user.getUserId());
+        dto.setSelfAssessed(selfAssessmentCount > 0);
+
+        // Check if the manager has assessed the user in any active assessment
+        int managerAssessmentCount = userManSelectedQuestionAnswerRepo.isManagerAssessedInActiveAssessment(user.getUserId(), managerId);
+        dto.setManagerAssessed(managerAssessmentCount > 0);
+
+        // Add the user's assessment status to the response list
+        response.add(dto);
+    }
+
+    return response;
+}
 }
 

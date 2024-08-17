@@ -1,8 +1,6 @@
 package com.example.talent_man.controllers;
 
-import com.example.talent_man.dto.assessment.AssessmentDto;
-import com.example.talent_man.dto.assessment.AssessmentResponse;
-import com.example.talent_man.dto.assessment.QuestionDto;
+import com.example.talent_man.dto.assessment.*;
 import com.example.talent_man.models.Assessment;
 import com.example.talent_man.models.AssessmentQuestion;
 import com.example.talent_man.service_imp.AssessmentQuestionServiceImp;
@@ -11,6 +9,7 @@ import com.example.talent_man.service_imp.PotentialAttributeServiceImp;
 import com.example.talent_man.services.AssessmentService;
 import com.example.talent_man.utils.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -167,4 +166,50 @@ public class AssessmentQuestionsController {
         return response;
     }
 
+    @GetMapping("/not-assessed/{managerId}")
+    public ApiResponse<List<ManagerAssessmentResponse>> getAssessmentsNotAssessedByManager(@PathVariable("managerId") int managerId) {
+        // Retrieve assessments not yet assessed by the manager
+        List<ManagerAssessmentResponse> assessments = assessmentService.getAssessmentsNotAssessedByManager(managerId);
+
+        // Check if the manager exists
+        if (!assessmentService.doesUserExist(managerId)) {
+            return new ApiResponse<>(404, "Manager not found.");
+        }
+
+        // Check if there are any assessments
+        if (assessments.isEmpty()) {
+            return new ApiResponse<>(404, "No assessments found that have not been assessed by the manager.");
+        }
+        // Create a new ApiResponse object with status, message, and data
+        ApiResponse<List<ManagerAssessmentResponse>> response = new ApiResponse<>(200, "Assessments not assessed by the manager retrieved successfully.");
+        response.setItem(assessments);
+
+        return response;
+
+        // Return success response with the list of assessments
+    }
+
+    @GetMapping("/{managerId}/assessment-status")
+    public ApiResponse<List<ManagerUserAssessmentStatusDto>> getManagerUsersAssessmentStatus(
+            @PathVariable("managerId") int managerId) {
+
+        // Check if the manager exists
+        if (!assessmentService.doesUserExist(managerId)) {
+            return new ApiResponse<>(404, "Manager not found.");
+        }
+
+        // Retrieve the assessment status for all users managed by the given managerId
+        List<ManagerUserAssessmentStatusDto> statusList = assessmentService.getManagerUsersAssessmentStatus(managerId);
+
+        // Check if there are any statuses
+        if (statusList.isEmpty()) {
+            return new ApiResponse<>(404, "No assessment status found for the given manager ID.");
+        }
+
+        // Create a new ApiResponse object with status, message, and data
+        ApiResponse<List<ManagerUserAssessmentStatusDto>> response = new ApiResponse<>(200, "Assessment status retrieved successfully.");
+        response.setItem(statusList);
+
+        return response;
+    }
 }
