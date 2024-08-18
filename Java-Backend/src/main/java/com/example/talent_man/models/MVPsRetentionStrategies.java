@@ -19,4 +19,7 @@ public class MVPsRetentionStrategies {
     @Column(name = "development_interventions")
     private String retentionStrategies;
 
+//    @ManyToOne
+//    @JoinColumn(name = "mvp_assessment_id")
+//    private MVPsAssessment mvPsAssessment;
 }

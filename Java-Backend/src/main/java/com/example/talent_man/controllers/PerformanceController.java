@@ -93,7 +93,7 @@ public class PerformanceController {
     @GetMapping("/HIPOs/all/employees/{managerId}")
     public CombinedDataResponse getAllUserHIPOs(@PathVariable int managerId) {
         List<UserPerformanceDTO> talent = performanceService.getAllUserHIPOs(managerId);
-
+        System.out.println("items: " + talent);
         // Generate combined data for each user
         Map<Integer, CombinedDataResponse.Item> combinedData = generateCombinedData(talent);
 
@@ -177,7 +177,7 @@ public class PerformanceController {
                     case "Change Agility":
                         item.setChangeAgilityScore(manAssessmentAvg);
                         break;
-                    case "Judgment":
+                    case "Judgement":
                         item.setJudgmentScore(manAssessmentAvg);
                         break;
                     case "Aspiration":

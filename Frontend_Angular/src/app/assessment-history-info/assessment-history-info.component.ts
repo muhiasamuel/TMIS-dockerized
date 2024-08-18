@@ -1,7 +1,7 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, Injector, Input, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpServiceService } from '../services/http-service.service';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef,MatDialog } from '@angular/material/dialog';
 
 interface AssessmentStatus {
   managerScore: number | null;
@@ -34,7 +34,10 @@ export class AssessmentHistoryInfoComponent implements OnInit {
   highestPerformedAttribute: AssessmentStatus | null = null;
   highestPerformedAssessment: Assessment | null = null;
 
+  private dialogRef: MatDialogRef<AssessmentHistoryInfoComponent, any>;
+
   constructor(
+    private injector: Injector,
     private http: HttpClient,
      private server: HttpServiceService) { }
 
@@ -56,6 +59,10 @@ export class AssessmentHistoryInfoComponent implements OnInit {
       this.assessments = response.item;
       this.calculateStatistics();
     });
+  }
+  closeDialog() {
+    const dialog = this.injector.get(MatDialog);
+    dialog.closeAll();
   }
 
   calculateStatistics(): void {
