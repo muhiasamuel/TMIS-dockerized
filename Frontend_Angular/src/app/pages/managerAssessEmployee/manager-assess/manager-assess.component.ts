@@ -4,6 +4,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { HttpServiceService } from '../../../services/http-service.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AssessmentHistoryInfoComponent } from '../../../assessment-history-info/assessment-history-info.component';
 
 // Define the ApiResponse interface
 interface ApiResponse {
@@ -45,7 +47,9 @@ export class ManagerAssessComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private http: HttpClient, private server: HttpServiceService) { }
+  constructor(private http: HttpClient,
+    private dialog:MatDialog,
+     private server: HttpServiceService) { }
 
   ngOnInit(): void {
     this.systemUser = JSON.parse(localStorage.getItem('user') || '{}');
@@ -76,4 +80,17 @@ export class ManagerAssessComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
     this.dataSource.filter = filterValue;
   }
-}
+
+  view(id: number) {
+    const dialogRef = this.dialog.open(AssessmentHistoryInfoComponent, {
+      width: "80%",
+      height: "60%",
+      position: {
+        right: "25px"
+      }
+    });
+  
+    dialogRef.componentInstance.id = id; // Set the input property directly
+  }
+  }
+

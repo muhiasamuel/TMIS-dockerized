@@ -2,18 +2,15 @@
     <div class="row">
         <div class="col sm-5 card mx-2">
             <h4 class="greeting">{{greeting}}, {{ systemUser.user.userFullName.toUpperCase() }}</h4>
-            <p class="assessment-info">Assessment  jkjkjdds helps monitor progress and contributes to enforcing the assessment triangle, i.e., observations, interpretations of that observation, and understanding of that observation. Any breakdown can be noted by professors when reviewing their students' work.</p>
+            <p class="assessment-info">Assessment  helps monitor progress and contributes to enforcing the assessment triangle, i.e., observations, interpretations of that observation, and understanding of that observation. Any breakdown can be noted by professors when reviewing their students' work.</p>
             <div class="buttons-container">
                 <div class="row">
                     <div class="col-12 col-md-4 mb-2">
                         <button class="my-btn w-100" [ngClass]="{'active': activeButton === 'notDone'}" (click)="openNotDone()">Not done Assessments</button>
                     </div>
-                    <div class="col-12 col-md-4 mb-2">
-                        <button class="my-btn w-100" [ngClass]="{'active': activeButton === 'done'}" (click)="openDone()">Done Assessments</button>
-                    </div>
                   
                     <div class="col-12 col-md-4 mb-2">
-                        <button class="my-btn w-100" [ngClass]="{'active': activeButton === 'assessed'}" (click)="openAssessed()">Assessed Assessments</button>
+                        <button class="my-btn w-100" [ngClass]="{'active': activeButton === 'assessed'}" (click)="openAssessed()">Assessments History</button>
                     </div>
                 </div>
             </div>
@@ -77,11 +74,11 @@
             </div>
           </ng-container>
           <ng-template #elseTemplate>
-            <h1>No assessments Found</h1>
+            <h6 class="card-category p-5 m-5" >No active and not done assessments Found</h6>
           </ng-template>
         </div>
         <div class="col-sm-12" *ngIf="activeButton === 'assessed'">
-          <h2>hjbjhdsjjds xjhhduiu duisioids diioisoi disidi</h2>          
+          <h2 class="card-category">Assessments History at a Grimpse</h2>          
           <app-assessment-history-info></app-assessment-history-info>
         </div>
       </div>
