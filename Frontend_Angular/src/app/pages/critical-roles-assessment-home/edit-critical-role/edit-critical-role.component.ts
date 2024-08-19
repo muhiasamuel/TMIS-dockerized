@@ -39,7 +39,6 @@ export class EditCriticalRoleComponent {
   private http: HttpServiceService,
   private fb: FormBuilder,
   private dialogref:MatDialogRef<EditCriticalRoleComponent>){
-  
   }
 
     get roleDevelopmentStrategiesFormArray() {
@@ -187,7 +186,7 @@ deleteStrategy(i: number) {
   editRoleAssessment() {
     this.isSubmitting = true;
     if (this.formData) {
-     this.http.criticalRolesEdit(this.authUser.userId,this.dataToEdit.criticalRoleId, this.formData).subscribe(
+     this.http.criticalRolesEdit(this.authUser.user.userId,this.dataToEdit.criticalRoleId, this.formData).subscribe(
       ((res)=>{
         console.log(res);
       }),
@@ -209,7 +208,7 @@ deleteStrategy(i: number) {
   }
   //get critical ole details + startegies
   getCriticalRoleDetails(){
-    this.http.getCriticalRoleByID(this.dataToEdit.criticalRoleId)    .pipe(
+    this.http.getCriticalRoleByID(this.dataToEdit.criticalRoleId).pipe(
       switchMap(response => {
        this.criticalRole  = response.item.strategies
 

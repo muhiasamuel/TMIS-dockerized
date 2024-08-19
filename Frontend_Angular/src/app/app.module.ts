@@ -88,6 +88,7 @@ import { DepartmentComponent } from './pages/department/department.component';
 import { AddDepartmentComponent } from './pages/department/add-department/add-department.component';
 import { TalentComponent } from './pages/talent-mapping/talent/talent.component';
 import { ReadyNowDialogComponent } from './succession-plan/ready-now-dialog/ready-now-dialog.component';
+import { CreateEmployeeComponent } from './create-employee/create-employee.component';
 
 
 
@@ -154,6 +155,7 @@ import { ReadyNowDialogComponent } from './succession-plan/ready-now-dialog/read
     DepartmentComponent,
     AddDepartmentComponent,
     TalentComponent,
+    CreateEmployeeComponent,
     
    
   ],

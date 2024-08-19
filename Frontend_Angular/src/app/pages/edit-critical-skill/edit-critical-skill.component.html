@@ -52,33 +52,6 @@
         <mat-radio-group formControlName="priority">
           <mat-radio-button *ngFor="let score of scores" [value]="score">{{score}}</mat-radio-button>
         </mat-radio-group>
-        <div class="score-guide">
-          <h5 class="card-category mb-0 guide">Scoring Guide</h5>
-          <table class="table table-bordered">
-              <thead>
-                  
-                  <tr>
-                      <th>Score</th>
-                      <th>Meaning</th>
-                  </tr>
-
-              </thead>
-              <tbody>
-                  <tr>
-                      <td>0 - 2</td>
-                      <td>The skill is less critical</td>
-                  </tr>
-                  <tr>
-                      <td>3 - 4</td>
-                      <td>Modarate</td>
-                  </tr>
-                  <tr>
-                      <td>4 - 5</td>
-                      <td>high</td>
-                  </tr>
-              </tbody>
-          </table> 
-        </div>
         <div>
           <button matStepperPrevious class="btn btn-primary" >Back</button>
           <button matStepperNext class="btn btn-success text-white">Next</button>
@@ -237,7 +210,7 @@
             </div>
           </ng-container>
           <ng-template #elseTamplate>
-            <button class="btn btn-success text-white" type="submit" (click)="onEditing()">Submit</button>
+            <button class="btn btn-success text-white" type="submit" (click)="processSkills()">Submit</button>
           </ng-template>
         </div>
         <div class="col-md-6">
@@ -245,4 +218,62 @@
       </div>
     </mat-step>
   </mat-stepper>
+
+
+  <div class="row">
+    <div class="score-guide col-md-5">
+      <h5 class="card-category mb-0 guide">Scoring Guide</h5>
+      <table class="table table-bordered">
+        <thead>
+
+          <tr>
+            <th>Score</th>
+            <th>Meaning</th>
+          </tr>
+
+        </thead>
+        <tbody>
+          <tr>
+            <td>0 - 2</td>
+            <td>The skill is less critical</td>
+          </tr>
+          <tr>
+            <td>3 - 4</td>
+            <td>Modarate</td>
+          </tr>
+          <tr>
+            <td>4 - 5</td>
+            <td>high</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+    <div class="container col-md-7">
+      <h6>Guide to Determining Current State</h6>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>State</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody class="table-body">
+          <tr>
+            <td style="background-color: red;">Red</td>
+            <td>No known successor, or known successor will be ready in longer than 2 years</td>
+          </tr>
+          <tr>
+            <td style="background-color: rgba(252, 204, 14, 0.756);">Amber</td>
+            <td>A known successor will be ready in 1 - 2 years</td>
+          </tr>
+          <tr>
+            <td style="background-color: green;">Green</td>
+            <td>We have a ready now successor for the role</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div> 
+  
 

@@ -1,0 +1,20 @@
+.employee-form .form-control{
+    background-color: white;
+    width: 70%
+}
+.is-loading {
+    position: relative;
+  }
+  
+  .is-loading .spinner-border {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+.dialog-content{
+  align-items: center;
+  justify-content: center;
+  margin-left: 50px;
+}

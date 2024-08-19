@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpServiceService } from '../../../services/http-service.service';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { Router } from '@angular/router';
+import { CreateEmployeeComponent } from '../../../create-employee/create-employee.component';
 
 @Component({
   selector: 'app-my-teams-profile',
@@ -103,8 +104,23 @@ export class MyTeamsProfileComponent {
 navigateToUserProfile(userId: string) {
   this.router.navigate(['/profile'], { queryParams: { userId: userId } });
 }
+
+openCreateEmployeeDialogue():void{
+  const dialogRef:MatDialogRef<CreateEmployeeComponent> = this.dialog.open(CreateEmployeeComponent, {
+    width:"40%",
+    height:"80%",
+  });
+  
+  // Method to get data to udate dynamically when the dialog is closed
+  dialogRef.afterClosed().subscribe( 
+    ((result) =>{
+      this.getAllEmployees()
+    })
+  )
+  
+}
    
-   }
+}
  
   
 
