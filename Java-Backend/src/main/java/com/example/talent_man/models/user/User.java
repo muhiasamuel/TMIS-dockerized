@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,10 +31,10 @@ public abstract class User implements Serializable, UserDetails {
     @Column(name = "user_type", columnDefinition = "VARCHAR(255)")
     private String userType;
 
-    @Column(name = "PF_NO", columnDefinition = "VARCHAR(255)")
+    @Column(name = "PF_NO", columnDefinition = "VARCHAR(255)", unique = true)
     private String pf;
 
-    @Column(name = "user_full_name", columnDefinition = "VARCHAR(255)", unique = true)
+    @Column(name = "user_full_name", columnDefinition = "VARCHAR(255)")
     private String userFullName;
 
     @Column(name = "email", columnDefinition = "VARCHAR(255)", unique = true)
@@ -62,6 +63,8 @@ public abstract class User implements Serializable, UserDetails {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "role_id")
     private Role role;
+
+
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -106,7 +109,6 @@ public abstract class User implements Serializable, UserDetails {
         return enabled;
     }
 
-    public void setManager(Manager man) {
-    }
+
 
 }

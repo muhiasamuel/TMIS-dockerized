@@ -241,36 +241,48 @@ public class UserServiceImp implements UserService {
         manager.setUserType("Manager");
         manager.setUserFullName(userDto.getUserFullName());
         manager.setEmail(userDto.getEmail());
-        manager.setPf(userDto.getPf());
         manager.setUsername(userDto.getUsername());
         manager.setPassword(encodedPassword);
+        manager.setPf(userDto.getPf());
+
         Role role = roleRepo.findById(userDto.getRoleId())
                 .orElseThrow(() -> new RuntimeException("Role Not Found: " + userDto.getRoleId()));
         manager.setRole(role);
+
         Department department = departmentRepo.findById(userDto.getDepartmentId())
-                .orElseThrow(() -> new RuntimeException("department Not Found: " + userDto.getDepartmentId()));
+                .orElseThrow(() -> new RuntimeException("Department Not Found: " + userDto.getDepartmentId()));
+
+        System.out.println("Setting department: " + department.getDepName());
         manager.setDepartment(department);
+
+        System.out.println("Manager's department after setting: " + manager.getDepartment());
+
+
         Position position = positionRepo.findById(userDto.getPositionId())
-                .orElseThrow(() -> new RuntimeException("Position Not Found: " + userDto.getRoleId()));
-        manager.setRole(role);
+                .orElseThrow(() -> new RuntimeException("Position Not Found: " + userDto.getPositionId()));
         if (!position.getDepartment().equals(department)) {
             throw new RuntimeException("Position does not belong to the specified Department.");
         }
         manager.setPosition(position);
+
         manager.setLocked(userDto.getLocked() != null ? userDto.getLocked() : false);
         manager.setEnabled(userDto.getEnabled() != null ? userDto.getEnabled() : false);
-        Manager man = managerRepo.findById(managerId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + managerId));
-        manager.setManager(man);
 
+        // Assign the parent manager if provided
+        if (managerId > 0) {
+            Manager parentManager = managerRepo.findById(managerId)
+                    .orElseThrow(() -> new RuntimeException("Manager not found with id: " + managerId));
 
-        // Save the employee
-        User savedEmployee = repo.save(manager);
+            manager.setManager(parentManager);
+        }
 
-        // Send the plain text password to the employee's email
+        // Save the manager
+        User savedManager = repo.save(manager);
+
+        // Send the plain text password to the manager's email
         emailService.sendEmail(manager.getEmail(), "Your new account password", "Your password is: " + rawPassword);
 
-        return savedEmployee;
+        return savedManager;
     }
 
     @Override

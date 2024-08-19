@@ -144,7 +144,8 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
             "LEFT JOIN performance p ON u.user_id = p.user_id " +
             "WHERE asr.assessment_type IN ('USER_ASSESSMENT', 'MANAGER_ASSESSMENT') " +
             "AND u.manager_id = :managerId " + // Use the parameter here for the manager ID
-            "AND p.year >= YEAR(CURDATE()) - 3 " + // Filter for the last 3 years
+
+            // Filter for the last 3 years
             "GROUP BY u.user_id, u.username, u.user_full_name, pa.potential_attribute_name, p.year, a.date_created " +
             ") " +
             "SELECT *, COALESCE(userAssessmentAvg, 0) + COALESCE(manAssessmentAvg, 0) AS a, " +

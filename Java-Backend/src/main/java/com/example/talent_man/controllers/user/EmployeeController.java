@@ -41,7 +41,7 @@ public class EmployeeController {
 
     @PostMapping("/manager/{managerId}")
     public ApiResponse<User> createManager(@RequestBody UserRequestDto userDto, @PathVariable int managerId) {
-        User createdEmployee = userService.createTopManager(userDto);
+        User createdEmployee = userService.createManager(userDto, managerId);
         ApiResponse res = new ApiResponse<>();
         res.setItem(createdEmployee);
         res.setMessage("Manager created Successfully");

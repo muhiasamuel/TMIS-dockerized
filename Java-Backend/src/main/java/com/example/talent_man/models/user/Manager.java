@@ -42,13 +42,12 @@ public class Manager extends User implements Serializable {
     @JoinColumn(name = "manager_id")
     private Set<Assessment> assessedAssessments;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="manager_id")
+    @ToString.Exclude
+    private Manager manager;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "department_id", referencedColumnName = "department_id")
-    private Department department;
 
-    //constructors
-    public Manager(){}
 
 
 }
