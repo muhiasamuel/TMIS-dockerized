@@ -107,7 +107,7 @@ export class SkillsViewComponent implements OnInit {
 
   editSkill(row:any) {
 
-    this.dialog.open(EditCriticalSkillComponent,{
+     const dialogRef:MatDialogRef<EditCriticalSkillComponent> = this.dialog.open(EditCriticalSkillComponent,{
       width: '75%',
       height:'85%',
       position:{
@@ -119,11 +119,11 @@ export class SkillsViewComponent implements OnInit {
       
     })
     
-    // dialogRef.afterClosed().subscribe(
-    //   ((res) =>{
-    //     this.ngOnInit()
-    //   })
-    // )
+    dialogRef.afterClosed().subscribe(
+      ((res) =>{
+        this.ngOnInit()
+      })
+    )
 
   //   this.http.getCriticalSkill(id).subscribe(
   //     ((res) =>{

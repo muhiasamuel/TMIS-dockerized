@@ -92,7 +92,8 @@ import { DepartmentComponent } from './pages/department/department.component';
 import { AddDepartmentComponent } from './pages/department/add-department/add-department.component';
 import { TalentComponent } from './pages/talent-mapping/talent/talent.component';
 import { ReadyNowDialogComponent } from './succession-plan/ready-now-dialog/ready-now-dialog.component';
-import { MatBreadcrumbModule } from 'mat-breadcrumb';
+import { CreateEmployeeComponent } from './create-employee/create-employee.component';
+
 import { AssessmentHistoryInfoComponent } from './assessment-history-info/assessment-history-info.component';
 
 
@@ -161,6 +162,7 @@ import { AssessmentHistoryInfoComponent } from './assessment-history-info/assess
     DepartmentComponent,
     AddDepartmentComponent,
     TalentComponent,
+    CreateEmployeeComponent,
     AssessmentHistoryInfoComponent,
     
    

@@ -1,0 +1,92 @@
+<div mat-dialog-actions class="dialog-action">
+    <button mat-button (click)="closeDialog()">Close
+    </button>
+  </div>
+  
+  <div class="dialog-content">
+    <form [formGroup]="createEmployeeForm" (ngSubmit)="onSubmit()" class="employee-form">
+      <div class="form-group">
+        <label for="userFullName">Full Name</label>
+        <input id="userFullName" placeholder="Enter name" formControlName="userFullName" class="form-control">
+        <div *ngIf="createEmployeeForm.get('userFullName').touched && createEmployeeForm.get('userFullName').invalid" class="text-danger">
+          Name is required.
+        </div>
+      </div>
+    
+      <div class="form-group">
+        <label for="pf">PF</label>
+        <input id="pf" placeholder="1234" formControlName="pf" class="form-control">
+        <div *ngIf="createEmployeeForm.get('pf').touched && createEmployeeForm.get('pf').invalid" class="text-danger">
+          PF is required.
+        </div>
+      </div>
+    
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input id="username" formControlName="username" class="form-control">
+        <div *ngIf="createEmployeeForm.get('username').touched && createEmployeeForm.get('username').invalid" class="text-danger">
+          Username is required.
+        </div>
+      </div>
+    
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" formControlName="email" placeholder="email" type="email" class="form-control">
+        <div *ngIf="createEmployeeForm.get('email').touched && createEmployeeForm.get('email').invalid" class="text-danger">
+          Valid email is required.
+        </div>
+      </div>
+    
+      <div class="form-group">
+        <mat-form-field>
+          <mat-label>Role</mat-label>
+          <mat-select formControlName="roleId">
+              @for (role of roles; track role) {
+              <mat-option [value]="role.id">{{role.roleName}}</mat-option>
+            }
+    
+            <div *ngIf="createEmployeeForm.get('roleId').touched && createEmployeeForm.get('roleId').invalid" class="text-danger">
+              Role is required.
+            </div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    
+      <div class="form-group">
+        <mat-form-field>
+          <mat-label>Department</mat-label>
+          <mat-select formControlName="departmentId">
+            @for (dep of department; track department) {
+              <mat-option [value]="dep.depId">{{dep.depName}}</mat-option>
+            }
+            <div *ngIf="createEmployeeForm.get('departmentId').touched && createEmployeeForm.get('departmentId').invalid" class="text-danger">
+              Department is required.
+            </div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    
+      <div class="form-group">
+        <mat-form-field>
+          <mat-label>Position</mat-label>
+          <mat-select formControlName="positionId" (click)="getPosition()" >
+            @for (position of positions; track positions) {
+              <mat-option [value]="position.pid">{{position.positionName}}</mat-option>
+            }
+    
+            <div *ngIf="createEmployeeForm.get('positionId').touched && createEmployeeForm.get('positionId').invalid" class="text-danger">
+              Position is required.
+            </div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    
+      <button type="submit" class="btn btn-primary">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        <span *ngIf="!loading">Create Employee</span>
+      </button>
+    </form>
+  </div>
+  
+  
+  

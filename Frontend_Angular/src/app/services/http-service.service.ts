@@ -181,9 +181,14 @@ createPotentialNextRole(employeeId: number, data: any): Observable<any> {
 
   // updating critical skill
   //http://192.168.2.21:8080/v1/criticalSkills/8/7
+  //http://192.168.88.199:8080/v1/api/criticalSkills/90/1
+
 
   updateCriticalSkill(managerId: number, skillId: number, data: any): Observable<any> {
-    const url = `${this.serverUrl}criticalSkills/${managerId}/${skillId}`;
+
+    console.log('sssssssss',data);
+    
+    const url = `${this.serverUrl}criticalSkills/${skillId}/${managerId}`;
     const headers = new HttpHeaders({ 'content-type': 'application/json' });
     return this.http.put<any>(url, data)
 
