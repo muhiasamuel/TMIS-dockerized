@@ -1,5 +1,6 @@
 package com.example.talent_man.dto.succession;
 
+import com.example.talent_man.models.succession.ExternalSuccessorDto;
 import lombok.Data;
 
 import java.util.List;
@@ -19,6 +20,8 @@ public class SuccessionPlanDto {
 
     private List<ProposedInterventionDto> proposedInterventions; // List of Proposed Interventions
     private List<SuccessorDevelopmentNeedDto> successorDevelopmentNeeds; // List of Successor Development Needs
+
+    private ExternalSuccessorDto externalSuccessor; // New field for External Successor
 
     // Getters and Setters
 }

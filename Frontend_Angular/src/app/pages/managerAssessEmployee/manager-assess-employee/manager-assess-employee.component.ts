@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { HttpServiceService } from '../../../services/http-service.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface Answer {
@@ -49,9 +49,11 @@ export class ManagerAssessEmployeeComponent implements OnInit {
   }
 
   getNotDone() {
-    this.server.getNotDoneAssesments(this.systemUser.user.userId).subscribe(
+    this.server.getActiveAssessments().subscribe(
       (res) => {
         this.notDoneAssessments = res.item; // Store not done assessments
+        console.log("hello", res.item);
+        
         this.setupFormGroups(); // Setup form groups after receiving assessments
       },
       (error) => {
@@ -64,81 +66,76 @@ export class ManagerAssessEmployeeComponent implements OnInit {
     this.firstFormGroups = []; // Reset the array
     this.notDoneAssessments.forEach((assessment) => {
       const formGroup = this._formBuilder.group({
-        assessmentId: [assessment.assessment.assessmentId], // Assessment ID
-        attributes: this._formBuilder.array(
-          assessment.assessment.potentialAttributes.map((attr) =>
+        assessmentId: [assessment.assessmentId],
+        potentialAttributes: this._formBuilder.array(
+          assessment.potentialAttributes.map((attr: any) =>
             this._formBuilder.group({
-              attributeName: [attr.attributeName], // Attribute name
+              attributeId: [attr.attributeId],
+              attributeName: [attr.attributeName],
               questions: this._formBuilder.array(
-                attr.questions.map((q) =>
+                attr.questions.map((q: any) =>
                   this._formBuilder.group({
-                    assessmentQuestionId: [q.assessmentQuestionId], // Question ID
-                    userId: [this.userId], // User ID
-                    choiceId: ['', Validators.required], // Initially empty, will be filled by the user
-                    managerAssessed: [true], // Assuming self-assessment is true
-                    choices: [q.choices] // Ensure choices are included
+                    assessmentQuestionId: [q.assessmentQuestionId],
+                    assessmentQuestionDescription: [q.assessmentQuestionDescription], // Ensure this field is included
+                    choices: this._formBuilder.array( // Initialize choices as a FormArray
+                      q.choices.map((choice: any) => this._formBuilder.group({
+                        choiceId: [choice.choiceId],
+                        choiceValue: [choice.choiceValue]
+                      }))
+                    ),
+                    choiceId: ['', Validators.required] // Default value for selected choice
                   })
                 )
-              ),
+              )
             })
           )
-        ),
+        )
       });
       this.firstFormGroups.push(formGroup); // Add the form group to the array
     });
   }
 
   getAttributeName(assessmentIndex: number, attrIndex: number): string {
-    return this.firstFormGroups[assessmentIndex].get(['attributes', attrIndex, 'attributeName'])?.value;
+    return this.firstFormGroups[assessmentIndex].get(['potentialAttributes', attrIndex, 'attributeName'])?.value;
   }
 
   getQuestionText(assessmentIndex: number, attrIndex: number, questionIndex: number): string {
-    return this.notDoneAssessments[assessmentIndex].assessment.potentialAttributes[attrIndex].questions[questionIndex].assessmentQuestionDescription;
+    return this.firstFormGroups[assessmentIndex].get(['potentialAttributes', attrIndex, 'questions', questionIndex, 'assessmentQuestionDescription'])?.value;
   }
 
   getChoices(assessmentIndex: number, attrIndex: number, qIndex: number) {
-    const questions = this.firstFormGroups[assessmentIndex].get('attributes')['controls'][attrIndex].get('questions')['controls'];
-    if (questions && questions[qIndex]) {
-      const choices = questions[qIndex].get('choices')['value'];
-      return choices ? choices.sort((a: any, b: any) => a.choiceValue - b.choiceValue) : []; // Sort choices in ascending order
-    }
-    return [];
+    const choicesArray = this.firstFormGroups[assessmentIndex].get(['potentialAttributes', attrIndex, 'questions', qIndex, 'choices']) as FormArray;
+    return choicesArray ? choicesArray.controls : [];
   }
 
   submit() {
     const requestBody = this.firstFormGroups.map((formGroup) => ({
       managerId: this.systemUser.user.userId,
-      assessmentId: formGroup.get('assessmentId')?.value, // Get assessment ID
-      answers: formGroup.get('attributes')?.value.flatMap((attr) =>
-        attr.questions.map((q) => ({
-          assessmentQuestionId: q.assessmentQuestionId, // Include question ID
-          userId: this.userId, // Include user ID
-          choiceId: q.choiceId, // Include selected choice ID
-          managerAssessed: q.managerAssessed // Include self-assessed flag
+      assessmentId: formGroup.get('assessmentId')?.value,
+      answers: formGroup.get('potentialAttributes')?.value.flatMap((attr: any) =>
+        attr.questions.map((q: any) => ({
+          assessmentQuestionId: q.assessmentQuestionId,
+          userId: this.userId,
+          choiceId: q.choiceId,
+          managerAssessed: true
         }))
-      ), // Map questions to answers
+      )
     }));
 
     console.log('Request Body:', requestBody[0]);
     this.server.postManagerAnswers(requestBody[0]).subscribe(
-      ((res) => {
+      (res) => {
         console.log('response', res);
-        this.snack.open("Assessment has been submitted successfully", "Close", { duration: 3600, verticalPosition: "bottom" })
+        this.snack.open("Assessment has been submitted successfully", "Close", { duration: 3600, verticalPosition: "bottom" });
         this.router.navigate(['/assess-my-team']).then(() => {
           window.location.reload();
         });
-      }),
-      ((error) => {
+      },
+      (error) => {
         console.log('error', error);
-
-      }),
-      () => { }
-    )
-    // Make your API call here with the requestBody
-    // Example:
-    // this.http.post(`${this.server.serverUrl}submitAssessment`, requestBody).subscribe(...);
+      }
+    );
   }
-
   getEmployeeInfo() {
     this.server.getEmployeeById(this.userId).subscribe(
       (response: any) => {

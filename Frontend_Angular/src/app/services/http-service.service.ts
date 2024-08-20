@@ -281,6 +281,13 @@ getNotDoneAssesments(userId:number):Observable<any>{
   return this.http.get<any>(url);
 }
 
+getActiveAssessments():Observable<any>{
+  //http://localhost:8080/v1/api/activeAssessments
+
+  const url = `${this.serverUrl}activeAssessments`;
+  return this.http.get(url)
+}
+
 // submitUserAnswers
 postUsersAnswers(data:any): Observable<any>{
   //http://localhost:8080/v1/api/answers/user

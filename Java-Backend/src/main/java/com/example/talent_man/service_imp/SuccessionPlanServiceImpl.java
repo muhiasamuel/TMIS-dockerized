@@ -57,6 +57,13 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
     @Override
     public SuccessionPlanDto createSuccessionPlan(SuccessionPlanDto successionPlanDto) {
         try {
+            // Validate that at least one of the ReadyUser lists is filled
+            if ((successionPlanDto.getReadyNow() == null || successionPlanDto.getReadyNow().isEmpty()) &&
+                    (successionPlanDto.getReadyAfterTwoYears() == null || successionPlanDto.getReadyAfterTwoYears().isEmpty()) &&
+                    (successionPlanDto.getReadyMoreThanTwoYears() == null || successionPlanDto.getReadyMoreThanTwoYears().isEmpty())) {
+                throw new IllegalArgumentException("At least one of the Ready User lists (Now, 1-2 Years, More than 2 Years) must be filled.");
+            }
+
             // Fetch the Department
             Department department = departmentRepository.findById(successionPlanDto.getDepartmentId())
                     .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
