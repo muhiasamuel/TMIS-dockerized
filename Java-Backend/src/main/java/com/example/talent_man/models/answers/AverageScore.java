@@ -31,5 +31,14 @@ public class AverageScore implements Serializable {
     @JoinColumn(name = "potential_attribute_id", nullable = false)
     private PotentialAttribute potentialAttribute; // Reference to the potential attribute
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "assessment_type", nullable = false)
+    private AssessmentType assessmentType; // Indicates if it's a self-assessment or manager assessment
+
     private double averageScore; // The calculated average score
+
+    public enum AssessmentType {
+        USER_ASSESSMENT,
+        MANAGER_ASSESSMENT
+    }
 }

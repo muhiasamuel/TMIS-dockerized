@@ -7,163 +7,95 @@
     </ol>
     <div class=" mt-3">
         <mat-tab-group dynamicHeight>
-            
-            <mat-tab label="Mvp Assessment">
-              <div class="example-small-box mat-elevation-z4">
-                <div class="table">
-                   
-                    <table class="table table-bordered table-hover" id="mvps" >
-                        <thead>
-                            <tr>
-                                <th scope="col">PF No.</th>
-                                <th scope="col">Assessment Status</th>
-                                <th scope="col">Employee Name</th>
-                                <th scope="col">Employee Talent Rating (A1, A2, A3,B1,B2,B3 C1, C2, C3)</th>
-                                <th scope="col">Last 3 Performance Ratings</th>
-                                <th scope="col">Impact of Attrition on Business (Low, Medium, High)</th>
-                                <th scope="col">Talent Market Exposure (Low, Medium, High)</th>
-                                <th scope="col">Employee Career Priorities</th>
-                                <th scope="col">Current Assessment of Employee's Retention(Red, Amber, Green)</th>
-                                <th scope="col">Retention strategies to deploy</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let item of filteredMVPs; let i = index">
-                                <td>{{i+1}}</td>
-                                <td>
-                                    <ng-container *ngIf="item.retentionState; else elseTemplate">
-                                        <mat-icon class="text-success">checked</mat-icon>
-                                    </ng-container>
-                                    <ng-template #elseTemplate>
-                                        <mat-icon class="text-danger">cancel</mat-icon>
-                                    </ng-template>
-                                    
-                                </td>
-                                <td>{{item.name}}</td>
-                                <td>{{item.talentRating}}</td>
-                                <td>{{(item.threeYearsPerformanceRating).toFixed(1)}}</td>
-                                <td>
-                                    <div class="form-group" [formGroup]="attrition">
-                                        <select class="" id="current-state" formControlName="impactOfAttrition"
-                                            placeholder="Impact of attrition on busiess">
-                                            <option value="high">High</option>
-                                            <option value="medeum">Medium</option>
-                                            <option value="low">Low</option>
-                                        </select>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group" [formGroup]="market_Exposure">
-                                        <select class="" id="current-state" formControlName="marketExposure"
-                                            placeholder="Talent Market Exposure">
-                                            <option value="high">High</option>
-                                            <option value="medeum">Medium</option>
-                                            <option value="low">Low</option>
-                                        </select>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group" [formGroup]="careerPriority">
-                                        <input type="text" placeholder="Career Priorities" formControlName="careerPriorities">
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group" [formGroup]="retentionState">
-                                        <select class="" id="current-state" formControlName="retentionAssessmentState"
-                                            placeholder="Talent Market Exposure">
-                                            <option value="red">Red</option>
-                                            <option value="amber">Amber</option>
-                                            <option value="green">Green</option>
-                                        </select>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group" [formGroup]="attrition">
-                                        <input type="text" placeholder="Retention Strategies" (click)="addStrategies(item.userId)">
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-              </div>
-              <div class="col-md-8">
-                <div class="table">
-                    <h6>Guide to Determining the Current State (Column H)</h6>
-                    <table class="table">
-                        <thead>
-                            <tr style="background-color: aliceblue;">
-                                <th scope="col">State</th>
-                                <th scope="col">Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="background-color: red; color: white;">Red</td>
-                                <td>Employees retention outlook is unknown and no strategy has been adopted to ring fence
-                                    effectively</td>
-                            </tr>
-                            <tr>
-                                <td style="background-color: rgb(215, 215, 9); color: white;">Amber</td>
-                                <td>Employees retention outlook is known, however no strategy has been adopted to ring fence
-                                    effectively </td>
-                            </tr>
-                            <tr>
-                                <td style="background-color: rgb(37, 153, 24); color: white;">Green</td>
-                                <td>Employee's retention outlook is known and a ring fencing strategy has either been
-                                    adopted or been recommended to the Country Talent Council</td>
-                            </tr>
-                        </tbody>
-    
-                    </table>
-                </div>
-            </div>
-            </mat-tab>
-            <mat-tab label="MVPs Assessment Report" >
-                <button (click)="downloadPdf()" class="btn btn-md btn-primary text-white d-flex align-items-center justify-content-center ">PDF <mat-icon>download</mat-icon></button>
 
-              <div class="example-large-box mat-elevation-z4"#pdf>
-                <div class="table">
-                    <table class="table table-bordered table-hover" id="mvps" >
-                        <thead>
-                            <tr>
-                                <th scope="col">PF No.</th>
-                                <th scope="col">Employee Name</th>
-                                <th scope="col">Employee Talent Rating (A1, A2, A3,B1,B2,B3 C1, C2, C3)</th>
-                                <th scope="col">Last 3 Performance Ratings</th>
-                                <th scope="col">Impact of Attrition on Business (Low, Medium, High)</th>
-                                <th scope="col">Talent Market Exposure (Low, Medium, High)</th>
-                                <th scope="col">Employee Career Priorities</th>
-                                <th scope="col">Current Assessment of Employee's Retention(Red, Amber, Green)</th>
-                                <th scope="col">Retention strategies to deploy</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let item of filteredData; let i = index">
-                                <td>{{i+1}}</td>
-                                <td>{{item.name}}</td>
-                                <td>{{item.talentRating}}</td>
-                                <td>{{(item.threeYearsPerformanceRating).toFixed(1)}}</td>
-                                <td>
-                                    {{item.impactOfAttrition}}
-                                </td>
-                                <td>
-                                   {{item.marketExposure}}
-                                </td>
-                                <td>
-                                    {{item.careerPriority}}
-                                </td>
-                                <td>
-                                  {{item.retentionState}}
-                                </td>
-                                <td>
-                                    <div  *ngFor="let strategy of item.strategies; let j = index">                                        
-                                        <span>{{j+1}}: {{strategy.retentionStrategies}}</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <mat-tab label="Mvp Assessment">
+                <div class="example-small-box mat-elevation-z4">
+                    <div class="table">
+                        <!-- Filter Input -->
+                        <input type="text" [(ngModel)]="filterText" (ngModelChange)="filterSearchData()"
+                            placeholder="Search" class="filter-input">
+                        <table class="table table-bordered table-hover" id="mvps">
+                            <thead>
+                                <tr>
+                                    <th scope="col">PF No.</th>
+                                    <th scope="col">Assessment Status</th>
+                                    <th scope="col">Employee Name</th>
+                                    <th scope="col">Employee Talent Rating (A1, A2, A3,B1,B2,B3 C1, C2, C3)</th>
+                                    <th scope="col">Last 3 Performance Ratings</th>
+                                    <th scope="col">Impact of Attrition on Business (Low, Medium, High)</th>
+                                    <th scope="col">Talent Market Exposure (Low, Medium, High)</th>
+                                    <th scope="col">Employee Career Priorities</th>
+                                    <th scope="col">Current Assessment of Employee's Retention(Red, Amber, Green)</th>
+                                    <th scope="col">Retention strategies to deploy</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of filteredMVPs; let i = index">
+                                    <td>{{i+1}}</td>
+                                    <td>
+                                        <ng-container *ngIf="item.retentionState; else elseTemplate">
+                                            <mat-icon class="text-success">checked</mat-icon>
+                                        </ng-container>
+                                        <ng-template #elseTemplate>
+                                            <mat-icon class="text-danger">cancel</mat-icon>
+                                        </ng-template>
+
+                                    </td>
+                                    <td>{{item.name}}</td>
+                                    <td>{{item.talentRating}}</td>
+                                    <td>{{(item.threeYearsPerformanceRating).toFixed(1)}}</td>
+                                    <td>
+                                        <div class="form-group" [formGroup]="attrition">
+                                            <select class="" id="current-state" formControlName="impactOfAttrition"
+                                                placeholder="Impact of attrition on busiess">
+                                                <option value="high">High</option>
+                                                <option value="medeum">Medium</option>
+                                                <option value="low">Low</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group" [formGroup]="market_Exposure">
+                                            <select class="" id="current-state" formControlName="marketExposure"
+                                                placeholder="Talent Market Exposure">
+                                                <option value="high">High</option>
+                                                <option value="medeum">Medium</option>
+                                                <option value="low">Low</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group" [formGroup]="careerPriority">
+                                            <input type="text" placeholder="Career Priorities"
+                                                formControlName="careerPriorities">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group" [formGroup]="retentionState">
+                                            <select class="" id="current-state"
+                                                formControlName="retentionAssessmentState"
+                                                placeholder="Talent Market Exposure">
+                                                <option value="red">Red</option>
+                                                <option value="amber">Amber</option>
+                                                <option value="green">Green</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group" [formGroup]="attrition">
+                                            <input type="text" placeholder="Retention Strategies"
+                                                (click)="addStrategies(item.userId)">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="pagination mt-3">
+                            <button (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
+                            <span>Page {{currentPage}} of {{totalPages}}</span>
+                            <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-8">
                     <div class="table">
@@ -178,29 +110,116 @@
                             <tbody>
                                 <tr>
                                     <td style="background-color: red; color: white;">Red</td>
-                                    <td>Employees retention outlook is unknown and no strategy has been adopted to ring fence
+                                    <td>Employees retention outlook is unknown and no strategy has been adopted to ring
+                                        fence
                                         effectively</td>
                                 </tr>
                                 <tr>
                                     <td style="background-color: rgb(215, 215, 9); color: white;">Amber</td>
-                                    <td>Employees retention outlook is known, however no strategy has been adopted to ring fence
+                                    <td>Employees retention outlook is known, however no strategy has been adopted to
+                                        ring fence
                                         effectively </td>
                                 </tr>
                                 <tr>
                                     <td style="background-color: rgb(37, 153, 24); color: white;">Green</td>
-                                    <td>Employee's retention outlook is known and a ring fencing strategy has either been
+                                    <td>Employee's retention outlook is known and a ring fencing strategy has either
+                                        been
                                         adopted or been recommended to the Country Talent Council</td>
                                 </tr>
                             </tbody>
-        
+
                         </table>
+
                     </div>
                 </div>
-              </div>
-             
             </mat-tab>
-          </mat-tab-group>
-          
+            <mat-tab label="MVPs Assessment Report">
+                <button (click)="downloadPdf()"
+                    class="btn btn-md btn-primary text-white d-flex align-items-center justify-content-center ">PDF
+                    <mat-icon>download</mat-icon></button>
+
+                <div class="example-large-box mat-elevation-z4" #pdf>
+                    <div class="table">
+                        <table class="table table-bordered table-hover" id="mvps">
+                            <thead>
+                                <tr>
+                                    <th scope="col">PF No.</th>
+                                    <th scope="col">Employee Name</th>
+                                    <th scope="col">Employee Talent Rating (A1, A2, A3,B1,B2,B3 C1, C2, C3)</th>
+                                    <th scope="col">Last 3 Performance Ratings</th>
+                                    <th scope="col">Impact of Attrition on Business (Low, Medium, High)</th>
+                                    <th scope="col">Talent Market Exposure (Low, Medium, High)</th>
+                                    <th scope="col">Employee Career Priorities</th>
+                                    <th scope="col">Current Assessment of Employee's Retention(Red, Amber, Green)</th>
+                                    <th scope="col">Retention strategies to deploy</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of filteredData; let i = index">
+                                    <td>{{i+1}}</td>
+                                    <td>{{item.name}}</td>
+                                    <td>{{item.talentRating}}</td>
+                                    <td>{{(item.threeYearsPerformanceRating).toFixed(1)}}</td>
+                                    <td>
+                                        {{item.impactOfAttrition}}
+                                    </td>
+                                    <td>
+                                        {{item.marketExposure}}
+                                    </td>
+                                    <td>
+                                        {{item.careerPriority}}
+                                    </td>
+                                    <td>
+                                        {{item.retentionState}}
+                                    </td>
+                                    <td>
+                                        <div *ngFor="let strategy of item.strategies; let j = index">
+                                            <span>{{j+1}}: {{strategy.retentionStrategies}}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="table">
+                            <h6>Guide to Determining the Current State (Column H)</h6>
+                            <table class="table">
+                                <thead>
+                                    <tr style="background-color: aliceblue;">
+                                        <th scope="col">State</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="background-color: red; color: white;">Red</td>
+                                        <td>Employees retention outlook is unknown and no strategy has been adopted to
+                                            ring fence
+                                            effectively</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background-color: rgb(215, 215, 9); color: white;">Amber</td>
+                                        <td>Employees retention outlook is known, however no strategy has been adopted
+                                            to ring fence
+                                            effectively </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background-color: rgb(37, 153, 24); color: white;">Green</td>
+                                        <td>Employee's retention outlook is known and a ring fencing strategy has either
+                                            been
+                                            adopted or been recommended to the Country Talent Council</td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </mat-tab>
+        </mat-tab-group>
+
 
 
 

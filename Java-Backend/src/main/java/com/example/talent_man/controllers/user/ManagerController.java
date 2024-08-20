@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -21,16 +22,19 @@ public class ManagerController {
     @Autowired
     private UserService service;
 
+    @Autowired
+    private  UserRepo userRepo;
+
     @GetMapping("/employees")
-    public ApiResponse<Set<Employee>> getManagerEmployees(@RequestParam int managerId) {
+    public ApiResponse<List<User>> getManagerEmployees(@RequestParam int managerId) {
 
         try {
             if (managerId == 0) {
                 return new ApiResponse<>(300, "Enter a valid id");
             } else {
-                ApiResponse<Set<Employee>> newSet = new ApiResponse<>(200, " successfully");
-                Manager manager = service.getManagerById(managerId);
-                newSet.setItem(manager.getEmployees());
+                ApiResponse<List<User>> newSet = new ApiResponse<>(200, " successfully");
+                List<User> managerUsers = userRepo.findUsersByManagerId(managerId);
+                newSet.setItem(managerUsers);
                 return newSet;
             }
         } catch (Exception e) {

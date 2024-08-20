@@ -60,6 +60,7 @@ const routes: Routes = [
       { path: 'assQuests/:id',      component: MyAssessmentsComponent },
       { path: 'view-assessed-employee/:id/:assId', component:AttributesComponent},
       { path: 'assess-my-employee/:id/:assId', component: ManagerAssessEmployeeComponent },
+      { path: 'assess-my-employee/:id/:assId', component: ManagerAssessEmployeeComponent },
       { path: 'assess/:id/:status' , component: DoneByComponent },
       { path: 'assess-my-team',      component: ManagerAssessComponent },
       { path: 'roles',      component: RolesComponent },

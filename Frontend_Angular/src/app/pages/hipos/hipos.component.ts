@@ -55,6 +55,11 @@ export class HIPOsComponent implements OnInit {
   allHIPOsData: any[] = [];
   filteredHIPOsData:any [] = [];
 
+  paginatedHIPOS: any[] = [];
+  filterText: string = '';
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  totalPages: number = 1;
   displayedColumns: string[] = [
     'userId',
      'username',
@@ -125,6 +130,8 @@ export class HIPOsComponent implements OnInit {
         this.interventions = interventions.item;
         this.combineData()
         this.filteredData()
+        this.filterSearchData()
+        this.updatePagination();
       }
     )
   }
@@ -155,6 +162,7 @@ export class HIPOsComponent implements OnInit {
     })
     console.log("12345678", allData);
     this.allHIPOsData = allData
+    this.filterSearchData();
     
   }
 
@@ -237,6 +245,47 @@ export class HIPOsComponent implements OnInit {
   getAttScore(attScores: AttScore[], pattName: string): number {
     const scoreObj = attScores.find(score => score.pattName === pattName);
     return scoreObj ? parseInt(scoreObj.score) : 0;  // Default to 0 if not found
+  }
+
+  applyFiltertoSeach(event: Event) {
+    this.filterText = (event.target as HTMLInputElement).value;
+    this.filterSearchData();
+  }
+
+  filterSearchData(): void {
+    if (this.filterText.trim()) {
+      this.allHIPOsData = this.filteredHIPOsData.filter(item =>
+        item.name.toLowerCase().includes(this.filterText.toLowerCase())
+      );
+    } else {
+      this.filteredHIPOsData = [...this.allHIPOsData]; // Reset to original data if filterText is empty
+    }
+    this.updatePagination();
+  }
+
+  updatePagination(): void {
+    this.totalPages = Math.ceil(this.allHIPOsData.length / this.itemsPerPage);
+    this.paginate();
+  }
+
+  paginate(): void {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.paginatedHIPOS = this.allHIPOsData.slice(start, end);
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.paginate();
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.paginate();
+    }
   }
 
 }

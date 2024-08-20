@@ -42,6 +42,10 @@ import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch, with
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatTabsModule} from '@angular/material/tabs';
 import { DialogViewComponent } from './pages/dialog-view/dialog-view.component';
+import { MatCardModule } from '@angular/material/card';
+import {MatListModule} from '@angular/material/list';
+import {MatExpansionModule} from '@angular/material/expansion';
+
 
 
 import { MatOptionModule } from '@angular/material/core';
@@ -90,6 +94,8 @@ import { TalentComponent } from './pages/talent-mapping/talent/talent.component'
 import { ReadyNowDialogComponent } from './succession-plan/ready-now-dialog/ready-now-dialog.component';
 import { CreateEmployeeComponent } from './create-employee/create-employee.component';
 
+import { AssessmentHistoryInfoComponent } from './assessment-history-info/assessment-history-info.component';
+
 
 
 @NgModule({
@@ -126,6 +132,7 @@ import { CreateEmployeeComponent } from './create-employee/create-employee.compo
     AttributesComponent,
     TimerDialogComponent,
     ManagerAssessComponent,
+    AssessmentHistoryInfoComponent,
     ManagerAssessEmployeeComponent,
     AddAttributeComponent,
     MyAssessmentsComponent,
@@ -156,6 +163,7 @@ import { CreateEmployeeComponent } from './create-employee/create-employee.compo
     AddDepartmentComponent,
     TalentComponent,
     CreateEmployeeComponent,
+    AssessmentHistoryInfoComponent,
     
    
   ],
@@ -172,6 +180,8 @@ import { CreateEmployeeComponent } from './create-employee/create-employee.compo
     MatPaginatorModule,
     MatTableModule,
     FormsModule,
+    MatListModule,
+    MatExpansionModule,
     MatSelectModule,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -179,6 +189,7 @@ import { CreateEmployeeComponent } from './create-employee/create-employee.compo
     MatButtonModule,
     MatPaginator,
     MatTableModule,
+    MatCardModule,
     NgbModule,
     MatIconModule,
     MatSelectModule,

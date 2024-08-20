@@ -1,0 +1,69 @@
+<div class="row">
+    <ng-container *ngIf="assessments; else noAssessmentHistory">
+        <div class="col-md-9 row">
+            <mat-card *ngFor="let assessment of assessments" class="assessment-card col-md-6">
+              <mat-card-header>
+                <mat-card-title>{{ assessment.assessmentName }}</mat-card-title>
+                <mat-card-subtitle>{{ assessment.assessmentDate | date:'yyyy-MM-dd' }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p><strong>Description:</strong> {{ assessment.assessmentDescription }}</p>
+                <div class="row">
+                  <p><strong>Overall Score:</strong> {{ assessment.overallScore | number:'1.2-2' }}</p>
+                  <ng-container *ngIf="assessment.managerAssessed; else elseTemplate">
+                    <div class="d-flex align-items-center">
+                      <strong>is Manager Assessed:</strong>
+                      <mat-icon>radio_button_checked</mat-icon>
+                    </div>
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                    <div class="d-flex align-items-center">
+                      <strong>is Manager Assessed:</strong>
+                      <mat-icon>cancel</mat-icon>
+                    </div>
+                  </ng-template>
+                </div>
+        
+                <mat-expansion-panel *ngIf="assessment.assessmentStatuses.length">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      Details by Attribute
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <div class="row">
+                    <div class="col-md-3 card" *ngFor="let status of assessment.assessmentStatuses">
+                      <h6>{{ status.potentialAttributeName }}</h6>
+                      <p><strong>User Score:</strong> {{ status.userScore | number:'1.2-2' }}</p>
+                      <p><strong>Manager Score:</strong> {{ status.managerScore | number:'1.2-2' }}</p>
+                    </div>
+                  </div>
+                </mat-expansion-panel>
+              </mat-card-content>
+            </mat-card>
+          </div>
+    </ng-container>
+    <ng-template #noAssessmentHistory>
+        <div class="card p-3 m-2">
+            <h5 class="card-category">No Previous Assessments Found</h5>
+        </div>
+    </ng-template>
+    
+    <!-- Assessments List -->
+
+  
+    <!-- Statistics Card -->
+    <div class="col-md-3 mx-1">
+      <div class="card statistics-card">
+        <div class="card-body">
+          <h4>Statistics</h4>
+          <p ><strong class="card-category">Total Assessments:</strong> {{ totalAssessments }}</p>
+          <p><strong class="card-category">Highest Performed Attribute:</strong> {{ highestPerformedAttribute?.potentialAttributeName || 'N/A' }}</p>
+          <p><strong class="card-category">Highest Performed Assessment:</strong> {{ highestPerformedAssessment?.assessmentName || 'N/A' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="id">
+    <button (click)="closeDialog()">close</button>
+  </div>
+  

@@ -25,9 +25,9 @@ export class HttpServiceService {
  // serverUrl: string = 'http://192.168.89.11:8080';
 
   // serverUrl: string = 'http://192.168.91.194:8080';
-  //serverUrl: string = 'http://192.168.89.161:8080/v1/api/';
+  serverUrl: string = 'http://192.168.88.199:8080/v1/api/';
 
-  serverUrl: string = environment.API_BASE_URL;
+  //serverUrl: string = environment.API_BASE_URL;
   //  serverUrl: string = 'http://192.168.2.21:8080';
 
 
@@ -290,6 +290,11 @@ getNotDoneAssesments(userId:number):Observable<any>{
 postUsersAnswers(data:any): Observable<any>{
   //http://localhost:8080/v1/api/answers/user
   const url =`${this.serverUrl}answers/user`
+  return this.http.post<any>(url, data)
+}
+
+postManagerAnswers(data:any):Observable<any>{
+  const url = `${this.serverUrl}answers/manager`
   return this.http.post<any>(url, data)
 }
 

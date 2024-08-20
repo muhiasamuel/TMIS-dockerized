@@ -101,17 +101,7 @@ export class EditCriticalSkillComponent implements OnInit{
       current: [this.skillToEdit.currentSkillState, Validators.required]
     })
   }
-
-  // addStrategy(){
-  //   this.skillDevelopmentStrategiesFormArray.push(this.fb.group({
-  //     strategyName:''
-  //   }))
-  // }
-
-  // deleteStrategy(i: number){
-  //   this.skillDevelopmentStrategiesFormArray.removeAt(i)
-  // }
-  
+ 
   onStepChange(stepper: StepperSelectionEvent) {
     const priorityFormValue = this.priorityForm?.get('priority')?.value;
     const scarcityFormValue = this.scarcityForm?.get('scarcity')?.value;

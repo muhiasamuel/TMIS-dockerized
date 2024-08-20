@@ -1,43 +1,148 @@
+<nav aria-label="breadcrumb mt-2">
+    <ol class=" breadcrumb-arrow align-items-center">
+        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+        <li class="breadcrumb-item"><a routerLink="/managers">Managers</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Assessment Status</li>
+    </ol>
+</nav>
 <div class="container-fluid">
-    <div class="row">
-        <div class="col sm-5 card mx-2">
-            <h4 class="greeting">{{greeting}}, {{ systemUser.user.userFullName.toUpperCase() }}</h4>
-            <p class="assessment-info">The table below contains a table of assesed assesments and unassesed assesments</p>
-        </div>
-        <div class="col-sm-3 card department-stats">
-            <h4>Department Statistics</h4>
-            <p *ngIf="systemUser.user.role.id == 1">Head: <b>{{ systemUser.user.userFullName.toUpperCase() }}</b></p>
-            <p *ngIf="systemUser.user.role.id == 2">Head: <b>{{ systemUser.user.manager.userFullName.toUpperCase() }}</b> </p>
-            <p>Employees: <b>8</b> </p>
-            <p>Assessments posted: <b>2</b> </p>
-        </div>
-    </div>
+    <!-- Assessment Information Card -->
 
-    <div class="table">
-        <table class="table table-bordered table-striped">
-            <thead class="thead-dark">
-                <th>#</th>
-                <th>PF Number</th>
-                <th>Employee Name</th>
-                <th>Employee Type</th>
-                <th>Action</th>
 
-            </thead>
-            <tbody>
-                <tr *ngFor="let employee of managerEmployees; let i = index">
-                    <td> {{i+1}} </td>
-                    <td> {{employee.pf}} </td>
-                    <td> {{employee.userFullName}} </td>
-                    <td> {{employee.userType}} </td>
-                    <td>
-                        <button  class="btn btn-md d-flex align-items-center">
-                            <mat-icon> visibility </mat-icon> view profile
-                        </button>
-                       
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+    <div class="d-flex">
+        <mat-card class="user-assessments-card">
+            <mat-tab-group>
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        <mat-icon class="example-tab-icon mx-2">people</mat-icon>
+                        Assess My Team
+                    </ng-template>
+                    <mat-card-header>
+                        <mat-card-title>User Assessments</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <mat-form-field>
+                            <mat-label>Filter</mat-label>
+                            <input matInput (keyup)="applyFilter($event)" placeholder="Filter">
+                        </mat-form-field>
+
+                        <table mat-table [dataSource]="dataSource" matSort>
+                            <ng-container matColumnDef="userId">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+                                <td mat-cell *matCellDef="let element ; let i=index">{{i+1}}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="username">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Username</th>
+                                <td mat-cell *matCellDef="let element">{{element.username}}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="userFullName">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Full Name</th>
+                                <td mat-cell *matCellDef="let element">{{element.userFullName}}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="pf">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>PF</th>
+                                <td mat-cell *matCellDef="let element">{{element.pf}}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="selfAssessed">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Self Assessed</th>
+                                <td mat-cell *matCellDef="let element">
+                                    <ng-container *ngIf="element.selfAssessed; else elseTemplatefalse">
+                                        <mat-icon class="mx-2 view" aria-hidden="false"
+                                            aria-label="View icon">done</mat-icon>
+
+                                    </ng-container>
+                                    <ng-template #elseTemplatefalse>
+                                        <mat-icon class="mx-2 edit-1" aria-hidden="false"
+                                            aria-label="View icon">cancel</mat-icon>
+
+                                    </ng-template>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="managerAssessed">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Manager Assessed</th>
+                                <td mat-cell *matCellDef="let element">
+                                    <ng-container *ngIf="element.managerAssessed else elseTemplatefalse">
+                                        <mat-icon class="mx-2 view" aria-hidden="false"
+                                            aria-label="View icon">done</mat-icon>
+
+                                    </ng-container>
+                                    <ng-template #elseTemplatefalse>
+                                        <mat-icon class="mx-2 edit-1" aria-hidden="false"
+                                            aria-label="View icon">cancel</mat-icon>
+
+                                    </ng-template>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="Actions">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
+                                <td mat-cell *matCellDef="let element" class="actions">
+                                    <button class="btn btn-sm btn-success" (click)="view(element.userId)">
+                                        <mat-icon class="edit" aria-hidden="false"
+                                            aria-label="View icon">visibility</mat-icon>
+
+                                    </button>
+                                    <ng-container *ngIf="element.selfAssessed; else elseTemplate">
+                                        <ng-container *ngIf="element.managerAssessed; else elseTemplate2">
+                                            <button [disabled]="true" class="btn btn-sm btn-primary"
+                                                [routerLink]="['/assess-my-employee', element.userId, assessmentInfo.assessmentId]">
+                                                <mat-icon aria-hidden="false " class="edit"
+                                                    aria-label="Edit icon">edit</mat-icon>
+                                            </button>
+                                        </ng-container>
+                                        <ng-template #elseTemplate2>
+                                            <button class="btn btn-sm btn-primary"
+                                                [routerLink]="['/assess-my-employee', element.userId, assessmentInfo.assessmentId]">
+                                                <mat-icon aria-hidden="false " class="edit"
+                                                    aria-label="Edit icon">edit</mat-icon>
+                                            </button>
+                                        </ng-template>
+
+
+                                    </ng-container>
+                                    <ng-template #elseTemplate>
+                                        <mat-icon aria-hidden="false " class="edit-1"
+                                            aria-label="Edit icon">edit</mat-icon>
+                                    </ng-template>
+                                </td>
+                            </ng-container>
+
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+
+                        <mat-paginator [pageSize]="10" showFirstLastButtons></mat-paginator>
+                    </mat-card-content>
+                </mat-tab>
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        <mat-icon class="example-tab-icon mx-2">person</mat-icon>
+                        Assess Self
+                    </ng-template>
+                    <app-user-assessment></app-user-assessment>
+                </mat-tab>
+
+
+            </mat-tab-group>
+
+
+        </mat-card>
+        <mat-card class="assessment-info-card">
+            <mat-card-header>
+                <mat-card-title>Assessment Information</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p><strong>Assessment Name:</strong> {{ assessmentInfo?.assessmentName }}</p>
+                <p><strong>Description:</strong> {{ assessmentInfo?.assessmentDescription }}</p>
+                <p><strong>Expiry Date:</strong> {{ assessmentInfo?.assessmentExpiry }}</p>
+            </mat-card-content>
+        </mat-card>
     </div>
+    <!-- User Assessments Table -->
+
 </div>

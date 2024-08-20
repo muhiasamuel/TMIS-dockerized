@@ -117,50 +117,96 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
             "    pa.potential_attribute_id, pa.potential_attribute_name",nativeQuery = true)
     List<TalentInterface> getAllUserPerformances();
 
-    @Query(value = "SELECT main.userId, main.userName, main.userFullName, main.potentialAttribute, main.averagePerformance, " +
-            "main.userAssessmentAvg, main.manAssessmentAvg, main.a, main.assessmentDate, main.performanceYear, " +
-            "main.userClass, main.averageManAssessmentAvg, SUM(main.manAssessmentAvg) OVER (PARTITION BY main.userId) AS potentialRatingSum, " +
-            "AVG(main.manAssessmentAvg) OVER (PARTITION BY main.userId) AS potentialRating " +
-            "FROM (SELECT u.user_id AS userId, u.user_full_name as userFullName, u.username AS userName, pa.potential_attribute_name AS potentialAttribute, " +
-            "AVG(p.performance_metric) AS averagePerformance, AVG(c.choice_value) AS userAssessmentAvg, " +
-            "AVG(cm.choice_value) AS manAssessmentAvg, AVG(cm.choice_value + c.choice_value) AS a, a.date_created AS assessmentDate, " +
-            "p.year AS performanceYear, CASE WHEN (AVG(cm.choice_value + c.choice_value)) >= 14 THEN 'Class A' " +
-            "WHEN (AVG(cm.choice_value + c.choice_value)) < 14 AND (AVG(cm.choice_value + c.choice_value)) >= 12 THEN 'Class B' " +
-            "WHEN (AVG(cm.choice_value + c.choice_value)) < 12 AND (AVG(cm.choice_value + c.choice_value)) >= 10 THEN 'Class C' " +
-            "WHEN AVG(cm.choice_value) BETWEEN 4 AND 6 AND AVG(p.performance_metric) BETWEEN 4 AND 5 THEN 'Class A' ELSE 'Other' END AS userClass, " +
-            "AVG(cm.choice_value) AS averageManAssessmentAvg FROM users u LEFT JOIN performance p ON u.user_id = p.user_id " +
-            "LEFT JOIN user_question_answers uqa ON u.user_id = uqa.employee_id LEFT JOIN choices c ON uqa.user_selected_choice_id = c.choice_id " +
-            "LEFT JOIN choices cm ON uqa.manager_selected_choice_id = cm.choice_id LEFT JOIN assessments a ON uqa.assessment_id = a.assessment_id " +
-            "LEFT JOIN potential_attributes pa ON a.potential_attribute_id = pa.potential_attribute_id WHERE uqa.manager_id = :managerId " +
-            " GROUP BY u.user_id, pa.potential_attribute_name,  a.date_created) AS main " +
-            "ORDER BY main.performanceYear, main.assessmentDate", nativeQuery = true)
+    @Query(value = "WITH AggregatedScores AS ( " +
+            "SELECT u.user_id AS userId, u.username AS userName, u.user_full_name AS userFullName, " +
+            "pa.potential_attribute_name AS potentialAttribute, " +
+            "AVG(p.performance_metric) AS averagePerformance, " +
+            "AVG(CASE WHEN asr.assessment_type = 'USER_ASSESSMENT' THEN asr.average_score ELSE NULL END) AS userAssessmentAvg, " +
+            "AVG(CASE WHEN asr.assessment_type = 'MANAGER_ASSESSMENT' THEN asr.average_score ELSE NULL END) AS manAssessmentAvg, " +
+            "a.date_created AS assessmentDate, p.year AS performanceYear, " +
+            "CASE WHEN AVG(CASE WHEN asr.assessment_type = 'USER_ASSESSMENT' THEN asr.average_score ELSE NULL END + " +
+            "CASE WHEN asr.assessment_type = 'MANAGER_ASSESSMENT' THEN asr.average_score ELSE NULL END) >= 14 THEN 'Class A' " +
+            "WHEN AVG(CASE WHEN asr.assessment_type = 'USER_ASSESSMENT' THEN asr.average_score ELSE NULL END + " +
+            "CASE WHEN asr.assessment_type = 'MANAGER_ASSESSMENT' THEN asr.average_score ELSE NULL END) < 14 AND " +
+            "AVG(CASE WHEN asr.assessment_type = 'USER_ASSESSMENT' THEN asr.average_score ELSE NULL END + " +
+            "CASE WHEN asr.assessment_type = 'MANAGER_ASSESSMENT' THEN asr.average_score ELSE NULL END) >= 12 THEN 'Class B' " +
+            "WHEN AVG(CASE WHEN asr.assessment_type = 'USER_ASSESSMENT' THEN asr.average_score ELSE NULL END + " +
+            "CASE WHEN asr.assessment_type = 'MANAGER_ASSESSMENT' THEN asr.average_score ELSE NULL END) < 12 AND " +
+            "AVG(CASE WHEN asr.assessment_type = 'USER_ASSESSMENT' THEN asr.average_score ELSE NULL END + " +
+            "CASE WHEN asr.assessment_type = 'MANAGER_ASSESSMENT' THEN asr.average_score ELSE NULL END) >= 10 THEN 'Class C' " +
+            "WHEN AVG(CASE WHEN asr.assessment_type = 'MANAGER_ASSESSMENT' THEN asr.average_score ELSE NULL END) BETWEEN 4 AND 6 AND " +
+            "AVG(p.performance_metric) BETWEEN 4 AND 5 THEN 'Class A' ELSE 'Other' END AS userClass, " +
+            "AVG(CASE WHEN asr.assessment_type = 'MANAGER_ASSESSMENT' THEN asr.average_score ELSE NULL END) AS averageManAssessmentAvg " +
+            "FROM users u " +
+            "JOIN average_scores asr ON u.user_id = asr.user_id " +
+            "JOIN assessments a ON asr.assessment_id = a.assessment_id " +
+            "JOIN potential_attributes pa ON asr.potential_attribute_id = pa.potential_attribute_id " +
+            "LEFT JOIN performance p ON u.user_id = p.user_id " +
+            "WHERE asr.assessment_type IN ('USER_ASSESSMENT', 'MANAGER_ASSESSMENT') " +
+            "AND u.manager_id = :managerId " + // Use the parameter here for the manager ID
+
+            // Filter for the last 3 years
+            "GROUP BY u.user_id, u.username, u.user_full_name, pa.potential_attribute_name, p.year, a.date_created " +
+            ") " +
+            "SELECT *, COALESCE(userAssessmentAvg, 0) + COALESCE(manAssessmentAvg, 0) AS a, " +
+            "SUM(averageManAssessmentAvg) OVER (PARTITION BY userId) AS potentialRatingSum, " +
+            "AVG(averageManAssessmentAvg) OVER (PARTITION BY userId) AS potentialRating " +
+            "FROM AggregatedScores " +
+            "ORDER BY performanceYear, assessmentDate", nativeQuery = true)
     List<UserPerformanceData> getAllUserHIPOs(int managerId);
 
-    @Query(value = "SELECT main.userId, main.userName, main.potentialAttribute, main.averagePerformance, " +
-            "main.userAssessmentAvg, main.manAssessmentAvg, main.a, main.assessmentDate, main.performanceYear, " +
-            "main.userClass, main.averageManAssessmentAvg, " +
-            "SUM(main.manAssessmentAvg) OVER (PARTITION BY main.userId) AS potentialRatingSum, " +
-            "AVG(main.manAssessmentAvg) OVER (PARTITION BY main.userId) AS potentialRating " +
-            "FROM (SELECT u.user_id AS userId, u.username AS userName, pa.potential_attribute_name AS potentialAttribute, " +
-            "AVG(p.performance_metric) AS averagePerformance, AVG(c.choice_value) AS userAssessmentAvg, " +
-            "AVG(cm.choice_value) AS manAssessmentAvg, AVG(cm.choice_value + c.choice_value) AS a, a.date_created AS assessmentDate, " +
-            "p.year AS performanceYear, " +
-
-            "CASE WHEN (AVG(cm.choice_value + c.choice_value)) >= 14 THEN 'Class A' " +
-            "WHEN (AVG(cm.choice_value + c.choice_value)) < 14 AND (AVG(cm.choice_value + c.choice_value)) >= 12 THEN 'Class B' " +
-            "WHEN (AVG(cm.choice_value + c.choice_value)) < 12 AND (AVG(cm.choice_value + c.choice_value)) >= 10 THEN 'Class C' " +
-            "WHEN AVG(cm.choice_value) BETWEEN 4 AND 6 AND AVG(p.performance_metric) BETWEEN 4 AND 5 THEN 'Class A' " +
-            "ELSE 'Other' END AS userClass, " +
-            "AVG(cm.choice_value) AS averageManAssessmentAvg FROM users u " +
-            "LEFT JOIN performance p ON u.user_id = p.user_id " +
-            "LEFT JOIN user_question_answers uqa ON u.user_id = uqa.employee_id " +
-            "LEFT JOIN choices c ON uqa.user_selected_choice_id = c.choice_id " +
-            "LEFT JOIN choices cm ON uqa.manager_selected_choice_id = cm.choice_id " +
-            "LEFT JOIN assessments a ON uqa.assessment_id = a.assessment_id " +
-            "LEFT JOIN potential_attributes pa ON a.potential_attribute_id = pa.potential_attribute_id " +
-            "WHERE uqa.manager_id = :managerId  AND p.year = :year AND YEAR(a.date_created) = :year " +
-            "GROUP BY u.user_id, pa.potential_attribute_name, p.year, a.date_created) AS main " +
-            "ORDER BY main.performanceYear, main.assessmentDate", nativeQuery = true)
+    @Query(nativeQuery = true, value = """
+        WITH AggregatedScores AS (
+            SELECT 
+                u.user_id AS userId,
+                u.username AS userName,
+                u.user_full_name AS userFullName,
+                pa.potential_attribute_name AS potentialAttribute,
+                AVG(p.performance_metric) AS averagePerformance,
+                AVG(CASE WHEN asr.assessment_type = 'USER_ASSESSMENT' THEN asr.average_score ELSE NULL END) AS userAssessmentAvg,
+                AVG(CASE WHEN asr.assessment_type = 'MANAGER_ASSESSMENT' THEN asr.average_score ELSE NULL END) AS manAssessmentAvg,
+                a.date_created AS assessmentDate,
+                p.year AS performanceYear,
+                CASE 
+                    WHEN AVG(CASE WHEN asr.assessment_type = 'USER_ASSESSMENT' THEN asr.average_score ELSE NULL END +
+                        CASE WHEN asr.assessment_type = 'MANAGER_ASSESSMENT' THEN asr.average_score ELSE NULL END) >= 14 THEN 'Class A'
+                    WHEN AVG(CASE WHEN asr.assessment_type = 'USER_ASSESSMENT' THEN asr.average_score ELSE NULL END +
+                        CASE WHEN asr.assessment_type = 'MANAGER_ASSESSMENT' THEN asr.average_score ELSE NULL END) < 14 AND 
+                        AVG(CASE WHEN asr.assessment_type = 'USER_ASSESSMENT' THEN asr.average_score ELSE NULL END +
+                        CASE WHEN asr.assessment_type = 'MANAGER_ASSESSMENT' THEN asr.average_score ELSE NULL END) >= 12 THEN 'Class B'
+                    WHEN AVG(CASE WHEN asr.assessment_type = 'USER_ASSESSMENT' THEN asr.average_score ELSE NULL END +
+                        CASE WHEN asr.assessment_type = 'MANAGER_ASSESSMENT' THEN asr.average_score ELSE NULL END) < 12 AND 
+                        AVG(CASE WHEN asr.assessment_type = 'USER_ASSESSMENT' THEN asr.average_score ELSE NULL END +
+                        CASE WHEN asr.assessment_type = 'MANAGER_ASSESSMENT' THEN asr.average_score ELSE NULL END) >= 10 THEN 'Class C'
+                    WHEN AVG(CASE WHEN asr.assessment_type = 'MANAGER_ASSESSMENT' THEN asr.average_score ELSE NULL END) BETWEEN 4 AND 6 AND 
+                        AVG(p.performance_metric) BETWEEN 4 AND 5 THEN 'Class A'
+                    ELSE 'Other'
+                END AS userClass,
+                AVG(CASE WHEN asr.assessment_type = 'MANAGER_ASSESSMENT' THEN asr.average_score ELSE NULL END) AS averageManAssessmentAvg
+            FROM 
+                users u
+                JOIN average_scores asr ON u.user_id = asr.user_id
+                JOIN assessments a ON asr.assessment_id = a.assessment_id
+                JOIN potential_attributes pa ON asr.potential_attribute_id = pa.potential_attribute_id
+                LEFT JOIN performance p ON u.user_id = p.user_id
+            WHERE 
+                asr.assessment_type IN ('USER_ASSESSMENT', 'MANAGER_ASSESSMENT')
+                AND p.year = :year
+                AND YEAR(a.date_created) = :year
+                AND u.manager_id = :managerId
+            GROUP BY 
+                u.user_id, u.username, u.user_full_name, pa.potential_attribute_name, p.year, a.date_created
+        )
+        SELECT 
+            *,
+            COALESCE(userAssessmentAvg, 0) + COALESCE(manAssessmentAvg, 0) AS a,
+            SUM(averageManAssessmentAvg) OVER (PARTITION BY userId) AS potentialRatingSum,
+            AVG(averageManAssessmentAvg) OVER (PARTITION BY userId) AS potentialRating
+        FROM 
+            AggregatedScores
+        ORDER BY 
+            performanceYear, assessmentDate;
+        """)
     List<UserPerformanceData> getAllUserHIPOsByYear(int managerId, int year);
 
     @Query( value = "SELECT " +

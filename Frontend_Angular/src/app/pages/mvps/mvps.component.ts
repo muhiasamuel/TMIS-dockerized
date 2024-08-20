@@ -29,6 +29,11 @@ export class MvpsComponent implements OnInit {
   fullData: any[] = [];
   filteredData:any[] = [];
   filteredMVPs:any[] = [];
+  paginatedMVPs: any[] = [];
+  filterText: string = '';
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  totalPages: number = 1;
   @ViewChild('pdf', {static:false}) el!:ElementRef
 
 
@@ -89,12 +94,13 @@ export class MvpsComponent implements OnInit {
       this.fullcombineData()
       this.filterData()
       this.filterMVPs()
+      this.filterSearchData()
+      this.updatePagination();
+
     });
   }
 
   combineData(): void {
-
-    
     
     const combinedData = this.talentData.map(user => {
       const performance = this.performance.find(p => p.userId == user.userId);
@@ -178,15 +184,21 @@ export class MvpsComponent implements OnInit {
   }
 
   filterMVPs() {
-    this.filteredMVPs = this.fullData.filter(
-      item =>item.yearsRatedCount >= 2 &&
-      item.threeYearsPerformanceRating >= 3 && 
-      item.talentRating == 'A1' ||
-      item.talentRating == 'A2' ||
-      item.talentRating == 'B1' ||
-      item.talentRating == 'B2'
-    )}
-
+    console.log('Full Data:', this.fullData);
+    this.filteredMVPs = this.fullData
+      .filter(item => {
+        console.log('Filtering item:', item);
+        return (item.yearsRatedCount >= 2 &&
+                item.threeYearsPerformanceRating >= 3 &&
+                (item.talentRating == 'A1' ||
+                 item.talentRating == 'A2' ||
+                 item.talentRating == 'B1' ||
+                 item.talentRating == 'B2'));
+      });
+    console.log('Filtered MVPs:', this.filteredMVPs);
+  }
+  
+  
   fullcombineData(): void {
 
     const combinedData = this.talentData.map(user => {
@@ -272,5 +284,39 @@ export class MvpsComponent implements OnInit {
     
         pdf.save('MVPsAssessment.pdf');
       });
+    }
+
+    filterSearchData(): void {
+      this.filteredMVPs = this.MVPs.filter(item => 
+        item.name.toLowerCase().includes(this.filterText.toLowerCase())
+      );
+      this.updatePagination();
+      console.log("123", this.fullData);
+      
+    }
+  
+    updatePagination(): void {
+      this.totalPages = Math.ceil(this.filteredMVPs.length / this.itemsPerPage);
+      this.paginate();
+    }
+  
+    paginate(): void {
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      this.paginatedMVPs = this.filteredMVPs.slice(start, end);
+    }
+  
+    prevPage(): void {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        this.paginate();
+      }
+    }
+  
+    nextPage(): void {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+        this.paginate();
+      }
     }
 }

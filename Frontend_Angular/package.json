@@ -33,6 +33,7 @@
     "jasmine-spec-reporter": "^7.0.0",
     "jquery": "^3.7.1",
     "jspdf": "^2.5.1",
+    "mat-breadcrumb": "^1.0.1",
     "moment": "^2.30.1",
     "ngx-toastr": "^18.0.0",
     "protractor": "^7.0.0",

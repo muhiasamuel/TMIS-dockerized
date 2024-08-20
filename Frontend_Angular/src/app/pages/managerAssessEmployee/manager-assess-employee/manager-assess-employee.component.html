@@ -1,57 +1,84 @@
-<div class="container">
-    <div class="row">
+<div class="container-fluid">
+    <div class="row infocard">
         <div class="col-sm-12 topHeader radii d-flex align-items-center justify-content-between">
-            <button class="btn">back</button>
-                <p class="ms-3">{{title}}</p>
-                <button></button>
+            <button class="btn btn-md btn-primary" routerLink="/assess-my-team">back</button>
+            <p class="ms-3">Currently Assessing:<span>{{userToAssess.userFullName}}</span> PF Number:<span>{{userToAssess.employeePf}}</span></p>
+            <button></button>
         </div>
     </div>
-    <div class="row myCard justify-content-between mb-2 align-items-center">
-        <div class="col-sm-8">
-            <h3>{{assName}}</h3>
-            <p>{{assDescription}}</p>
+    <div class="row justify-content-between mb-2 align-items-center">
+        <div class="col-sm-7 mx-2 card" *ngFor="let assessment of notDoneAssessments; let i=index">
+            <h3>{{assessment.assessment.assessmentName}}</h3>
+            <p>{{assessment.assessment.assessmentDescription}}</p>
         </div>
         <div class="col-sm-3 card p-2">
             <h6>Statistics</h6>
-            <p>Total Questions: {{userDoneQuestions.length}}</p>
+            <p>Total Questions: 36</p>
             <p>Employee average: 1.3</p>
         </div>
-        
+
     </div>
     <div class="row">
-        <div class="col-sm-12 d-flex justify-content-between">
-            
-            <div class="col-sm-6">
-                <h6 class="appColor text-center">{{systemUser.userFullName}} please evaluate {{employeeName}}</h6>
-                <form action="" [formGroup]="questionForm">
-                    <div class="w-100" *ngFor="let quest of userDoneQuestions; let i =index">
-                        <div class="questions">
-                            <p>{{i + 1}}. {{quest.questionDescription}}</p>
-                            <p *ngFor="let option of quest.choices; let j = index" class="ms-4">
-                                <input type="radio" [value]="option" [formControlName]="quest.questionId">
-                                <span class="ms-3">{{option.choiceName}}</span>
-                            </p>
-                        </div>
-                    </div>
-                    <h4 id="error" class="text-danger"></h4>
-                    <button class="btn" (click) = "submitMangerAssessment()">Submit</button>
-                </form>
-            </div>
-            <div class="card p-2 col-sm-6">
-                <h6 class="appColor text-center"> {{employeeName}} self Assessment Results</h6>
-                <p>Assessment: </p>
-                <div class="w-100" *ngFor="let quest of userDoneQuestions; let i = index">
-                    <div class="questions">
-                        <p>{{i + 1 }}. {{quest.questionDescription}}</p>
-                        <ul>
-                            <li *ngFor="let choice of userDoneQuestions[i].choices">{{choice.choiceName}}</li>
-                        </ul>
-                        <p>Selected Choice: {{quest.employeeChoice.choiceName}}</p>
+        <div class="col-sm-12 card">
+            <ng-container *ngIf="notDoneAssessments; else elseTemplate">
+                <div class="px-3 py-2" *ngFor="let assessment of notDoneAssessments; let i=index">
+                  
+                    <div class="card">
+                        <mat-horizontal-stepper [linear]="isLinear" #stepper>
+                            <mat-step
+                                *ngFor="let attrFormGroup of firstFormGroups[i].get('attributes')['controls']; let attrIndex=index"
+                                [stepControl]="attrFormGroup">
+                                <ng-template matStepLabel>{{getAttributeName(i, attrIndex)}}</ng-template>
 
+                                <div class="row">
+                                    <ng-container
+                                        *ngFor="let questionGroup of attrFormGroup.get('questions')['controls']; let qIndex=index">
+                                        <div class="col-sm-6">
+                                            <form [formGroup]="questionGroup">
+                                                <div class="question-container">
+                                                    <label class="question-text">
+                                                        {{qIndex + 1}}. {{getQuestionText(i, attrIndex, qIndex)}}
+                                                    </label>
+                                                    <mat-radio-group class="choice-option" formControlName="choiceId">
+                                                        <mat-radio-button
+                                                            *ngFor="let choice of getChoices(i, attrIndex, qIndex)"
+                                                            [value]="choice.choiceId">
+                                                            {{choice.choiceValue}}
+                                                        </mat-radio-button>
+                                                    </mat-radio-group>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </ng-container>
+                                </div>
+
+                                <div class="mat-stepper-buttons">
+                                    <button mat-button matStepperPrevious class="nav-button-prev">Back</button>
+                                    <button mat-button matStepperNext class="nav-button-next">Next</button>
+                                </div>
+                            </mat-step>
+
+                            <mat-step>
+                                <ng-template matStepLabel>Done</ng-template>
+                                <p>You have completed this assessment.</p>
+                                <div class="mat-stepper-buttons">
+                                    <button mat-button matStepperPrevious class="nav-button-prev">Back</button>
+                                    <button mat-button class="reset-button" (click)="stepper.reset()">Reset</button>
+                                    <button mat-button class="submit-button" (click)="submit()">Submit</button>
+                                </div>
+                            </mat-step>
+                        </mat-horizontal-stepper>
                     </div>
                 </div>
-            </div>
-
+            </ng-container>
+            <ng-template #elseTemplate>
+                <h1>No assessments Found</h1>
+            </ng-template>
+        </div>
+        <div class="col-sm-12">
+            <!-- <app-user-done-assessments [data]="dataToTranser"></app-user-done-assessments> -->
         </div>
     </div>
+
+
 </div>
