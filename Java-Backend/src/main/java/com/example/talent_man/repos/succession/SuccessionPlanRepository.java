@@ -5,5 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SuccessionPlanRepository extends JpaRepository<SuccessionPlan, Integer> {
+public interface
+SuccessionPlanRepository extends JpaRepository<SuccessionPlan, Integer> {
 }
