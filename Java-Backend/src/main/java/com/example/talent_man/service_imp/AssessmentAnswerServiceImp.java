@@ -156,12 +156,8 @@ public class AssessmentAnswerServiceImp implements AssessmentAnswerService {
 //                return new ApiResponse<>(400, "User " + user.getUserFullName() + " is not an employee.");
 //            }
 //
-            Manager man = (Manager) user; // Safe cast after checking
+//
 
-            // Check if the employee belongs to the manager
-            if (!man.getManager().equals(manager)) {
-                return new ApiResponse<>(400, "Employee " + man.getUserFullName() + " does not belong to this manager.");
-            }
 
             // Check if the employee has completed their self-assessment
             if (!userManSelectedQuestionAnswerRepository.existsByUserAndAssessmentId(user, managerAnswerDTO.getAssessmentId())) {

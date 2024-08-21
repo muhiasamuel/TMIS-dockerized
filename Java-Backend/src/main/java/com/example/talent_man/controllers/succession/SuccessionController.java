@@ -29,22 +29,46 @@ public class SuccessionController {
     @GetMapping
     public ApiResponse<List<SuccessionPlanDto>> getAllSuccessionPlans() {
         List<SuccessionPlanDto> plans = successionPlanService.getAllSuccessionPlans();
-        ApiResponse res = new ApiResponse<>();
-        res.setMessage("Succession plans Retrieved successfully");
-        res.setStatus(200);
-        res.setItem(plans);
+        ApiResponse<List<SuccessionPlanDto>> res = new ApiResponse<>();
+
+        if (plans.isEmpty()) {
+            // Set the response to 404 Not Found if no plans are found
+            res.setMessage("No succession plans found");
+            res.setStatus(404);
+            res.setItem(null);  // Optionally set item to null or leave it out
+        } else {
+            // Set the response to 200 OK if plans are found
+            res.setMessage("Succession plans retrieved successfully");
+            res.setStatus(200);
+            res.setItem(plans);
+        }
+
         return res;
     }
+
 
     @GetMapping("/{id}")
     public ApiResponse<SuccessionPlanDto> getSuccessionPlanById(@PathVariable int id) {
         SuccessionPlanDto plan = successionPlanService.getSuccessionPlanById(id);
-        ApiResponse res = new ApiResponse<>();
-        res.setMessage("Succession plan Record retrieved successfully");
-        res.setStatus(200);
-        res.setItem(plan);
+        ApiResponse<SuccessionPlanDto> res = new ApiResponse<>();
+
+        if (plan == null) {
+            // Set the response to 404 Not Found if no plan is found
+            res.setMessage("Succession plan not found");
+            res.setStatus(404);
+            res.setItem(null);  // Optionally set item to null or leave it out
+        } else {
+            // Set the response to 200 OK if the plan is found
+            res.setMessage("Succession plan record retrieved successfully");
+            res.setStatus(200);
+            res.setItem(plan);
+        }
+
         return res;
     }
+
+
+
 
     @PutMapping("/{id}")
     public ApiResponse<SuccessionPlanDto> updateSuccessionPlan(@PathVariable int id, @RequestBody SuccessionPlanDto successionPlanDto) {

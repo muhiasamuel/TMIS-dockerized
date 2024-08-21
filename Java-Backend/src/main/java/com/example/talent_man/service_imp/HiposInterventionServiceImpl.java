@@ -12,6 +12,7 @@ import com.example.talent_man.models.user.User;
 import com.example.talent_man.repos.HipoNextPotentialRolesRepo;
 import com.example.talent_man.repos.HiposInterventionRepository;
 import com.example.talent_man.repos.user.EmployeeRepo;
+import com.example.talent_man.repos.user.UserRepo;
 import com.example.talent_man.services.HiposInterventionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,8 @@ public class HiposInterventionServiceImpl implements HiposInterventionService {
     private EmployeeRepo employeeRepository;
 
     @Autowired
+    private UserRepo userRepo;
+    @Autowired
     private HipoNextPotentialRolesRepo hipoNextPotentialRolesRepo;
     @Override
     public List<HiposIntervention> getAllHiposInterventions() {
@@ -43,7 +46,7 @@ public class HiposInterventionServiceImpl implements HiposInterventionService {
 
 
         try {
-            Employee employee = employeeRepository.findById(employeeId)
+            User user = userRepo.findById(employeeId)
                     .orElseThrow(() -> new RuntimeException("User not found with id: " + employeeId));
 
             List<HiposIntervention> interventions = new ArrayList<>();
@@ -52,7 +55,7 @@ public class HiposInterventionServiceImpl implements HiposInterventionService {
                 HiposIntervention hiposIntervention = new HiposIntervention();
                 hiposIntervention.setDevelopmentInterventions(interventionDTO.getDevelopmentInterventions());
                 hiposIntervention.setHowToAchieveInterventions(interventionDTO.getHowToAchieveInterventions());
-                hiposIntervention.setEmployee(employee);
+                hiposIntervention.setEmployee(user);
                 interventions.add(hiposIntervention);
             }
 
@@ -65,12 +68,12 @@ public class HiposInterventionServiceImpl implements HiposInterventionService {
     @Override
     public MappedSuccession createHIPOsNextPotentialRoles(MappedSuccessionDto mappedSuccessionDto, int employeeId){
         try {
-            Employee employee = employeeRepository.findById(employeeId)
+            User user = userRepo.findById(employeeId)
                     .orElseThrow(() -> new RuntimeException("User not found with id: " + employeeId));
 
             MappedSuccession mappedSuccession = new MappedSuccession();
             mappedSuccession.setPotentialNextRole(mappedSuccessionDto.getPotentialNextRole());
-            mappedSuccession.setEmployee(employee);
+            mappedSuccession.setEmployee(user);
 
 
             return hipoNextPotentialRolesRepo.save(mappedSuccession);

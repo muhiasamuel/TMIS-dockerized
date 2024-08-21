@@ -20,12 +20,23 @@ public class SuccessionDriversController {
     @GetMapping
     public ApiResponse<List<SuccessionDrivers>> getAllSuccessionDrivers() {
         List<SuccessionDrivers> drivers = successionDriversService.getAllSuccessionDrivers();
-        ApiResponse res = new ApiResponse<>();
-        res.setMessage("Succession drivers retrieved successfully");
-        res.setStatus(200);
-        res.setItem(drivers);
+        ApiResponse<List<SuccessionDrivers>> res = new ApiResponse<>();
+
+        if (drivers.isEmpty()) {
+            // Set the response to 404 Not Found if no drivers are found
+            res.setMessage("No succession drivers found");
+            res.setStatus(404);
+            res.setItem(null);  // Optionally set item to null or leave it out
+        } else {
+            // Set the response to 200 OK if drivers are found
+            res.setMessage("Succession drivers retrieved successfully");
+            res.setStatus(200);
+            res.setItem(drivers);
+        }
+
         return res;
     }
+
 
     @GetMapping("/{id}")
     public ApiResponse<SuccessionDrivers> getSuccessionDriverById(@PathVariable int id) {
