@@ -1,0 +1,14 @@
+.chart-container {
+    position: relative;
+    width: 100%;
+    margin: auto;
+    overflow: hidden; /* Prevent overflow if resizing issues occur */
+  }
+  
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100%; /* Ensure the height does not exceed the container */
+    max-width: 100%; /* Ensure the width does not exceed the container */
+  }
+  

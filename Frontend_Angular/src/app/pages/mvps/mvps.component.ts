@@ -28,6 +28,7 @@ export class MvpsComponent implements OnInit {
   assessment: any[] = [];
   fullData: any[] = [];
   filteredData:any[] = [];
+  allData:any[]=[];
   filteredMVPs:any[] = [];
   paginatedMVPs: any[] = [];
   filterText: string = '';
@@ -94,7 +95,6 @@ export class MvpsComponent implements OnInit {
       this.fullcombineData()
       this.filterData()
       this.filterMVPs()
-      this.filterSearchData()
       this.updatePagination();
 
     });
@@ -188,13 +188,14 @@ export class MvpsComponent implements OnInit {
     this.filteredMVPs = this.fullData
       .filter(item => {
         console.log('Filtering item:', item);
-        return (item.yearsRatedCount >= 2 &&
-                item.threeYearsPerformanceRating >= 3 &&
+        return (item.yearsRatedCount >= 1 &&
+                item.threeYearsPerformanceRating >= 1 &&
                 (item.talentRating == 'A1' ||
                  item.talentRating == 'A2' ||
                  item.talentRating == 'B1' ||
                  item.talentRating == 'B2'));
       });
+      this.allData = this.filteredMVPs
     console.log('Filtered MVPs:', this.filteredMVPs);
   }
   
@@ -287,7 +288,7 @@ export class MvpsComponent implements OnInit {
     }
 
     filterSearchData(): void {
-      this.filteredMVPs = this.MVPs.filter(item => 
+      this.filteredMVPs = this.allData.filter(item => 
         item.name.toLowerCase().includes(this.filterText.toLowerCase())
       );
       this.updatePagination();

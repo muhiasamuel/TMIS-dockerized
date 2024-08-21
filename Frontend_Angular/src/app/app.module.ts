@@ -45,8 +45,9 @@ import { DialogViewComponent } from './pages/dialog-view/dialog-view.component';
 import { MatCardModule } from '@angular/material/card';
 import {MatListModule} from '@angular/material/list';
 import {MatExpansionModule} from '@angular/material/expansion';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
-
+import { BaseChartDirective  } from 'ng2-charts';
 
 import { MatOptionModule } from '@angular/material/core';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
@@ -95,6 +96,7 @@ import { ReadyNowDialogComponent } from './succession-plan/ready-now-dialog/read
 import { CreateEmployeeComponent } from './create-employee/create-employee.component';
 
 import { AssessmentHistoryInfoComponent } from './assessment-history-info/assessment-history-info.component';
+import { AssessmentLineGraphComponent } from './graphs/assessment-line-graph/assessment-line-graph.component';
 
 
 
@@ -164,6 +166,7 @@ import { AssessmentHistoryInfoComponent } from './assessment-history-info/assess
     TalentComponent,
     CreateEmployeeComponent,
     AssessmentHistoryInfoComponent,
+    AssessmentLineGraphComponent,
     
    
   ],
@@ -176,6 +179,7 @@ import { AssessmentHistoryInfoComponent } from './assessment-history-info/assess
     BrowserAnimationsModule,
     MatStepperModule,
     MatTableModule,
+    BaseChartDirective,
     MatRadioModule,
     MatPaginatorModule,
     MatTableModule,
@@ -205,13 +209,18 @@ import { AssessmentHistoryInfoComponent } from './assessment-history-info/assess
     MatTabsModule,
     MatGridListModule,
     CommonModule,
+    
     ToastrModule.forRoot()
     
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorsService, multi: true },
     provideHttpClient(),
+    provideCharts(withDefaultRegisterables())
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+
+

@@ -16,6 +16,8 @@ export class BarChartComponent implements OnInit {
   totalCountList: string[] = [];
    chart: any;
    authUser:any
+lineChartData: any;
+lineChartOptions: any;
   
   constructor(
     @Inject(DOCUMENT) private document: Document,

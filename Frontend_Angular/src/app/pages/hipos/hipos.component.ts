@@ -54,7 +54,7 @@ export class HIPOsComponent implements OnInit {
   interventions: any[] = [];
   allHIPOsData: any[] = [];
   filteredHIPOsData:any [] = [];
-
+  data: any[] = [];
   paginatedHIPOS: any[] = [];
   filterText: string = '';
   currentPage: number = 1;
@@ -130,7 +130,6 @@ export class HIPOsComponent implements OnInit {
         this.interventions = interventions.item;
         this.combineData()
         this.filteredData()
-        this.filterSearchData()
         this.updatePagination();
       }
     )
@@ -161,6 +160,7 @@ export class HIPOsComponent implements OnInit {
       }
     })
     console.log("12345678", allData);
+    this.data = allData;
     this.allHIPOsData = allData
     this.filterSearchData();
     
@@ -254,11 +254,11 @@ export class HIPOsComponent implements OnInit {
 
   filterSearchData(): void {
     if (this.filterText.trim()) {
-      this.allHIPOsData = this.filteredHIPOsData.filter(item =>
+      this.allHIPOsData = this.data.filter(item =>
         item.name.toLowerCase().includes(this.filterText.toLowerCase())
       );
     } else {
-      this.filteredHIPOsData = [...this.allHIPOsData]; // Reset to original data if filterText is empty
+      this.data = [...this.allHIPOsData]; // Reset to original data if filterText is empty
     }
     this.updatePagination();
   }

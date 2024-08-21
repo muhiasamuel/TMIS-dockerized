@@ -56,6 +56,8 @@ export class AssessmentHistoryInfoComponent implements OnInit {
   loadAssessments(id): void {
     const url = `${this.server.serverUrl}user/${id}/scoring-history`;
     this.http.get<{ item: Assessment[] }>(url).subscribe(response => {
+      console.log(response.item);
+      
       this.assessments = response.item;
       this.calculateStatistics();
     });

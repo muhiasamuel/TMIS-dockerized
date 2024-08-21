@@ -1,94 +1,97 @@
-import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
-import Chart from 'chart.js/auto';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Chart, ChartConfiguration } from 'chart.js';
+import { HttpServiceService } from '../../services/http-service.service';
 
 @Component({
   selector: 'app-pie-chart',
   templateUrl: './pie-chart.component.html',
-  styleUrl: './pie-chart.component.scss'
+  styleUrls: ['./pie-chart.component.scss']
 })
-export class PieChartComponent implements OnInit{
-  public realdata: any = [];
-  public labeldata: any = [];
-  public colordata: any =[];
-  
-  public chart: any;
-   public criticalSkill = [
-    {
-      skill: 'programming',
-      level: 6,
-      colorcode: "ruby",
-    },
-    {
-      skill: 'manager',
-      level: 5,
-      colorcode: "red",
-    },
-    {
-      skill: 'dataanslysis',
-      level: 6,
-      colorcode: "maroon",
-    },
-    {
-      skill: 'bookeeping',
-      level: 4,
-      colorcode: "brown",
-    },
-    {
-      skill: 'accounting',
-      level: 2,
-      colorcode: "grey",
+export class PieChartComponent implements OnInit {
+  pieChart: Chart<'pie'>;
+  assessments: any[] = [];
+  pieChartData: ChartConfiguration<'pie'>['data'] = {
+    labels: [],
+    datasets: [{
+      data: [],
+      backgroundColor: []
+    }]
+  };
+  pieChartOptions: ChartConfiguration<'pie'>['options'] = {
+    responsive: true,
+    maintainAspectRatio: true, // Allow chart to adjust to container
+    plugins: {
+      tooltip: {
+        enabled: true,
+        callbacks: {
+          label: (context) => {
+            const label = context.label || '';
+            const value = context.raw;
+            return `${label}: ${value}`;
+          }
+        }
+      },
+      legend: {
+        display: true,
+        position: 'top'
+      }
     }
-  ]
-  constructor(@Inject(DOCUMENT) private document: Document) {}
+  };
+
+  private resizeTimeout: any;
+
+  constructor(private http: HttpClient, private server: HttpServiceService) {}
 
   ngOnInit(): void {
-    // this.service.getChartInfo().subscribe((response) => {
-    //   this.chartInfo = response;
-      if (this.criticalSkill != null) {
-        for (let i = 0; i < this.criticalSkill.length; i++) {
-          this.labeldata.push(this.criticalSkill[i].skill);
-          this.realdata.push(this.criticalSkill[i].level);
-          this.colordata.push(this.criticalSkill[i].colorcode);
-
-          
-  const chartElement = this.document.getElementById('MyChart');
-  if (chartElement) {
-    const existingChart = Chart.getChart('MyChart');
-    if (existingChart) {
-      existingChart.destroy(); // Destroy existing chart if present
-    }
+    this.loadAssessments(2);
   }
+
+  loadAssessments(id: number): void {
+    const url = `${this.server.serverUrl}user/${id}/scoring-history`;
+    this.http.get<{ item: any[] }>(url).subscribe(response => {
+      this.assessments = response.item;
+      this.preparePieChartData();
+    });
+  }
+
+  preparePieChartData(): void {
+    const scores = this.assessments.reduce((acc, assessment) => {
+      assessment.assessmentStatuses.forEach(status => {
+        if (!acc[status.potentialAttributeName]) {
+          acc[status.potentialAttributeName] = 0;
         }
-        
-      }
-      this.chart = new Chart('MyChart', {
-        type: 'pie', //this denotes tha type of chart
-        data: {
-          labels: this.labeldata,
-          datasets: [
-            {
-              label: 'Critical Skill',
-              data: this.realdata,
-             // backgroundColor: this.colordata,
-             backgroundColor: [
-              'rgba(248, 41, 43, 0.8)',
-              'rgba(229, 189, 12, 0.8)',
-              'rgba(40, 170, 45, 0.8)'
-            ],
-            borderColor: [
-              'rgba(248, 41, 43, 1)',
-              'rgba(229, 189, 12, 1)',
-              'rgba(40, 170, 45, 1)'
-            ],
-             
-            },
-          ],
-        },
-        options: {
-          aspectRatio: 1.8,
-          
-        },
-      });  
+        acc[status.potentialAttributeName] += status.userScore;
+      });
+      return acc;
+    }, {} as { [key: string]: number });
+
+    this.pieChartData.labels = Object.keys(scores);
+    this.pieChartData.datasets[0].data = Object.values(scores);
+    this.pieChartData.datasets[0].backgroundColor = Object.keys(scores).map((_, index) => `hsl(${index * 70}, 70%, 50%)`);
+
+    this.createPieChart();
+  }
+
+  createPieChart(): void {
+    if (this.pieChart) {
+      this.pieChart.destroy();
+    }
+
+    this.pieChart = new Chart('AssessmentPieChart', {
+      type: 'pie',
+      data: this.pieChartData,
+      options: this.pieChartOptions
+    });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(): void {
+    if (this.pieChart) {
+      clearTimeout(this.resizeTimeout);
+      this.resizeTimeout = setTimeout(() => {
+        this.pieChart.resize(); // Ensure chart resizes correctly
+      }, 200); // Debounce resize by 200ms
+    }
   }
 }

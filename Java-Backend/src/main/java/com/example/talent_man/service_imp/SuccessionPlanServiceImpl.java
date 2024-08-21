@@ -57,11 +57,12 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
     @Override
     public SuccessionPlanDto createSuccessionPlan(SuccessionPlanDto successionPlanDto) {
         try {
-            // Validate that at least one of the ReadyUser lists is filled
+            // Validate that at least one of the ReadyUser lists or External Successor is filled
             if ((successionPlanDto.getReadyNow() == null || successionPlanDto.getReadyNow().isEmpty()) &&
                     (successionPlanDto.getReadyAfterTwoYears() == null || successionPlanDto.getReadyAfterTwoYears().isEmpty()) &&
-                    (successionPlanDto.getReadyMoreThanTwoYears() == null || successionPlanDto.getReadyMoreThanTwoYears().isEmpty())) {
-                throw new IllegalArgumentException("At least one of the Ready User lists (Now, 1-2 Years, More than 2 Years) must be filled.");
+                    (successionPlanDto.getReadyMoreThanTwoYears() == null || successionPlanDto.getReadyMoreThanTwoYears().isEmpty()) &&
+                    (successionPlanDto.getExternalSuccessor() == null || isExternalSuccessorEmpty(successionPlanDto.getExternalSuccessor()))) {
+                throw new IllegalArgumentException("At least one of the Ready User lists or External Successor must be filled.");
             }
 
             // Fetch the Department
@@ -72,6 +73,7 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
             Position position = positionRepository.findById(successionPlanDto.getPositionId())
                     .orElseThrow(() -> new ResourceNotFoundException("Position not found"));
 
+            // Fetch the Succession Driver
             SuccessionDrivers drivers = successionDriverRepo.findById(successionPlanDto.getDriverId())
                     .orElseThrow(() -> new ResourceNotFoundException("Succession Driver not found"));
 
@@ -80,6 +82,7 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
                 throw new ResourceNotFoundException("Position does not belong to the Department");
             }
 
+            // Fetch the Current Role Holder
             User currentRoleHolder = userRepository.findById(successionPlanDto.getCurrentRoleHolderId())
                     .orElseThrow(() -> new ResourceNotFoundException("Current Role Holder not found"));
 
@@ -87,11 +90,11 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
                 throw new ResourceNotFoundException("Current Role Holder does not hold the specified Position");
             }
 
+            // Create and populate SuccessionPlan entity
             SuccessionPlan successionPlan = new SuccessionPlan();
             successionPlan.setDepartment(department);
             successionPlan.setPosition(position);
             successionPlan.setPlanDriver(drivers);
-
             successionPlan.setRetentionRiskRating(successionPlanDto.getRetentionRiskRating());
             successionPlan.setCurrentRoleHolder(currentRoleHolder);
             successionPlan.setReadyNow(new ArrayList<>());
@@ -99,6 +102,19 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
             successionPlan.setReadyMoreThanTwoYears(new ArrayList<>());
             successionPlan.setProposedInterventions(new ArrayList<>());
             successionPlan.setSuccessorDevelopmentNeeds(new ArrayList<>());
+
+            // Set External Successor if provided
+            if (successionPlanDto.getExternalSuccessor() != null) {
+                ExternalSuccessor externalSuccessor = new ExternalSuccessor();
+                ExternalSuccessorDto externalDto = successionPlanDto.getExternalSuccessor();
+                externalSuccessor.setName(externalDto.getName());
+                externalSuccessor.setContactInfo(externalDto.getContactInfo());
+                externalSuccessor.setCurrentPosition(externalDto.getCurrentPosition());
+                externalSuccessor.setCurrentCompany(externalDto.getCurrentCompany());
+                externalSuccessor.setReasonForSelection(externalDto.getReasonForSelection());
+                externalSuccessor.setExpectedStartDate(externalDto.getExpectedStartDate());
+                successionPlan.setExternalSuccessor(externalSuccessor);
+            }
 
             // Save and link ReadyUsers
             List<ReadyUsers> readyNow = saveReadyUsers(successionPlanDto.getReadyNow(), successionPlan, "Now");
@@ -127,8 +143,16 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
 
             return convertToDto(savedSuccessionPlan);
         } catch (Exception e) {
-            throw new IllegalArgumentException("There was an error adding succession plan: " + e.getMessage(), e);
+            throw new IllegalArgumentException("There was an error adding the succession plan: " + e.getMessage(), e);
         }
+    }
+
+    // Helper method to check if the ExternalSuccessorDto is empty
+    private boolean isExternalSuccessorEmpty(ExternalSuccessorDto dto) {
+        return dto.getName() == null || dto.getName().isEmpty() &&
+                dto.getContactInfo() == null || dto.getContactInfo().isEmpty() &&
+                dto.getCurrentPosition() == null || dto.getCurrentPosition().isEmpty() &&
+                dto.getCurrentCompany() == null || dto.getCurrentCompany().isEmpty();
     }
 
     @Override
@@ -311,7 +335,25 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
                 successionPlan.getSuccessorDevelopmentNeeds().stream().map(this::convertToSuccessorDevelopmentNeedDto).collect(Collectors.toList()) :
                 new ArrayList<>());
 
+        // Set External Successor if present
+        if (successionPlan.getExternalSuccessor() != null) {
+            ExternalSuccessorDto externalSuccessorDto = getExternalSuccessorDto(successionPlan);
+            dto.setExternalSuccessor(externalSuccessorDto);
+        }
+
         return dto;
+    }
+
+    private static ExternalSuccessorDto getExternalSuccessorDto(SuccessionPlan successionPlan) {
+        ExternalSuccessor externalSuccessor = successionPlan.getExternalSuccessor();
+        ExternalSuccessorDto externalSuccessorDto = new ExternalSuccessorDto();
+        externalSuccessorDto.setName(externalSuccessor.getName());
+        externalSuccessorDto.setContactInfo(externalSuccessor.getContactInfo());
+        externalSuccessorDto.setCurrentPosition(externalSuccessor.getCurrentPosition());
+        externalSuccessorDto.setCurrentCompany(externalSuccessor.getCurrentCompany());
+        externalSuccessorDto.setReasonForSelection(externalSuccessor.getReasonForSelection());
+        externalSuccessorDto.setExpectedStartDate(externalSuccessor.getExpectedStartDate());
+        return externalSuccessorDto;
     }
 
     private ReadyUserDto convertToReadyUserDto(ReadyUsers readyUser) {
