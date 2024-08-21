@@ -124,31 +124,6 @@ export class SkillsViewComponent implements OnInit {
         this.ngOnInit()
       })
     )
-
-  //   this.http.getCriticalSkill(id).subscribe(
-  //     ((res) =>{
-  //       if (res) {
-  //       this.updata=res
-          
-  //       }
-  //       console.log(res);
-        
-  //     }),
-  //     ((e) => {
-  //       this.snack.open(e.message.error, "Close", {duration:3600})
-  //     }),
-  //     () => {
-
-  //     }
-  //   )
-  //   this.http.updateCriticalSkill(id,this.authUser.userId, this.updata ).subscribe(
-  //     ((res) =>{
-  //       console.log("Martinelli", res);
-  //     }),
-  //   ((error)=>{
-  //     console.error("gabriel",error)
-  //   }),
-  // ()=>{alert('successful')})
   }
 
     applyFilter(event: Event) {
