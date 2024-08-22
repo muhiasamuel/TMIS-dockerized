@@ -159,6 +159,9 @@ public class AssessmentAnswerServiceImp implements AssessmentAnswerService {
 //
 
 
+
+
+
             // Check if the employee has completed their self-assessment
             if (!userManSelectedQuestionAnswerRepository.existsByUserAndAssessmentId(user, managerAnswerDTO.getAssessmentId())) {
                 return new ApiResponse<>(400, "User " + user.getUserFullName() + " must complete their self-assessment before you can assess them.");

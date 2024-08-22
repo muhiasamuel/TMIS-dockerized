@@ -1,6 +1,7 @@
-<div class="row">
+<div >
+  <div class="row">
     <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats"  routerLink="/MyTeamsProfile">
+      <div class="card card-stats" routerLink="/MyTeamsProfile">
         <div class="card-body ">
           <div class="row">
             <div class="col-5 col-md-4">
@@ -12,7 +13,7 @@
               <div class="numbers">
                 <p class="card-category">All Employees</p>
                 <p class="card-title">{{ noOfEmployees }}
-                  <p>
+                <p>
               </div>
             </div>
           </div>
@@ -38,7 +39,7 @@
               <div class="numbers">
                 <p class="card-category">Critical Skills</p>
                 <p class="card-title">{{noOfCriticalSkills}}
-                  <p>
+                <p>
               </div>
             </div>
           </div>
@@ -53,7 +54,7 @@
     </div>
     <div class="col-lg-3 col-md-6 col-sm-6">
       <div class="card card-stats">
-        <div class="card-body ">
+        <div class="card-body " routerLink="/assess-my-potential">
           <div class="row">
             <div class="col-5 col-md-4">
               <div class="icon-big text-center icon-warning">
@@ -62,9 +63,9 @@
             </div>
             <div class="col-7 col-md-8">
               <div class="numbers">
-                <p class="card-category">Previous Assessments</p>
-                <p class="card-title">2
-                  <p>
+                <p class="card-category">My Done Assessments</p>
+                <p class="card-title">{{receivedAssessments.length}}
+                <p>
               </div>
             </div>
           </div>
@@ -91,7 +92,7 @@
               <div class="numbers">
                 <p class="card-category">MVP's</p>
                 <p class="card-title">30
-                  <p>
+                <p>
               </div>
             </div>
           </div>
@@ -105,26 +106,40 @@
       </div>
     </div>
   </div>
+  <div>
+    <ng-container *ngIf="permission.CREATE_MANAGERS">
+      <div class="row">
+        <div class=" col-md-6">
+          <app-bar-chart [criticalSkills]="criticalSkills" [items]="items"></app-bar-chart>
 
-    
+        </div>
+
+        <div class="col-md-6">
+          <app-critical-roles-bar></app-critical-roles-bar>
+        </div>
+
+      </div>
+    </ng-container>
+    <ng-template #elseTemplate>
+
+    </ng-template>
+
+
     <!-- <canvas id="myChart"></canvas> -->
-<!-- </div> -->
-<div class="row">
-  <div class="col-md-6">
-    <app-bar-chart [criticalSkills]="criticalSkills" [items] = "items"></app-bar-chart>
+    <!-- </div> -->
 
-  </div>
- 
-  <div class="col-md-6">
-    <app-critical-roles-bar></app-critical-roles-bar>
-  </div>
- 
-</div>
-<div class="row">
-  <div class="col-md-3">
-    <app-pie-chart></app-pie-chart>
-  </div>
-  <div class="col-md-6">
-    <app-assessment-line-graph></app-assessment-line-graph>
+    <div class="row">
+      <div class="col-md-3">
+        <app-pie-chart (assessmentsChange)="onAssessmentsChange($event)"></app-pie-chart>
+      </div>
+
+      <div class="col-md-6">
+        <app-assessment-line-graph></app-assessment-line-graph>
+      </div>
+      <div class="col-md-3">
+        <app-assessment-bar-graph [assessments]="receivedAssessments"></app-assessment-bar-graph>
+      </div>
+
+    </div>
   </div>
 </div>

@@ -16,12 +16,19 @@ import { SkillsAssessmentComponent } from '../skills-assessment/skills-assessmen
 })
 
 export class DashboardComponent implements OnInit{
+  receivedAssessments: any[] = [];
+
+  onAssessmentsChange(assessments: any[]): void {
+    this.receivedAssessments = assessments;
+    console.log('Assessments received from child:', this.receivedAssessments);
+  }
   authUser:any;
   employees:any;
   noOfEmployees:number;
   criticalSkills:any[] = [];
   items:any[] = [];
   noOfCriticalSkills:any;
+  permission: any;
   constructor(
     public http: HttpServiceService,
     private dialog: MatDialog,
@@ -31,13 +38,40 @@ export class DashboardComponent implements OnInit{
   ngOnInit(): void {
     const user = localStorage.getItem("user")
     if (user) {
+    
+      
       this.authUser = JSON.parse(user)
+      console.log("user", this.authUser);
     }
 
     this.getAllEmployees()
     this.getAllCriticalSkills()
     //this.getAllCriticalRoles()
+    this.categorizePermissions(this.authUser.permissions)
   }
+ categorizePermissions(permissions) {
+    const categorized = {};
+    const permissionsMap = {};
+
+
+    permissions.forEach(permission => {
+      this.permission = permission
+        const { resource } = permission;
+        permissionsMap[permission.permissionName] = permission;
+
+        
+        if (!categorized[resource]) {
+            categorized[resource] = [];
+        }
+        
+        categorized[resource].push(permission);
+    });
+    this.permission = permissionsMap
+    console.log(this.permission);
+    
+
+    return categorized;
+}
 getAllEmployees(){
     this.http.getAllEmployees(this.authUser.user.userId).subscribe(
       ((res) =>{

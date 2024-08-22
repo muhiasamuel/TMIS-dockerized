@@ -97,6 +97,7 @@ import { CreateEmployeeComponent } from './create-employee/create-employee.compo
 
 import { AssessmentHistoryInfoComponent } from './assessment-history-info/assessment-history-info.component';
 import { AssessmentLineGraphComponent } from './graphs/assessment-line-graph/assessment-line-graph.component';
+import { AssessmentBarGraphComponent } from './graphs/assessment-bar-graph/assessment-bar-graph.component';
 
 
 
@@ -167,6 +168,7 @@ import { AssessmentLineGraphComponent } from './graphs/assessment-line-graph/ass
     CreateEmployeeComponent,
     AssessmentHistoryInfoComponent,
     AssessmentLineGraphComponent,
+    AssessmentBarGraphComponent,
     
    
   ],
