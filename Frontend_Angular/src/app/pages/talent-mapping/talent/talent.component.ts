@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { HttpServiceService } from '../../../services/http-service.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -11,9 +11,12 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class TalentComponent implements OnInit, AfterViewInit {
 
-  constructor(private http: HttpServiceService, private route: Router) {}
+  constructor(private http: HttpServiceService,    
+    private route: ActivatedRoute,
+    private router: Router,) {}
 
   talents: any[] = [];
+  rating:string ='';
   managerId: any;
   filterValue: string = '';
   dataSource = new MatTableDataSource<any>([]);
@@ -25,17 +28,21 @@ export class TalentComponent implements OnInit, AfterViewInit {
     const user = localStorage.getItem("user");
     this.managerId = JSON.parse(user);
     console.log("manager", this.managerId);
-    this.displayTalent();
+    this.route.paramMap.subscribe(params => {
+      this.rating = params.get('rating');
+    });
+    this.displayTalent(this.rating);
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
 
-  displayTalent() {
+  displayTalent(rating) {
     this.http.getTalent(this.managerId.user.userId).subscribe(
       (res) => {
-        this.talents = res.items;
+
+        this.talents = res.items.filter((item) => item.talentRating === rating );
         console.log('new', this.talents);
         this.dataSource.data = this.talents;
         this.filterTalents(); // Initialize filteredTalents after fetching data
