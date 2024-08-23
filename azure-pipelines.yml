@@ -42,12 +42,12 @@ stages:
     - publish: manifests
       artifact: manifests
 
-    # Publish additional artifacts
-    - task: PublishPipelineArtifact@1
-      displayName: 'Publish Kubernetes Manifests'
-      inputs:
-        targetPath: '$(Pipeline.Workspace)/manifests'
-        artifact: 'manifests'
+    # # Publish additional artifacts
+    # - task: PublishPipelineArtifact@1
+    #   displayName: 'Publish Kubernetes Manifests'
+    #   inputs:
+    #     targetPath: '$(Pipeline.Workspace)/manifests'
+    #     artifact: 'manifests'
 
 - stage: Deploy
   displayName: Deploy stage
