@@ -1,8 +1,14 @@
+
 trigger:
 - main
 
 resources:
-- repo: self
+  repositories:
+  - repository: self
+    type: git
+    name: muhiasamuel/TMIS-dockerized
+    ref: refs/heads/main  # or use a specific commit SHA like 123abc456def
+
 
 variables:
   dockerRegistryServiceConnection: '21558edf-04b4-483e-b0fc-e4291b3407fe'
