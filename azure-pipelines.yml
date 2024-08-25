@@ -1,4 +1,3 @@
-
 trigger:
 - main
 
@@ -9,12 +8,11 @@ resources:
     name: muhiasamuel/TMIS-dockerized
     ref: refs/heads/main  # or use a specific commit SHA like 123abc456def
 
-
 variables:
   dockerRegistryServiceConnection: '21558edf-04b4-483e-b0fc-e4291b3407fe'
-  imageRepository: 'muhiasamueltmisdockerized'
   containerRegistry: 'talentsys.azurecr.io'
-  dockerfilePath: '**/Dockerfile'
+  tmisappImageRepository: 'tmisapp'
+  springbootappImageRepository: 'springbootapp'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'talentsysddef-auth'
   vmImageName: Talent
@@ -30,24 +28,27 @@ stages:
       name: Talent  # Use your custom agent pool here
     steps:
     - task: Docker@2
-      displayName: Build and push an image to container registry
+      displayName: Build and push tmisapp image to container registry
       inputs:
         command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
+        repository: $(tmisappImageRepository)
+        dockerfile: 'Frontend_Angular/Dockerfile'
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+
+    - task: Docker@2
+      displayName: Build and push springbootapp image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(springbootappImageRepository)
+        dockerfile: 'Java-Backend/Dockerfile'
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
 
     - publish: manifests
       artifact: manifests
-
-    # # Publish additional artifacts
-    # - task: PublishPipelineArtifact@1
-    #   displayName: 'Publish Kubernetes Manifests'
-    #   inputs:
-    #     targetPath: '$(Pipeline.Workspace)/manifests'
-    #     artifact: 'manifests'
 
 - stage: Deploy
   displayName: Deploy stage
@@ -84,7 +85,9 @@ stages:
               imagePullSecrets: |
                 $(imagePullSecret)
               containers: |
-                $(containerRegistry)/$(imageRepository):$(tag)
+                $(containerRegistry)/$(tmisappImageRepository):$(tag)
+                $(containerRegistry)/$(springbootappImageRepository):$(tag)
+                mariadb:latest  # Directly use the pre-built mariadb image
 
   - deployment: DeployPullRequest
     displayName: Deploy Pull request
@@ -128,7 +131,9 @@ stages:
               imagePullSecrets: |
                 $(imagePullSecret)
               containers: |
-                $(containerRegistry)/$(imageRepository):$(tag)
+                $(containerRegistry)/$(tmisappImageRepository):$(tag)
+                $(containerRegistry)/$(springbootappImageRepository):$(tag)
+                mariadb:latest  # Directly use the pre-built mariadb image
 
           - task: Kubernetes@1
             name: get
