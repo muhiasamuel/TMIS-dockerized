@@ -81,7 +81,7 @@ const routes: Routes = [
       { path: 'user-assessment', component:UserAssessmentComponent},
       { path: 'add-attributes',      component: AddAssessmentQuestionsComponent },
       {path: 'departments', component:DepartmentComponent},
-      { path: 'talent', component: TalentComponent}
+      { path: 'talent/:rating', component: TalentComponent}
      
   ]},
   {

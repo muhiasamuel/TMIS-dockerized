@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Chart, ChartConfiguration } from 'chart.js';
 import { HttpServiceService } from '../../services/http-service.service';
@@ -9,6 +9,7 @@ import { HttpServiceService } from '../../services/http-service.service';
   styleUrls: ['./pie-chart.component.scss']
 })
 export class PieChartComponent implements OnInit {
+  @Output() assessmentsChange = new EventEmitter<any[]>();
   pieChart: Chart<'pie'>;
   assessments: any[] = [];
   pieChartData: ChartConfiguration<'pie'>['data'] = {
@@ -20,7 +21,7 @@ export class PieChartComponent implements OnInit {
   };
   pieChartOptions: ChartConfiguration<'pie'>['options'] = {
     responsive: true,
-    maintainAspectRatio: true, // Allow chart to adjust to container
+    maintainAspectRatio: true,
     plugins: {
       tooltip: {
         enabled: true,
@@ -51,24 +52,28 @@ export class PieChartComponent implements OnInit {
     const url = `${this.server.serverUrl}user/${id}/scoring-history`;
     this.http.get<{ item: any[] }>(url).subscribe(response => {
       this.assessments = response.item;
+      console.log("assessments", response.item);
+
+      // Emit the assessments data to the parent
+      this.assessmentsChange.emit(this.assessments);
+
       this.preparePieChartData();
     });
   }
 
   preparePieChartData(): void {
+    // Aggregate overallScores for each assessment
     const scores = this.assessments.reduce((acc, assessment) => {
-      assessment.assessmentStatuses.forEach(status => {
-        if (!acc[status.potentialAttributeName]) {
-          acc[status.potentialAttributeName] = 0;
-        }
-        acc[status.potentialAttributeName] += status.userScore;
-      });
+      if (!acc[assessment.assessmentName]) {
+        acc[assessment.assessmentName] = 0;
+      }
+      acc[assessment.assessmentName] += assessment.overallScore;
       return acc;
     }, {} as { [key: string]: number });
 
     this.pieChartData.labels = Object.keys(scores);
     this.pieChartData.datasets[0].data = Object.values(scores);
-    this.pieChartData.datasets[0].backgroundColor = Object.keys(scores).map((_, index) => `hsl(${index * 70}, 70%, 50%)`);
+    this.pieChartData.datasets[0].backgroundColor = Object.keys(scores).map((_, index) => `hsl(${index * 70}, 70%, 30%)`);
 
     this.createPieChart();
   }

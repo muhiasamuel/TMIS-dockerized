@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: muhiasamueltmisdockerized 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: muhiasamueltmisdockerized
+  template:
+    metadata:
+      labels:
+        app: muhiasamueltmisdockerized 
+    spec:
+      containers:
+        - name: muhiasamueltmisdockerized 
+          image: talentsys.azurecr.io/muhiasamueltmisdockerized
+          ports:
+          - containerPort: 80

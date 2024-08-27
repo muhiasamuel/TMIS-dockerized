@@ -18,37 +18,56 @@ body{
 }
 
 .mat-color1{
-  background-color: rgb(0, 90, 153);
+  background-color: rgb(12, 38, 184);
+  font-size: medium;
+  margin: 4px;
+  font-weight: 700;
   color: white;
 }
 
 .mat-color2{
-  background-color: #008000;
+  background-color: #19a619;
   color: white;
+  margin: 4px;
+  font-size: medium;
+  font-weight: 700;
 }
 
 .mat-color3{
-  background-color: rgb(191,110,42);
+  background-color: rgb(198, 87, 9);
   color: white;
+  margin: 4px;
+  font-size: medium;
+  font-weight: 700;
 }
 
 .mat-color4{
-  background-color: rgb(183, 21, 16);
+  background-color: rgb(153, 14, 9);
   color: white;
+  margin: 4px;
+  font-size: medium;
+  font-weight: 700;
 }
 
 .mat-color5{
-  background-color: rgb(200, 149, 50);
+  background-color: rgb(119, 119, 30);
   color: white;
+  margin: 4px;
+  font-size: medium;
+  font-weight: 700;
 }
 
 .mat-color6{
   background-color: rgb(191, 101, 38);
   color: white;
+  margin: 4px;
+  font-size: medium;
+  font-weight: 700;
 }
 
 .horizontal{
   display: inline-block;
+  font-weight: 900;
   margin-left: 17rem;
 }
 
@@ -89,9 +108,10 @@ body{
 }
 .breadcrumb-arrow li a {
   position: relative;
+  font-weight: 900;
   color: #fff;
   text-decoration: none;
-  background-color: rgb(164, 42, 43);
+  background-color: rgb(8, 27, 130);
   border: 1px solid #3bafda
 }
 .breadcrumb-arrow li:first-child a {
@@ -109,7 +129,7 @@ body{
 .breadcrumb-arrow li a:before {
   right: -10px;
   z-index: 3;
-  border-left-color: rgb(130, 42, 43);
+  border-left-color: rgb(15, 61, 146);
   border-left-style: solid;
   border-left-width: 11px
 }
