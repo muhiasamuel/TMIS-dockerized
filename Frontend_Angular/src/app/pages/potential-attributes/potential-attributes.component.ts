@@ -8,6 +8,8 @@ import { AddAttributeComponent } from '../add-attribute/add-attribute.component'
 import {  Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { log } from 'console';
+import { AddAssessmentQuestionsComponent } from '../add-assessment-questions/add-assessment-questions.component';
+import { url } from 'inspector';
 
 @Component({
   selector: 'app-potential-attributes',
@@ -17,8 +19,13 @@ import { log } from 'console';
 export class PotentialAttributesComponent {
   systemUser: any
   userRoleId: any
+  status:boolean= false;
   title = "Potential Attributes"
+  name="Assesements"
   potentialAttribute: any[] = []
+  Assesement: any[] = []
+  Assesements: any[] = []
+  
 
   constructor(private route: Router, private http: HttpServiceService, private httpClient: HttpClient, private dialog: MatDialog){}
   ngOnInit(){
@@ -36,6 +43,7 @@ export class PotentialAttributesComponent {
     }else{
       this.route.navigate([''])
     }
+    this.getAssesements()
   }
 
   getManagerAttributes(managerId: any){
@@ -60,11 +68,42 @@ export class PotentialAttributesComponent {
 
   }
 
+  getAssesements(){
+    this.http.getAllAssesements().subscribe(
+    ((res)=>{
+      this.Assesement = res.item
+      console.log('assessements',this.Assesement);
+      const i = this.Assesement.forEach((assessment) => {
+        console.log(assessment);
+        
+        if (assessment.status == "Active") {
+          this.status = true
+        }
+      })
+    }),
+    ((error)=>{
+      console.log(error);
+      
+    }),
+    ()=>{}
+    )
+  }
+
   openDialog(){
     // this.dialog.open(AddAttributeComponent)
       this.dialog.open(AddPotentialDescriptorComponent,{
        width: "50vw"
       })
+  }
+
+  openAssesementDialog(){
+    this.dialog.open(AddAssessmentQuestionsComponent,{
+      width:"60vw",
+      position:{
+        right:"20em"
+      } 
+    
+    })
   }
 
 }

@@ -1,11 +1,12 @@
 <div class="container-fluid">
-<button (click)="closeDialog()" class="close">
-  <mat-icon>close</mat-icon>
-</button>
-      <mat-stepper
-        class="example-stepper"
-        [orientation]="(stepperOrientation | async)!">
-        <!-- <mat-step label="Add Attributes for this assessment">
+  <button (click)="closeDialog()" class="close">
+    <mat-icon>close</mat-icon>
+  </button>
+  <mat-stepper
+    class="example-stepper"
+    [orientation]="(stepperOrientation | async)!"
+  >
+    <!-- <mat-step label="Add Attributes for this assessment">
           <app-add-potential-descriptor (newItemEvent)="getAddedAttributes($event)"></app-add-potential-descriptor>
           <div id="attrNext" class="mx-5 row">
             <h6 class="col-md-6">Or Continue To Assessment With Already Created Attributes</h6>
@@ -13,54 +14,96 @@
           </div>
         </mat-step> -->
 
-        <mat-step label="Add Details and Question for this assessment">
-          <h6>Assessment Details Section</h6>
-          <div class="justify-content-center">
-            <div class="header-nav mt-4 mb-2 justify-content-center ">
-              <form [formGroup]="assessmentForm">
-                  <table class="example-full-width" cellspacing="10"><tr>
-                    <td><mat-form-field class="example-full-width mx-1"  style="width: 18vw;">
-                      <mat-label>Target Group for this assessment</mat-label>
-                      <mat-select
-                       formControlName="target">
-                        <mat-option *ngFor="let targetgrp of targetGroup" [value]="targetgrp">
-                          {{targetgrp}}
-                        </mat-option>
-                      </mat-select>
-                    </mat-form-field></td>
-                    <td><mat-form-field class="example-full-width mx-1"  style="width: 15vw;">
-                      <mat-label>Attribute to test in this assessment</mat-label>
-                      <mat-select
-                       formControlName="potentialAttributeId">
-                        <mat-option *ngFor="let attr of assessmentAttributes" [value]="attr.potentialAttributeId">
-                          {{attr.potentialAttributeName}}
-                        </mat-option>
-                      </mat-select>
-                    </mat-form-field></td>
-                    <td><mat-form-field class="example-full-width mx-1"  style="width: 15vw;">
-                      <mat-label>Assessment Name</mat-label>
-                      <input matInput placeholder="Add Assessment Name" formControlName="assessmentName">
-                    </mat-form-field></td>
-                    <td><mat-form-field>
-                      <mat-label>Assessment Expiration Date</mat-label>
-                      <input matInput [matDatepicker]="picker1" formControlName="endDate">
-                      <mat-hint>MM/DD/YYYY</mat-hint>
-                      <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
-                      <mat-datepicker #picker1></mat-datepicker>
-                    </mat-form-field></td>                    
-                  </tr>
-                  <tr></tr>
-                </table>
-                  <div class="">
-                    <mat-form-field style="width: 65vw;" class="example-full-width">
-                      <mat-label>Assessment Description</mat-label>
-                      <textarea matInput formControlName="assessmentDescription"></textarea>
-                    </mat-form-field>
-                  </div>
-              </form>
+    <mat-step label="Create Customized Assesement">
+      <h6>Assessment Details Section</h6>
+      <div class="justify-content-center">
+        <div class="header-nav mt-4 mb-2 justify-content-center">
+          <form [formGroup]="assessmentForm">
+            <table class="example-full-width" cellspacing="10">
+              <tr>
+                <td>
+                  <mat-form-field
+                    class="example-full-width mx-1"
+                    style="width: 18vw"
+                  >
+                    <mat-label>Target Group for this assessment</mat-label>
+                    <mat-select formControlName="target">
+                      <mat-option
+                        *ngFor="let targetgrp of targetGroup"
+                        [value]="targetgrp"
+                      >
+                        {{ targetgrp }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+                <!-- <td>
+                  <label for="datre">date</label>
+                  <input type="date" name="" id="">
+                </td> -->
+                <!-- <td>
+                  <mat-form-field
+                   
+                  >
+                    <mat-label>Attribute to test in this assessment</mat-label>
+                    <mat-select formControlName="potentialAttributeId">
+                      <mat-option
+                        *ngFor="let attr of assessmentAttributes"
+                        [value]="attr.potentialAttributeId"
+                      >
+                        {{ attr.potentialAttributeName }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </td> -->
+
+                <td>
+                  <mat-form-field
+                    class="example-full-width mx-1"
+                    style="width: 15vw"
+                  >
+                    <mat-label>Assessment Name</mat-label>
+                    <input
+                      matInput
+                      placeholder="Add Assessment Name"
+                      formControlName="assessmentName"
+                    />
+                  </mat-form-field>
+                </td>
+
+                <td>
+                  <mat-form-field>
+                    <mat-label>Assessment End Date</mat-label>
+                    <input
+                      matInput
+                      [matDatepicker]="picker1"
+                      formControlName="endDate"
+                    />
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle
+                      matIconSuffix
+                      [for]="picker1"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr></tr>
+            </table>
+            <div class="">
+              <mat-form-field style="width: 65vw" class="example-full-width">
+                <mat-label>Assessment Description</mat-label>
+                <textarea
+                  matInput
+                  formControlName="assessmentDescription"
+                ></textarea>
+              </mat-form-field>
             </div>
-            <br>
-            <h6>Assessment Descriptors Section</h6>
+          </form>
+          <button>Submit</button>
+        </div>
+        <br />
+        <!-- <h6>Assessment Descriptors Section</h6>
               <form [formGroup]="questionForm" (ngSubmit)="getFormData()" class="mt-1">
             
                 <div class="" formArrayName="questionList">
@@ -74,8 +117,8 @@
                       (click)="removeQuestion(i)" 
                       class="btn btn-sm btn-danger text-white">
                       <span class="material-icons white600">delete</span>
-                      </button>            
-                      <!-- <div [formGroup]="choicesFormGroup(i)">
+                      </button>             -->
+        <!-- <div [formGroup]="choicesFormGroup(i)">
             
                         <div formArrayName="questionChoicesArray" class="row">
             
@@ -93,13 +136,13 @@
                           </div>
                         </div>
                       </div> -->
-                      <!-- <button type="button" 
+        <!-- <button type="button" 
                         (click)="addNewSubject(i)" 
                         class="btn btn-sm btn-primary mt-2 d-flex align-items-center text-white">
                         <span class="material-icons white600">add</span>
                          option
                       </button> -->
-                    </div>
+        <!-- </div>
                   </div>
                 </div>
                 <button type="button" (click)="addQuestion()" 
@@ -109,19 +152,19 @@
                 <button mat-button matStepperPrevious>Back</button>
                 <button mat-button matStepperNext>Next</button>
               </form>            
-            </div>
-   
-        </mat-step>
-        <mat-step>
+            </div> -->
+      </div>
+    </mat-step>
+    <!-- <mat-step>
           <ng-template matStepLabel>Done</ng-template>
           <p>You are now done.</p>
           <div>
             <button mat-button matStepperPrevious>Add Another one</button>
           </div>
-        </mat-step>
-      </mat-stepper>
+        </mat-step> -->
+  </mat-stepper>
 
-      <!-- <div class="row my-3">
+  <!-- <div class="row my-3">
         <div class="col-md-8">
           <div class="card">
             <div class="card-body">
@@ -180,4 +223,3 @@
         </div>
       </div> -->
 </div>
-

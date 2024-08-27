@@ -10,7 +10,7 @@ export interface RouteInfo {
 
 export const ROUTES: RouteInfo[] = [
     { path: '/dashboard',     title: 'Dashboard',         icon:'nc-bank',       class: 'text-dark', userType: true},
-    { path: '/potential-attributes',     title: 'Potential Attributes',         icon:'nc-bank',       class: 'text-dark' , userType: true},
+    { path: '/potential-attributes',     title: 'Assesements',         icon:'nc-bank',       class: 'text-dark' , userType: true},
     { path: '/assess-my-potential',         title: 'assess my Potential',             icon:'nc-diamond',    class: 'text-dark' , userType: true},
     { path: '/assess-my-team',         title: 'assess my Team',             icon:'nc-diamond',    class: 'text-dark' , userType: true},
 
