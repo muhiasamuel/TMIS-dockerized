@@ -6,13 +6,6 @@
     class="example-stepper"
     [orientation]="(stepperOrientation | async)!"
   >
-    <!-- <mat-step label="Add Attributes for this assessment">
-          <app-add-potential-descriptor (newItemEvent)="getAddedAttributes($event)"></app-add-potential-descriptor>
-          <div id="attrNext" class="mx-5 row">
-            <h6 class="col-md-6">Or Continue To Assessment With Already Created Attributes</h6>
-            <button class="btn btn-success text-white col-md-2"id="btnAttr" matStepperNext>Next</button>
-          </div>
-        </mat-step> -->
 
     <mat-step label="Create Customized Assesement">
       <h6>Assessment Details Section</h6>
@@ -37,26 +30,7 @@
                     </mat-select>
                   </mat-form-field>
                 </td>
-                <!-- <td>
-                  <label for="datre">date</label>
-                  <input type="date" name="" id="">
-                </td> -->
-                <!-- <td>
-                  <mat-form-field
-                   
-                  >
-                    <mat-label>Attribute to test in this assessment</mat-label>
-                    <mat-select formControlName="potentialAttributeId">
-                      <mat-option
-                        *ngFor="let attr of assessmentAttributes"
-                        [value]="attr.potentialAttributeId"
-                      >
-                        {{ attr.potentialAttributeName }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </td> -->
-
+              
                 <td>
                   <mat-form-field
                     class="example-full-width mx-1"
@@ -100,7 +74,7 @@
               </mat-form-field>
             </div>
           </form>
-          <button>Submit</button>
+          <button (click)="submitAssesementDetails()">Submit</button>
         </div>
         <br />
         <!-- <h6>Assessment Descriptors Section</h6>

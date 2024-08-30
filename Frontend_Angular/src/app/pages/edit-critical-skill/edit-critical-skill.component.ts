@@ -197,15 +197,9 @@ export class EditCriticalSkillComponent implements OnInit{
 
   getCriticalSkill(){
     this.http.getCriticalSkill(this.skillToEdit.skillId).subscribe(
-      ((res)=>{
-        console.log("skills",res);
-        this.criticalSkill= res.item
-      }),
-      ((error)=>{
-        console.log("error",error);
-        
-      }),
-      ()=>{}
+      response => { console.log("skills",response);
+        this.criticalSkill= response.item},
+      error => {console.log("error",error)},
     )
   }
 }
