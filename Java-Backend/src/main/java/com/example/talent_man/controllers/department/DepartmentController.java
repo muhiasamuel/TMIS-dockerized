@@ -7,9 +7,12 @@ import com.example.talent_man.service_imp.DepServiceImp;
 import com.example.talent_man.utils.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,37 +23,44 @@ public class DepartmentController {
     @Autowired
     private DepServiceImp dService;
 
-    @PostMapping("/addDepartment")
-    public ApiResponse<Department> addDepartment(@RequestBody DepDto dep) {
-        try {
-            if (dep.getDepName().isEmpty()) {
-                return new ApiResponse<>(301, "Department should have a name");
-            } else if (dep.getPositionList().isEmpty()) {
-                return new ApiResponse<>(301, "Department should have positions");
-            } else {
-                Department department = new Department();
-                department.setDepName(dep.getDepName());
-                Set<Position> positions = new HashSet<>();
 
-                for (PositionDto p : dep.getPositionList()) {
-                    if (p.getPName() == null) {
-                        return new ApiResponse<>(301, "Department position should have a name");
-                    }
-                    Position position = new Position();
-                    position.setPositionName(p.getPName());
-                    position.setDepartment(department); // Set the department for the position
-                    positions.add(position);
-                }
-                department.setDepartmentPositions(positions);
-                Department dbDep = dService.addDepartment(department);
-                ApiResponse<Department> response = new ApiResponse<>(200, "Successful");
-                response.setItem(dbDep);
-                return response;
+    @PostMapping
+    public ResponseEntity<Department> createDepartment(@RequestBody DepDto depDto) {
+        Department createdDepartment = dService.createDepartment(depDto);
+        return new ResponseEntity<>(createdDepartment, HttpStatus.CREATED);
+    }
+    @PostMapping("/addDepartment")
+    public ResponseEntity<ApiResponse<Department>> addDepartment(@RequestBody DepDto depDto) {
+        // Validate Department Name
+        if (depDto.getDepName() == null || depDto.getDepName().isEmpty()) {
+            return new ResponseEntity<>(new ApiResponse<>(301, "Department should have a name"), HttpStatus.BAD_REQUEST);
+        }
+
+        // Validate Positions List
+        if (depDto.getPositionList() == null || depDto.getPositionList().isEmpty()) {
+            return new ResponseEntity<>(new ApiResponse<>(301, "Department should have positions"), HttpStatus.BAD_REQUEST);
+        }
+
+        // Validate Each Position Name
+        for (PositionDto p : depDto.getPositionList()) {
+            System.out.println(p);
+            if (p.getPName() == null || p.getPName().isEmpty()) {
+                return new ResponseEntity<>(new ApiResponse<>(301, "Department position should have a name"), HttpStatus.BAD_REQUEST);
             }
+        }
+
+        try {
+            // Create the Department with validated data
+            Department createdDepartment = dService.createDepartment(depDto);
+            ApiResponse<Department> response = new ApiResponse<>(200, "Successful");
+            response.setItem(createdDepartment);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ApiResponse<>(500, e.getMessage());
+            // Handle any exceptions that occur during the creation
+            return new ResponseEntity<>(new ApiResponse<>(500, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @PostMapping("/addDepartmentPositions")
     public ApiResponse<Department> addDepartmentPositions(@RequestParam("depId") Integer depId, @RequestBody List<PositionDto> positions){
@@ -62,7 +72,7 @@ public class DepartmentController {
         else if (positions == null || positions.isEmpty()) {
             return new ApiResponse<>(301, "Please enter valid positions");
         }else{
-            Set<Position> positionList = new HashSet<>();
+            List<Position> positionList = new ArrayList<>();
 
             for (PositionDto p: positions){
                 if(p.getPName() == null || p.getPName().equals("")){
@@ -88,6 +98,7 @@ public class DepartmentController {
         }
     }
 
+
     @GetMapping("/getAllDepartments")
     public ApiResponse<List<Department>> getAlDepartments(){
         try{
@@ -106,7 +117,7 @@ public class DepartmentController {
     }
 
     @GetMapping("/getDepartmentPositions")
-    public ApiResponse<Set<Position>> getDepartmentPositions(@RequestParam(value = "depId") Integer depId){
+    public ApiResponse<List<Position>> getDepartmentPositions(@RequestParam(value = "depId") Integer depId){
         try{
             if(depId == null || depId == 0){
                 return new ApiResponse<>(301, "Please enter a valid id");
@@ -117,8 +128,8 @@ public class DepartmentController {
                 if(department.getDepartmentPositions() == null || department.getDepartmentPositions().isEmpty()){
                     return new ApiResponse<>(301, "No positions found with the given department");
                 }else{
-                    Set<Position> positionList = department.getDepartmentPositions();
-                    ApiResponse<Set<Position>> response = new ApiResponse<>(200, "successful");
+                    List<Position> positionList = department.getDepartmentPositions();
+                    ApiResponse<List<Position>> response = new ApiResponse<>(200, "successful");
                     response.setItem(positionList);
                     return response;
                 }

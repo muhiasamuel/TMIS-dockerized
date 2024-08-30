@@ -10,8 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Entity
@@ -29,7 +28,8 @@ public class Department implements Serializable {
 
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private Set<Position> departmentPositions;
+    private List<Position> departmentPositions = new ArrayList<>();
+
 
 //    @OneToOne(mappedBy = "department", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 //    @JsonBackReference

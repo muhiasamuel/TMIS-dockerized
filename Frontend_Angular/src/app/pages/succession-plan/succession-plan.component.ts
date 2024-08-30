@@ -1,23 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpServiceService } from '../../services/http-service.service';
 import { ReadyNowDialogComponent } from '../../succession-plan/ready-now-dialog/ready-now-dialog.component';
 
-
 @Component({
   selector: 'app-succession-plan',
   templateUrl: './succession-plan.component.html',
-  styleUrls: ['./succession-plan.component.scss'] 
+  styleUrls: ['./succession-plan.component.scss']
 })
 export class SuccessionPlanComponent implements OnInit {
 
   myForm: FormGroup;
-  departments;
-  authUser:any;
+  availableColumns = ['Ready Now (RN)', 'Ready in 1-2 Years (R1-2)', 'Ready in More Than 2 Years (R>2)', 'External Ready Successor'];
+  showReadyNow = false;
+  showReadyAfterTwoYears = false;
+  showReadyMoreThanTwoYears = false;
+  showExternalSuccessor = false;
   employees;
-  
-  
 
   constructor(
     private formBuilder: FormBuilder,
@@ -43,37 +43,17 @@ export class SuccessionPlanComponent implements OnInit {
     
     const user = localStorage.getItem("user");
     if (user) {
-      this.authUser = JSON.parse(user)
+      const authUser = JSON.parse(user);
     }
-  
-    
-  
   }
 
-  getDepartment() {
-    this.http.getDepartments().subscribe({
-      next: (res) => {
-        console.log('yoohh', res.item)
-        this.employees = res. item
-      },
-      error : (err) =>{
-        console.log('error fetching the holders', err)
-      },
-      complete : () => {
-        alert ('successful')
-      },
-    })
-  }
-
-  getSuccessionDrivers(){
+  getSuccessionDrivers() {
     this.http.getDrivers().subscribe(
       (res) => {
         console.log(res);
-        
       }
-    )
+    );
   }
- 
 
   openReadyNowDialog(): void {
     const dialogRef = this.dialog.open(ReadyNowDialogComponent, {
@@ -86,8 +66,6 @@ export class SuccessionPlanComponent implements OnInit {
         this.myForm.get('readyNow').setValue(result);
       }
     });
-
-   
   }
 
   openReadyTwoDialog(): void {
@@ -128,7 +106,47 @@ export class SuccessionPlanComponent implements OnInit {
     });
   }
 
-  //getting departing
+  onColumnSelect(column: string) {
+    switch (column) {
+      case 'Ready Now (RN)':
+        this.showReadyNow = true;
+        break;
+      case 'Ready in 1-2 Years (R1-2)':
+        this.showReadyAfterTwoYears = true;
+        break;
+      case 'Ready in More Than 2 Years (R>2)':
+        this.showReadyMoreThanTwoYears = true;
+        break;
+      case 'External Ready Successor':
+        this.showExternalSuccessor = true;
+        break;
+    }
 
+    this.availableColumns = this.availableColumns.filter(item => item !== column);
+  }
+  onColumnRemove(column: string) {
+    switch (column) {
+      case 'Ready Now (RN)':
+        this.showReadyNow = false;
+        this.myForm.get('readyNow').reset();
+
+        break;
+      case 'Ready in 1-2 Years (R1-2)':
+        this.showReadyAfterTwoYears = false;
+        this.myForm.get('readytwo').reset();
+        break;
+      case 'Ready in More Than 2 Years (R>2)':
+        this.showReadyMoreThanTwoYears = false;
+        this.myForm.get('readyMore').reset();
+        break;
+      case 'External Ready Successor':
+        this.showExternalSuccessor = false;
+        this.myForm.get('externalSuccessor').reset();
+        break;
+    }
+  
+    this.availableColumns.push(column); // Add back to dropdown
+  }
+  
+  
 }
-

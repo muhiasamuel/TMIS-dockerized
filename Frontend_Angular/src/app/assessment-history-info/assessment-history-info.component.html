@@ -1,3 +1,6 @@
+<div *ngIf="id">
+  <button class="dismiss btn btn-md btn-primary" (click)="closeDialog()">close</button>
+</div>
 <div class="row">
     <ng-container *ngIf="assessments; else noAssessmentHistory">
         <div class="col-md-9 row">
@@ -63,7 +66,10 @@
       </div>
     </div>
   </div>
-  <div *ngIf="id">
-    <button (click)="closeDialog()">close</button>
-  </div>
+ 
+  <div class="pagination mt-3">
+    <button (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
+    <span>Page {{currentPage}} of {{totalPages}}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+</div>
   
