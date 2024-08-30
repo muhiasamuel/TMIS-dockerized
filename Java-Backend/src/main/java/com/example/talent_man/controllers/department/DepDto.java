@@ -14,5 +14,5 @@ import java.util.List;
 @NoArgsConstructor
 public class DepDto implements Serializable {
     private String depName;
-    private List<PositionDto> positionList = new ArrayList<>();
+    private List<PositionDto> positionList;
 }

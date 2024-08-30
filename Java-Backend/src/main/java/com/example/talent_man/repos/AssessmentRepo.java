@@ -22,4 +22,6 @@ public interface AssessmentRepo extends JpaRepository<Assessment, Integer> {
 
     @Query(value = "SELECT * FROM assessments a WHERE a.end_date > :now", nativeQuery = true)
     List<Assessment> findActiveAssessments(@Param("now") LocalDate now);
+
+
 }

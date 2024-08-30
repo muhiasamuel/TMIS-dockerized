@@ -17,6 +17,8 @@ public interface AssessmentService {
 
     List<AssessmentDto> getActiveAssessments();
 
+    List<com.example.talent_man.dto.AssessmentDtoRes>getAllAssessments();
+
     List<AssessmentResponse> getActiveAssessmentsNotAttemptedByUser(int userId);
 
     List<ManagerAssessmentResponse> getAssessmentsNotAssessedByManager(int managerId);

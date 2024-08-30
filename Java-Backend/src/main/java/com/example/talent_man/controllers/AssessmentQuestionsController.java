@@ -235,4 +235,20 @@ public class AssessmentQuestionsController {
         return response;
     }
 
+    @GetMapping("/allAssessments")
+    public ApiResponse<List<com.example.talent_man.dto.AssessmentDtoRes>> getAllAssessments() {
+        try {
+            List<com.example.talent_man.dto.AssessmentDtoRes> assessments = assessmentService.getAllAssessments();
+
+            if (assessments.isEmpty()) {
+                return new ApiResponse<>(300, "No active assessments found");
+            }
+
+            ApiResponse<List<com.example.talent_man.dto.AssessmentDtoRes>> response = new ApiResponse<>(200, "Successfully retrieved active assessments");
+            response.setItem(assessments);
+            return response;
+        } catch (Exception e) {
+            return new ApiResponse<>(500, e.getMessage());
+        }
+    }
 }

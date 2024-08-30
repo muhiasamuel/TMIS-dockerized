@@ -13,7 +13,7 @@ import java.util.Objects;
 @Data
 @Entity
 @Table(name = "department_positions")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @NoArgsConstructor
 public class Position implements Serializable {
     @Id
@@ -26,13 +26,14 @@ public class Position implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "department_id")
-    @JsonIgnore // Prevent serialization and circular reference
+    @JsonIgnore
     private Department department;
 
     @Override
     public int hashCode() {
         return Objects.hash(pId);
     }
+
 
     @Override
     public boolean equals(Object obj) {

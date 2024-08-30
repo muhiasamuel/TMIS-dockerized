@@ -1,104 +1,124 @@
 <div class="container-fluid">
-    <form [formGroup]="myForm" (ngSubmit)="onSubmitted()">
-      <ol class="breadcrumb-arrow align-items-center">
-        <li><a>Succession</a></li>
-        <li><a>Planning</a></li>
-      </ol>
-      <div class="example-small-box mat-elevation-z4">
-        <div class="table-responsive">
-          <table class="table table-bordered table-hover" id="sp">
-            <thead>
-              <tr>
-                <th scope="col">Department</th>
-                <th scope="col">Succession Driver</th>
-                <th scope="col">Key Role</th>
-                <th scope="col">Current Role Holder</th>
-                <th scope="col">Retention Risk Rating (H,M,L)</th>
-                <th scope="col">Ready Now (RN)</th>
-                <th scope="col">Ready in 1-2 Years (R1-2)</th>
-                <th scope="col">Ready in Longer than 2 years (R>2)</th>
-                <th scope="col">External Ready Successor (Name, Current Role, Organisation)</th>
-                <th scope="col">Submit</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <div>
-                    <select id="department" formControlName="departments" class="form-control">
-                      <option value="Treasury" selected>Treasury</option>
-                      <option value="Cash">Cash</option>
-                    </select>
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <select id="succession-driver" formControlName="SuccessionDriver" class="form-control">
-                      <option value="Leadership Continuity" selected>Leadership Continuity</option>
-                      <option value="Critical Roles Cover">Critical Roles Cover</option>
-                      <option value="Regulatory Imperatives">Regulatory Imperatives</option>
-                      <option value="Strategic Growth Planning">Strategic Growth Planning</option>
-                      <option value="Talent Transition">Talent Transition</option>
-                    </select>
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <select id="key-role" formControlName="keyRole" class="form-control">
-                      <option value="Auditing">Auditing</option>
-                      <option value="Washwash">Washwash</option>
-                    </select>
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <select id="current-role-holder" formControlName="currentHolder" class="form-control">
-                      <option *ngFor="let employee of employees" [value]="employee.userFullName">
-                        {{employee.userFullName}}
-                      </option>
-                    </select>
-                  </div>
-                  
-                </td>
-                <td>
-                  <div>
-                    <select id="retention-risk" formControlName="retentionRisk" class="form-control">
-                      <option value="High" selected>High</option>
-                      <option value="Medium">Medium</option>
-                      <option value="Low">Low</option>
-                    </select>
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <input type="text" id="ready-now" formControlName="readyNow" class="form-control" (click)="openReadyNowDialog()" readonly>
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <input type="text" id="ready-in-1-2-years" formControlName="readytwo" class="form-control" (click)="openReadyTwoDialog()" readonly>
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <input type="text" id="ready-in-more-than-2-years" formControlName="readyMore" class="form-control" (click)="openReadyMoreDialog()" readonly>
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <input type="text" id="external-ready-successor" formControlName="externalSuccessor" class="form-control" placeholder="Brenda Doe, Head ALM, MK Solutions Ltd">
-                  </div>
-                </td>
-                <td>
-                  <input type="submit" value="Submit" class="btn btn-primary">
-                </td>
-              </tr>
-            </tbody>
-          </table>
+  <form [formGroup]="myForm" (ngSubmit)="onSubmitted()">
+    <ol class="breadcrumb-arrow align-items-center">
+      <li><a>Succession</a></li>
+      <li><a>Planning</a></li>
+    </ol>
+    <div class="example-small-box mat-elevation-z4">
+      <!-- Dropdown to select optional columns -->
+      <div class="d-flex justify-content-end align-items-center m-1 bg-light">
+        <div class="card-category mx-4">
+          <h6>Select From The Dropdown To Add More Columns Regarding The Successor</h6>
         </div>
+        <mat-form-field appearance="fill">
+          <mat-label>Select Column to Add</mat-label>
+          <mat-select (selectionChange)="onColumnSelect($event.value)">
+            <mat-option *ngFor="let column of availableColumns" [value]="column">
+              {{ column }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
-    </form>
-  </div>
-  
-  
 
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover excel-table" id="sp">
+          <thead>
+            <tr>
+              <th scope="col">Department</th>
+              <th scope="col">Succession Driver</th>
+              <th scope="col">Key Role</th>
+              <th scope="col">Current Role Holder</th>
+              <th scope="col">Retention Risk Rating (H,M,L)</th>
+              <th *ngIf="showReadyNow" scope="col" class="header-with-remove">
+                Ready Now (RN)
+                <button mat-icon-button (click)="onColumnRemove('Ready Now (RN)')" aria-label="Remove column">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </th>
+              <th *ngIf="showReadyAfterTwoYears">
+                <div class="header-with-remove">
+                  Ready in 1-2 Years (R1-2)
+                  <button type="button" class="remove-button" (click)="onColumnRemove('Ready in 1-2 Years (R1-2)')">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              </th>
+              <th *ngIf="showReadyMoreThanTwoYears">
+                <div class="header-with-remove">
+                  Ready in More Than 2 Years (R>2)
+                  <button type="button" class="remove-button" (click)="onColumnRemove('Ready in More Than 2 Years (R>2)')">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              </th>
+              <th *ngIf="showExternalSuccessor">
+                <div class="header-with-remove">
+                  External Ready Successor (Name, Current Role, Organisation)
+                  <button type="button" class="remove-button" (click)="onColumnRemove('External Ready Successor')">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              </th>
+              <th scope="col">Submit</th>
+            </tr>
+            
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <select id="department" formControlName="departments" class="form-control" placeholder="Select Department">
+                  <option value="Treasury">Treasury</option>
+                  <option value="Cash">Cash</option>
+                </select>
+              </td>
+              <td>
+                <select id="succession-driver" formControlName="SuccessionDriver" class="form-control" placeholder="Select Succession Driver">
+                  <option value="Leadership Continuity">Leadership Continuity</option>
+                  <option value="Critical Roles Cover">Critical Roles Cover</option>
+                  <option value="Regulatory Imperatives">Regulatory Imperatives</option>
+                  <option value="Strategic Growth Planning">Strategic Growth Planning</option>
+                  <option value="Talent Transition">Talent Transition</option>
+                </select>
+              </td>
+              <td>
+                <select id="key-role" formControlName="keyRole" class="form-control" placeholder="Select Key Role">
+                  <option value="Auditing">Auditing</option>
+                  <option value="Washwash">Washwash</option>
+                </select>
+              </td>
+              <td>
+                <select id="current-role-holder" formControlName="currentHolder" class="form-control" placeholder="Select Current Role Holder">
+                  <option *ngFor="let employee of employees" [value]="employee.userFullName">
+                    {{employee.userFullName}}
+                  </option>
+                </select>
+              </td>
+              <td>
+                <select id="retention-risk" formControlName="retentionRisk" class="form-control" placeholder="Select Retention Risk">
+                  <option value="High">High</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+              </td>
+              <td *ngIf="showReadyNow">
+                <input type="text" id="ready-now" formControlName="readyNow" class="form-control" (click)="openReadyNowDialog()" readonly placeholder="Ready Now">
+              </td>
+              <td *ngIf="showReadyAfterTwoYears">
+                <input type="text" id="ready-in-1-2-years" formControlName="readytwo" class="form-control" (click)="openReadyTwoDialog()" readonly placeholder="Ready in 1-2 Years">
+              </td>
+              <td *ngIf="showReadyMoreThanTwoYears">
+                <input type="text" id="ready-in-more-than-2-years" formControlName="readyMore" class="form-control" (click)="openReadyMoreDialog()" readonly placeholder="Ready in More Than 2 Years">
+              </td>
+              <td *ngIf="showExternalSuccessor">
+                <input type="text" id="external-ready-successor" formControlName="externalSuccessor" class="form-control" placeholder="Brenda Doe, Head ALM, MK Solutions Ltd">
+              </td>
+              <td>
+                <input type="submit" value="Submit" class="btn btn-primary">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </form>
+</div>

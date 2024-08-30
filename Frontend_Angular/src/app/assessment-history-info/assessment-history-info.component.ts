@@ -27,7 +27,11 @@ interface Assessment {
 export class AssessmentHistoryInfoComponent implements OnInit {
 
   @Input() id!: number;
-
+  isDisabled = true;
+  alldata:Assessment[] = [];
+  currentPage: number = 1;
+  itemsPerPage: number = 2;
+  totalPages: number = 1;
   assessments: Assessment[] = [];
   systemUser:any;
   totalAssessments = 0;
@@ -59,7 +63,9 @@ export class AssessmentHistoryInfoComponent implements OnInit {
       console.log(response.item);
       
       this.assessments = response.item;
+      this.alldata = response.item
       this.calculateStatistics();
+      this.updatePagination()
     });
   }
   closeDialog() {
@@ -87,5 +93,30 @@ export class AssessmentHistoryInfoComponent implements OnInit {
         }
       });
     });
+  }
+
+  updatePagination(): void {
+    this.totalPages = Math.ceil(this.alldata.length / this.itemsPerPage);
+    this.paginate();
+  }
+
+  //pagination
+  paginate(): void {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.assessments = this.alldata.slice(start, end);
+  }
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.paginate();
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.paginate();
+    }
   }
 }

@@ -84,7 +84,7 @@ export class ManagerAssessComponent implements OnInit {
   view(id: number) {
     const dialogRef = this.dialog.open(AssessmentHistoryInfoComponent, {
       width: "80%",
-      height: "60%",
+      // height: "60%",
       position: {
         right: "25px"
       }

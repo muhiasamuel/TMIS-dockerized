@@ -120,6 +120,30 @@ public class AssessmentServiceImp implements AssessmentService {
         return assessmentDto;
     }
 
+    @Override
+    public List<com.example.talent_man.dto.AssessmentDtoRes> getAllAssessments() {
+        LocalDate now = LocalDate.now(); // Gets the current date
+
+        return repo.findAll().stream().map(assessment -> {
+            com.example.talent_man.dto.AssessmentDtoRes dto = new com.example.talent_man.dto.AssessmentDtoRes();
+            dto.setAssessmentId(assessment.getAssessmentId());
+            dto.setTarget(assessment.getTarget());
+            dto.setAssessmentName(assessment.getAssessmentName());
+            dto.setAssessmentDescription(assessment.getAssessmentDescription());
+            dto.setEndDate(assessment.getEndDate());
+
+            if (assessment.getEndDate().isBefore(now) || assessment.getEndDate().isEqual(now)) {
+                dto.setStatus("Expired");
+            } else {
+                dto.setStatus("Active");
+            }
+
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+
+
 
     @Override
     public List<AssessmentDto> getActiveAssessments() {

@@ -82,109 +82,99 @@
 .breadcrumb-arrow li span {
     color: #434a54
 }
-#sp thead th {
-    background-color: rgb(164, 42, 43);
-    color: white;
-}
-table {
-    border-collapse: collapse; 
-}
-
-.rainbow-line {
-    width: 100%; 
-    height: 10px;  
-    background: linear-gradient(to right, red 0%, orange 20%, yellow 40%, green 60%, blue 80%, indigo 90%, violet 100%);
-}
-
-.text-box {
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 16px; 
-    font-weight: bold; 
-    color: white; 
-}
-.form-group input, select{
-    border: 0.1px solid rgb(195, 195, 195);
-    border-radius: 4px;
-    width: 98%;
-    padding:10px 5px;
-
-}
-#sp table, tbody td{
-    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    color: #6e6f70;
-}
-mat-icon{
-    zoom: 1.3;
-    font-weight: 900;
-}
-
-.form-control {
-    background-color: transparent ;
-    border: none ;
-    box-shadow: none ;
-    outline: none ;
-}
-
-.form-control:focus {
-    border: 1px solid #ced4da ;
-    box-shadow: none ;
-}
-
-.submit-btn {
-    background-color: transparent;
-    border: none;
-    color: inherit;
-    cursor: pointer;
-}
-
-.submit-btn:hover {
-    color: #007bff;
-}
-
-#current-role-holder {
-    width: 100%; 
-    padding: 8px; 
-    font-size: 16px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    color: #333;
-    box-sizing: border-box; 
+/* Ensures that header cells are aligned properly */
+/* Ensures consistent padding and alignment for table headers */
+th {
+    position: relative;
+    padding: 0.5rem 1rem;
+    text-align: left;
+    vertical-align: middle;
+    white-space: nowrap; /* Prevents text wrapping */
   }
   
-
-  #current-role-holder option {
-    padding: 10px;
-    font-size: 16px;
-    background-color: #fff;
-    color: #333;
+  /* Flexbox for aligning header content and remove button */
+  .header-with-remove {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem; /* Adjust padding if needed */
   }
   
-  #current-role-holder:focus {   
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  /* Remove button styles */
+  .remove-button {
+    background: none; /* Remove default button background */
+    border: none; /* Remove default button border */
+    padding: 0;
+    margin-left: 8px; /* Space between text and button */
+    cursor: pointer; /* Pointer cursor for better UX */
   }
   
+  /* Icon style for remove button */
+  .remove-button mat-icon {
+    font-size: 16px; /* Adjust icon size */
+    color: #ff0000; /* Red color for remove icon */
+  }
   
+  /* Optional: Ensures table responsiveness and visibility */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table th, .table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .table th {
+    background-color: #f2f2f2;
+  }
+  
+  /* Styling for Excel-like table */
+  .excel-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .excel-table th, .excel-table td {
+    border: 1px solid #dee2e6;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .excel-table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+  }
+  
+  .excel-table tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  /* Form control styles */
   .form-control {
-    display: block;
-    width: 100%; 
-    height: auto; 
-    padding: 0.375rem 0.75rem; 
+    width: 100%;
+    padding: 0.375rem 0.75rem;
     font-size: 1rem;
-    font-weight: 400;
     line-height: 1.5;
     color: #495057;
-    background-color: #fff;
-    background-clip: padding-box;
+    background-color: #ffffff;
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+  }
+  
+  .mat-form-field {
+    width: 100%;
   }
   
