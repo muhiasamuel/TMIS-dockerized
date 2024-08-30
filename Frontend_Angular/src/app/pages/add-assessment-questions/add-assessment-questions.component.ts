@@ -21,7 +21,7 @@ export class AddAssessmentQuestionsComponent implements OnInit{
   assessmentAttributes: any;
   assessments:any[] = [];
   user:any;
-  targetGroup = ["IT",'Oprerations',"Credit","Insutance","The Group"]
+  targetGroup = ["ALL"]
   attributes: any ;
   assessmentData:any
   myVariable: string | null | undefined;
@@ -161,6 +161,9 @@ export class AddAssessmentQuestionsComponent implements OnInit{
   
   }
   //adding assessments and assessment questions
+  submitAssesementDetails(){
+    
+  }
   addAssessmentQuestions(targetData:any, serverData:any){
    const attributeId = targetData.potentialAttributeId
    if (!attributeId) {
