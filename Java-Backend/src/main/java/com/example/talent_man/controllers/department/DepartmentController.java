@@ -99,6 +99,18 @@ public class DepartmentController {
     }
 
 
+    @PutMapping("/{departmentId}/addLeader/{leaderId}")
+    public ResponseEntity<ApiResponse<Department>> addLeaderToDepartment(
+            @PathVariable int departmentId, @PathVariable int leaderId) {
+        try {
+            Department updatedDepartment = dService.addLeaderToDepartment(departmentId, leaderId);
+            ApiResponse<Department> response = new ApiResponse<>(200, "Leader added successfully");
+            response.setItem(updatedDepartment);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ApiResponse<>(500, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @GetMapping("/getAllDepartments")
     public ApiResponse<List<Department>> getAlDepartments(){
         try{

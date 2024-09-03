@@ -113,6 +113,7 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
                     externalSuccessor.setContactInfo(externalDto.getContactInfo());
                     externalSuccessor.setCurrentPosition(externalDto.getCurrentPosition());
                     externalSuccessor.setCurrentCompany(externalDto.getCurrentCompany());
+                    externalSuccessor.setSuccessionPlan(successionPlan);
                     externalSuccessor.setReasonForSelection(externalDto.getReasonForSelection());
                     externalSuccessor.setExpectedStartDate(externalDto.getExpectedStartDate());
 
@@ -258,6 +259,7 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
                                 intervention.setType(interventionDto.getType());
                                 intervention.setDescription(interventionDto.getDescription());
                                 intervention.setStatus(interventionDto.getStatus());
+                                intervention.setSuccessionPlan(successionPlan);
                                 intervention.setStartDate(interventionDto.getStartDate());
                                 intervention.setEndDate(interventionDto.getEndDate());
                                 intervention.setReadyUser(savedReadyUser);
@@ -275,6 +277,7 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
                                 need.setNeedType(needDto.getNeedType());
                                 need.setDescription(needDto.getDescription());
                                 need.setReadyUser(savedReadyUser);
+                                need.setSuccessionPlan(successionPlan);
                                 return need;
                             })
                             .collect(Collectors.toList());
@@ -365,6 +368,7 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
         return externalSuccessors.stream().map(externalSuccessor -> {
             ExternalSuccessorDto externalSuccessorDto = new ExternalSuccessorDto();
             externalSuccessorDto.setName(externalSuccessor.getName());
+
             externalSuccessorDto.setContactInfo(externalSuccessor.getContactInfo());
             externalSuccessorDto.setCurrentPosition(externalSuccessor.getCurrentPosition());
             externalSuccessorDto.setCurrentCompany(externalSuccessor.getCurrentCompany());
