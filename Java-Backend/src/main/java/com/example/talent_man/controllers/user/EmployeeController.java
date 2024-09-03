@@ -2,6 +2,7 @@ package com.example.talent_man.controllers.user;
 
 import com.example.talent_man.dto.user.UserRequestDto;
 import com.example.talent_man.models.user.User;
+import com.example.talent_man.models.user.UserDTO;
 import com.example.talent_man.services.UserService;
 import com.example.talent_man.utils.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -63,4 +64,40 @@ public class EmployeeController {
         res.setItem(createdEmployees);
         return res;
     }
+
+    //get employees by position they hold
+    @GetMapping("get/employees/{positionId}")
+    public ApiResponse<List<UserDTO>> getEmployeesByPosition(@PathVariable int positionId) {
+        List<UserDTO> users = userService.getUsersByPosition(positionId);
+        ApiResponse<List<UserDTO>> res = new ApiResponse<>();
+
+        if (users.isEmpty()) {
+            res.setMessage("No employees found for the given position");
+            res.setStatus(404); // You can use 404 to indicate "Not Found" or 200 for a successful empty result
+        } else {
+            res.setMessage("Employees retrieved successfully");
+            res.setStatus(200);
+        }
+
+        res.setItem(users);
+        return res;
+    }
+    //GetAllEmployees
+    @GetMapping("get/all_employees")
+    public ApiResponse<List<UserDTO>> getAllEmployees() {
+        List<UserDTO> users = userService.findAllUsers();
+        ApiResponse<List<UserDTO>> res = new ApiResponse<>();
+
+        if (users.isEmpty()) {
+            res.setMessage("No employees found for the given position");
+            res.setStatus(404); // You can use 404 to indicate "Not Found" or 200 for a successful empty result
+        } else {
+            res.setMessage("Employees retrieved successfully");
+            res.setStatus(200);
+        }
+
+        res.setItem(users);
+        return res;
+    }
+
 }

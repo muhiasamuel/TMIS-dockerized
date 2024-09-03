@@ -61,7 +61,7 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
             if ((successionPlanDto.getReadyNow() == null || successionPlanDto.getReadyNow().isEmpty()) &&
                     (successionPlanDto.getReadyAfterTwoYears() == null || successionPlanDto.getReadyAfterTwoYears().isEmpty()) &&
                     (successionPlanDto.getReadyMoreThanTwoYears() == null || successionPlanDto.getReadyMoreThanTwoYears().isEmpty()) &&
-                    (successionPlanDto.getExternalSuccessor() == null || isExternalSuccessorEmpty(successionPlanDto.getExternalSuccessor()))) {
+                    (successionPlanDto.getExternalSuccessor() == null || successionPlanDto.getExternalSuccessor().isEmpty())) {
                 throw new IllegalArgumentException("At least one of the Ready User lists or External Successor must be filled.");
             }
 
@@ -104,17 +104,24 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
             successionPlan.setSuccessorDevelopmentNeeds(new ArrayList<>());
 
             // Set External Successor if provided
-            if (successionPlanDto.getExternalSuccessor() != null) {
-                ExternalSuccessor externalSuccessor = new ExternalSuccessor();
-                ExternalSuccessorDto externalDto = successionPlanDto.getExternalSuccessor();
-                externalSuccessor.setName(externalDto.getName());
-                externalSuccessor.setContactInfo(externalDto.getContactInfo());
-                externalSuccessor.setCurrentPosition(externalDto.getCurrentPosition());
-                externalSuccessor.setCurrentCompany(externalDto.getCurrentCompany());
-                externalSuccessor.setReasonForSelection(externalDto.getReasonForSelection());
-                externalSuccessor.setExpectedStartDate(externalDto.getExpectedStartDate());
-                successionPlan.setExternalSuccessor(externalSuccessor);
+            if (successionPlanDto.getExternalSuccessor() != null && !successionPlanDto.getExternalSuccessor().isEmpty()) {
+                List<ExternalSuccessor> externalSuccessors = new ArrayList<>();
+
+                for (ExternalSuccessorDto externalDto : successionPlanDto.getExternalSuccessor()) {
+                    ExternalSuccessor externalSuccessor = new ExternalSuccessor();
+                    externalSuccessor.setName(externalDto.getName());
+                    externalSuccessor.setContactInfo(externalDto.getContactInfo());
+                    externalSuccessor.setCurrentPosition(externalDto.getCurrentPosition());
+                    externalSuccessor.setCurrentCompany(externalDto.getCurrentCompany());
+                    externalSuccessor.setReasonForSelection(externalDto.getReasonForSelection());
+                    externalSuccessor.setExpectedStartDate(externalDto.getExpectedStartDate());
+
+                    externalSuccessors.add(externalSuccessor);
+                }
+
+                successionPlan.setExternalSuccessors(externalSuccessors);
             }
+
 
             // Save and link ReadyUsers
             List<ReadyUsers> readyNow = saveReadyUsers(successionPlanDto.getReadyNow(), successionPlan, "Now");
@@ -281,6 +288,10 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
     }
 
     private List<ProposedIntervention> saveProposedInterventions(List<ProposedInterventionDto> interventionDtos, SuccessionPlan successionPlan) {
+        if (interventionDtos == null) {
+            return new ArrayList<>();
+        }
+
         return interventionDtos.stream()
                 .map(dto -> {
                     ProposedIntervention intervention = new ProposedIntervention();
@@ -295,7 +306,11 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
                 .collect(Collectors.toList());
     }
 
+
     private List<SuccessorDevelopmentNeed> saveSuccessorDevelopmentNeeds(List<SuccessorDevelopmentNeedDto> needDtos, SuccessionPlan successionPlan) {
+        if (needDtos == null) {
+            return new ArrayList<>();
+        }
         return needDtos.stream()
                 .map(dto -> {
                     SuccessorDevelopmentNeed need = new SuccessorDevelopmentNeed();
@@ -336,26 +351,28 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
                 new ArrayList<>());
 
         // Set External Successor if present
-        if (successionPlan.getExternalSuccessor() != null) {
-            ExternalSuccessorDto externalSuccessorDto = getExternalSuccessorDto(successionPlan);
-            dto.setExternalSuccessor(externalSuccessorDto);
+        if (successionPlan.getExternalSuccessors() != null && !successionPlan.getExternalSuccessors().isEmpty()) {
+            List<ExternalSuccessorDto> externalSuccessorDtos = getExternalSuccessorDtos(successionPlan);
+            dto.setExternalSuccessor(externalSuccessorDtos);
         }
 
         return dto;
     }
 
-    private static ExternalSuccessorDto getExternalSuccessorDto(SuccessionPlan successionPlan) {
-        ExternalSuccessor externalSuccessor = successionPlan.getExternalSuccessor();
-        ExternalSuccessorDto externalSuccessorDto = new ExternalSuccessorDto();
-        externalSuccessorDto.setName(externalSuccessor.getName());
-        externalSuccessorDto.setContactInfo(externalSuccessor.getContactInfo());
-        externalSuccessorDto.setCurrentPosition(externalSuccessor.getCurrentPosition());
-        externalSuccessorDto.setCurrentCompany(externalSuccessor.getCurrentCompany());
-        externalSuccessorDto.setReasonForSelection(externalSuccessor.getReasonForSelection());
-        externalSuccessorDto.setExpectedStartDate(externalSuccessor.getExpectedStartDate());
-        return externalSuccessorDto;
-    }
+    private static List<ExternalSuccessorDto> getExternalSuccessorDtos(SuccessionPlan successionPlan) {
+        List<ExternalSuccessor> externalSuccessors = successionPlan.getExternalSuccessors();
 
+        return externalSuccessors.stream().map(externalSuccessor -> {
+            ExternalSuccessorDto externalSuccessorDto = new ExternalSuccessorDto();
+            externalSuccessorDto.setName(externalSuccessor.getName());
+            externalSuccessorDto.setContactInfo(externalSuccessor.getContactInfo());
+            externalSuccessorDto.setCurrentPosition(externalSuccessor.getCurrentPosition());
+            externalSuccessorDto.setCurrentCompany(externalSuccessor.getCurrentCompany());
+            externalSuccessorDto.setReasonForSelection(externalSuccessor.getReasonForSelection());
+            externalSuccessorDto.setExpectedStartDate(externalSuccessor.getExpectedStartDate());
+            return externalSuccessorDto;
+        }).collect(Collectors.toList());
+    }
     private ReadyUserDto convertToReadyUserDto(ReadyUsers readyUser) {
         ReadyUserDto dto = new ReadyUserDto();
         dto.setId(readyUser.getId());

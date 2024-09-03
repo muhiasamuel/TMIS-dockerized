@@ -1,6 +1,8 @@
 package com.example.talent_man.models;
 
+import com.example.talent_man.models.user.Manager;
 import com.example.talent_man.models.user.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -41,6 +43,11 @@ public class Assessment implements Serializable {
 
     @Column(name = "average_score")
     private Float averageScore = 0.0F;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "added_by", nullable = false)
+    @JsonBackReference
+    private User manager;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "assessment_id")

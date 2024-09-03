@@ -130,6 +130,7 @@ public class AssessmentServiceImp implements AssessmentService {
             dto.setTarget(assessment.getTarget());
             dto.setAssessmentName(assessment.getAssessmentName());
             dto.setAssessmentDescription(assessment.getAssessmentDescription());
+            dto.setCreatedAt(assessment.getCreatedAt());
             dto.setEndDate(assessment.getEndDate());
 
             if (assessment.getEndDate().isBefore(now) || assessment.getEndDate().isEqual(now)) {

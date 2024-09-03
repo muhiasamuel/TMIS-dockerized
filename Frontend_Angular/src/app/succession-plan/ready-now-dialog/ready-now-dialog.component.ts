@@ -5,21 +5,35 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 @Component({
   selector: 'app-ready-now-dialog',
   templateUrl: './ready-now-dialog.component.html',
-  styleUrl: './ready-now-dialog.component.scss'
+  styleUrls: ['./ready-now-dialog.component.scss'] // Corrected to styleUrls
 })
-export class ReadyNowDialogComponent {
+export class ReadyNowDialogComponent implements OnInit { // Added OnInit to the class declaration
   readyNowForm: FormGroup;
-  names = ['Muthui', 'Beth', 'Charles', 'Steve'];
+  departments:any;
+  positions:any;
+  employees:any
+  department:any
+  position:any
+
+  names:any;
 
   constructor(
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<ReadyNowDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) { }
+  ) {}
 
   ngOnInit(): void {
+    this.employees = this.data.employees
+    this.departments = this.data.department
+    console.log('depatmenssss', this.departments);
+    
+    console.log("emps yooooooooo",this.employees);
+    
     this.readyNowForm = this.formBuilder.group({
-      name: [this.data.name || ''],
+      userId: [this.data.name || ''],
+      department:[''],
+      position:[''],
       readinessLevel: [this.data.readinessLevel || ''],
       proposedInterventions: this.formBuilder.array(
         this.data.proposedInterventions?.map(intervention => this.createInterventionGroup(intervention)) || []
@@ -29,6 +43,24 @@ export class ReadyNowDialogComponent {
       )
     });
   }
+  
+    //filter selected department positions
+    getPosition() {
+
+      console.log("form", this.readyNowForm.value.department);
+      const positions = this.departments.filter(item => item.depId === this.readyNowForm.value.department)
+      this.positions = positions[0].departmentPositions
+      console.log("positions", this.positions);
+    }
+  
+    //filter employee who holds selected position
+    getPositionHolder() {
+  
+      console.log("form", this.readyNowForm.value.position);
+      const holders = this.employees.filter(user => user.positionId === this.readyNowForm.value.position)
+      this.names = holders
+      console.log("positions", this.names);
+    }
 
   createInterventionGroup(intervention): FormGroup {
     return this.formBuilder.group({
@@ -76,7 +108,14 @@ export class ReadyNowDialogComponent {
   }
 
   onSaveClick(): void {
-    this.dialogRef.close(this.readyNowForm.value);
+    const data = {
+      "userId": this.readyNowForm.value.userId,
+      "readinessLevel": this.readyNowForm.value.readinessLevel,
+      "proposedInterventions":this.readyNowForm.value.proposedInterventions,
+      "developmentNeeds":this.readyNowForm.value.developmentNeeds 
+    }
+    console.log("sam-data", data);
+    
+    this.dialogRef.close(data);
   }
 }
-

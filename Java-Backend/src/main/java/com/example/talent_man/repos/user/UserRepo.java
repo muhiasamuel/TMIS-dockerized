@@ -1,6 +1,7 @@
 package com.example.talent_man.repos.user;
 
 import com.example.talent_man.models.user.User;
+import com.example.talent_man.models.user.UserDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -40,6 +41,9 @@ public interface UserRepo extends JpaRepository<User, Integer> {
             "WHERE u.user_id = :employeeId", nativeQuery = true
     )
     UserWithManagerDetails getUserWithManagerDetails(@Param("employeeId") int employeeId);
+
+    @Query(value = "select * from users where position_id = :positionId", nativeQuery = true)
+    List<User> getUserByPosition(@Param("positionId") int positionId);
     public interface UserWithManagerDetails {
         String getUserFullName();
         String getEmployeeLevel();

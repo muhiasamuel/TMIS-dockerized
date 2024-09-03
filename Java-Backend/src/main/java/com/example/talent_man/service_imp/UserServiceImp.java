@@ -1,5 +1,6 @@
 package com.example.talent_man.service_imp;
 import com.example.talent_man.models.Department;
+import com.example.talent_man.models.user.UserDTO;
 import com.example.talent_man.repos.DepartmentRepo;
 import org.apache.poi.ss.usermodel.*;
 import com.example.talent_man.dto.user.AuthRequest;
@@ -35,6 +36,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -108,7 +110,39 @@ public class UserServiceImp implements UserService {
         return employeeRepo.findByAllEmployees();
     }
 
+    @Override
+    public List<UserDTO> findAllUsers() {
 
+        return repo.findAll().stream().map(users -> {
+            UserDTO dto = new UserDTO();
+            dto.setId(users.getUserId());
+            dto.setFirstName(users.getUserFullName());
+            dto.setPf(users.getPf());
+            dto.setUserType(users.getUserType());
+            dto.setPositionId(users.getPosition().getPId());
+
+            dto.setEmail(users.getEmail());
+
+            return  dto;
+        }).collect(Collectors.toList());
+    }
+
+
+    @Override
+    public List<UserDTO> getUsersByPosition(int positionId){
+        return repo.getUserByPosition(positionId).stream().map(users -> {
+            UserDTO dto = new UserDTO();
+            dto.setId(users.getUserId());
+            dto.setFirstName(users.getUserFullName());
+            dto.setPf(users.getPf());
+            dto.setUserType(users.getUserType());
+            dto.setPositionId(users.getPosition().getPId());
+            dto.setEmail(users.getEmail());
+
+            return  dto;
+        }).collect(Collectors.toList());
+
+    }
 
 
     @Override

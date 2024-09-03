@@ -29,7 +29,7 @@ export class HttpServiceService {
 
   // serverUrl: string = 'http://192.168.91.194:8080';
 
-  // serverUrl: string = 'http://localhost:8080/v1/api/';
+//  serverUrl: string = 'http://192.168.89.186:8080/v1/api/';
 
    serverUrl: string = 'http://192.168.89.134:8080/v1/api/';
 
@@ -237,6 +237,11 @@ createPotentialNextRole(employeeId: number, data: any): Observable<any> {
   //
   getAllEmployees(managerId: string): Observable<any> {
     const url = `${this.serverUrl}manager/employees?managerId=${managerId}`
+    return this.http.get(url);
+  }
+  //http://localhost:8080/v1/api/users/get/all_employees
+  getAllUsers(): Observable<any> {
+    const url = `${this.serverUrl}users/get/all_employees`
     return this.http.get(url);
   }
   //hipos
