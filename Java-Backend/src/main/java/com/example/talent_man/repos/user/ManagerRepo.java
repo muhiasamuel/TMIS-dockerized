@@ -3,6 +3,7 @@ package com.example.talent_man.repos.user;
 import com.example.talent_man.models.user.Employee;
 import com.example.talent_man.models.user.Manager;
 import com.example.talent_man.models.user.User;
+import com.example.talent_man.models.user.UserDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,4 +23,6 @@ public interface ManagerRepo extends JpaRepository<Manager, Integer> {
 
     @Query(value = "select distinct user_id from users where manager_id = :manId", nativeQuery = true)
     List<Integer> getManagerEmployees(@Param("manId") int manId);
+
+
 }

@@ -8,6 +8,7 @@ import com.example.talent_man.models.user.User;
 
 import com.example.talent_man.dto.user.AuthResponse;
 import com.example.talent_man.dto.user.OtpRequest;
+import com.example.talent_man.models.user.UserDTO;
 import com.example.talent_man.repos.PerformanceRepository;
 import com.example.talent_man.repos.user.UserRepo;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +26,8 @@ public interface UserService {
 
     List<Manager> findAllManagers();
     List<Employee> findAllEmployees();
+
+    List<UserDTO> findAllUsers();
 
     User getUserById(int id);
 
@@ -44,4 +47,6 @@ public interface UserService {
     AuthResponse validateOtp(OtpRequest otpRequest);
     //User addManagerSkill(User manager);
    // User addManagerSkills(int managerId, List<SkillsAsssessment> skills);
+
+    List<UserDTO> getUsersByPosition(int positionId);
 }

@@ -1,12 +1,45 @@
-mat-form-field {
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.full-width {
   width: 100%;
 }
 
-button {
-  margin-top: 10px;
+.half-width {
+  width: 48%;
 }
 
-h2 {
-  margin-top: 20px;
-  margin-bottom: 10px;
+.form-section {
+  margin-top: 16px;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  margin-top: 24px;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.add-button {
+  align-self: flex-start;
+}
+
+.remove-button {
+  align-self: center;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
 }

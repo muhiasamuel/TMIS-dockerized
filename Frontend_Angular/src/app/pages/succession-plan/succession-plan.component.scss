@@ -90,6 +90,7 @@ th {
     text-align: left;
     vertical-align: middle;
     white-space: nowrap; /* Prevents text wrapping */
+    background-color: #267917;
   }
   
   /* Flexbox for aligning header content and remove button */
@@ -127,7 +128,7 @@ th {
   }
   
   .table th {
-    background-color: #f2f2f2;
+    background-color: #28711f;
   }
   
   /* Styling for Excel-like table */
@@ -144,8 +145,10 @@ th {
   }
   
   .excel-table th {
-    background-color: #f8f9fa;
-    font-weight: bold;
+    background-color: #6c9040;
+    color: white;
+    padding: 12px 5px;
+    font-weight: 800;
   }
   
   .excel-table tbody tr:hover {

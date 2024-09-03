@@ -21,7 +21,7 @@ public class SuccessionPlanDto {
     private List<ProposedInterventionDto> proposedInterventions; // List of Proposed Interventions
     private List<SuccessorDevelopmentNeedDto> successorDevelopmentNeeds; // List of Successor Development Needs
 
-    private ExternalSuccessorDto externalSuccessor; // New field for External Successor
+    private List<ExternalSuccessorDto> externalSuccessor; // New field for External Successor
 
     // Getters and Setters
 }

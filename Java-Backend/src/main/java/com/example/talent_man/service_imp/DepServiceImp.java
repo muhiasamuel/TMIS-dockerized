@@ -4,6 +4,7 @@ import com.example.talent_man.controllers.department.DepDto;
 import com.example.talent_man.controllers.department.PositionDto;
 import com.example.talent_man.models.Department;
 import com.example.talent_man.models.Position;
+import com.example.talent_man.models.user.UserDTO;
 import com.example.talent_man.repos.DepartmentRepo;
 import com.example.talent_man.services.DepService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,5 +63,7 @@ public class DepServiceImp implements DepService {
 
         return savedDepartment;
     }
+
+
 
 }

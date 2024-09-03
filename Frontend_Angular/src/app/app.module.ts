@@ -98,6 +98,7 @@ import { CreateEmployeeComponent } from './create-employee/create-employee.compo
 import { AssessmentHistoryInfoComponent } from './assessment-history-info/assessment-history-info.component';
 import { AssessmentLineGraphComponent } from './graphs/assessment-line-graph/assessment-line-graph.component';
 import { AssessmentBarGraphComponent } from './graphs/assessment-bar-graph/assessment-bar-graph.component';
+import { ExternalSuccessorComponent } from './pages/succession-plan/external-successor/external-successor.component';
 
 
 
@@ -169,6 +170,7 @@ import { AssessmentBarGraphComponent } from './graphs/assessment-bar-graph/asses
     AssessmentHistoryInfoComponent,
     AssessmentLineGraphComponent,
     AssessmentBarGraphComponent,
+    ExternalSuccessorComponent,
     
    
   ],
