@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { HttpServiceService } from '../../services/http-service.service';
 import { ReadyNowDialogComponent } from '../../succession-plan/ready-now-dialog/ready-now-dialog.component';
 import { ExternalSuccessorComponent } from './external-successor/external-successor.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-succession-plan',
@@ -28,7 +29,8 @@ export class SuccessionPlanComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private http: HttpServiceService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -193,7 +195,12 @@ export class SuccessionPlanComponent implements OnInit {
     console.log(this.myForm.value);
     this.http.createSuccession(this.myForm.value).subscribe({
       next: res => {
-        console.log("Success", res);
+        this.snackBar.open('Succession Plan Added Sucessfully!', 'Close', {
+          duration: 3000,
+          panelClass: ['success-snackbar'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top'
+        });
       },
       error: err => {
         console.log("Error", err);
