@@ -29,9 +29,9 @@ export class HttpServiceService {
 
   // serverUrl: string = 'http://192.168.91.194:8080';
 
-  serverUrl: string = 'http://localhost:8080/v1/api/';
+  // serverUrl: string = 'http://localhost:8080/v1/api/';
 
-  // serverUrl: string = 'http://192.168.100.2:8080/v1/api/';
+   serverUrl: string = 'http://192.168.89.134:8080/v1/api/';
 
 
   //serverUrl: string = environment.API_BASE_URL;
@@ -133,11 +133,11 @@ createPotentialNextRole(employeeId: number, data: any): Observable<any> {
   return this.http.post<any>(url, data);
 }
   // adding assessment
-  createAssessment(AttributeId: number, data: any): Observable<any> {
-    const url = `${this.serverUrl}addAssessments?attributeId=${AttributeId}`
-    const headers = new HttpHeaders({ 'content-type': 'application/json' })
-    return this.http.post<any>(url, data)
-  }
+  // createAssessment(AttributeId: number, data: any): Observable<any> {
+  //   const url = `${this.serverUrl}addAssessments?attributeId=${AttributeId}`
+  //   const headers = new HttpHeaders({ 'content-type': 'application/json' })
+  //   return this.http.post<any>(url, data)
+  // }
   //http://localhost:8080/addAQuestionList?assId=1
   //Adding assessment and questions
   createAssessmentQuestions(assId: number, data: any): Observable<any> {
@@ -319,12 +319,13 @@ getAllAssesements():Observable<any>{
   return this.http.get<any>(url)
 }
 
-postAssesement(data:any): Observable<any>{
+postAssesement(data:any, userId:number): Observable<any>{
   // http://192.168.90.127:8080/v1/api/addAssignment
 
-  const url =`${this.serverUrl}addAssignment`
+  const url =`${this.serverUrl}addAssignment?managerId=${userId}`
   return this.http.post<any>(url,data)
 }
+
 
 }
 
