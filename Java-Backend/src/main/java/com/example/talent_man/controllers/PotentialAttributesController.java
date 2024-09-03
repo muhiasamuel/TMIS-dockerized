@@ -49,14 +49,19 @@ public class PotentialAttributesController {
 
 
     @PostMapping(value = "/addAssignment", consumes = "application/json")
-    public ApiResponse<Assessment> addAssessment(@RequestBody AssessmentDto ass) {
+    public ApiResponse<Assessment> addAssessment(@RequestBody AssessmentDto ass, @RequestParam Integer managerId) {
         try {
             if (ass.getAssessmentName() == null || ass.getAssessmentName().isEmpty()) {
                 return new ApiResponse<>(300, "Assessment should have a name");
             } else if (ass.getAssessmentDescription() == null || ass.getAssessmentDescription().isEmpty()) {
                 return new ApiResponse<>(300, "Please tell us more about the assessment, what to expect and what is required");
+
+            } else if (!assessmentService.doesUserExist(managerId)) {
+                return new ApiResponse<>(404, "Manager not found.");
             } else {
                 Assessment assessment = new Assessment();
+                User user = userService.getUserById(managerId);
+                assessment.setManager(user);
                 assessment.setAssessmentName(ass.getAssessmentName());
                 assessment.setAssessmentDescription(ass.getAssessmentDescription());
                 assessment.setTarget(ass.getTarget());

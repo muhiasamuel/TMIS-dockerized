@@ -63,6 +63,6 @@ public class SuccessionPlan implements Serializable {
     @JsonIgnore
     private List<SuccessorDevelopmentNeed> successorDevelopmentNeeds;
 
-    @Embedded
-    private ExternalSuccessor externalSuccessor; // New field for External Successor
+    @OneToMany(mappedBy = "successionPlan", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ExternalSuccessor> externalSuccessors; // Updated to handle multiple external successors
 }

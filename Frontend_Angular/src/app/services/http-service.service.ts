@@ -239,6 +239,11 @@ createPotentialNextRole(employeeId: number, data: any): Observable<any> {
     const url = `${this.serverUrl}manager/employees?managerId=${managerId}`
     return this.http.get(url);
   }
+  //http://localhost:8080/v1/api/users/get/all_employees
+  getAllUsers(): Observable<any> {
+    const url = `${this.serverUrl}users/get/all_employees`
+    return this.http.get(url);
+  }
   //hipos
   getHipos(url: string): Observable<any> {
     return this.http.get(url);

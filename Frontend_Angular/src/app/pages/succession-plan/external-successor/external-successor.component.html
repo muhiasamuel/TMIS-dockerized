@@ -1,0 +1,37 @@
+<div class="container">
+    <div class="card">
+        <h1 mat-dialog-title>External Successor Details</h1>
+        <div mat-dialog-content>
+            <form [formGroup]="externalSuccessorForm" class="form">
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="name">
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Contact Info</mat-label>
+                    <input matInput formControlName="contactInfo">
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Current Position</mat-label>
+                    <input matInput formControlName="currentPosition">
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Current Company</mat-label>
+                    <input matInput formControlName="currentCompany">
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Reason for Selection</mat-label>
+                    <input matInput formControlName="reasonForSelection">
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Expected Start Date</mat-label>
+                    <input matInput formControlName="expectedStartDate">
+                </mat-form-field>
+            </form>
+        </div>
+        <div mat-dialog-actions class="actions">
+            <button mat-button (click)="onNoClick()">Cancel</button>
+            <button mat-button color="primary" (click)="onSaveClick()">Save</button>
+        </div>
+    </div>
+</div>
