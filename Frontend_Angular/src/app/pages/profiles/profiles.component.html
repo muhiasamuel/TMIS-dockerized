@@ -1,135 +1,68 @@
- <div class="container">
-    <h1>EMPLOYEE TALENT PROFILE</h1>
+<div class="cv-container">
     <div class="row">
-        <div class=" col-md-4">
-            <h3>Personal & Organisation Information </h3>
-
-            <div class="profile-info">
-                <p><strong>Name:</strong> {{ employeeInfo?.userFullName }}</p>
-                <p><strong>Position Title:</strong> {{ employeeInfo?.positionName }}</p>
-                <p><strong>Level:</strong> {{ employeeInfo?.employeeLevel}}</p>
-                <p><strong>Department:</strong> {{ employeeInfo?.departmentName }}</p>
-                <p><strong>Name Line Manager:</strong> {{employeeInfo?.employeeDetails.lineManagerName }}</p>
-                <p><strong>Position Title of Line Manager:</strong> {{ employeeInfo?.employeeDetails.lineManagerPositionTitle }}</p>
-                <img src="../../../assets/img/owner_photo.PNG" alt="Profile Photo" class="profile-photo">
-            </div>
-            <div class="profile-section">
-                <h3>Previous Roles Held</h3>
-                <table>
-                    <tr *ngFor="let role of profile.previousRoles">
-                        <td>{{ role.positionTitle }}</td>
-                        <td>{{ role.employer }}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class=" col-md-4 profile-section">
-            <h3>Employee Education</h3>
-            <table>
-                <tr *ngFor="let education of profile.education">
-                    <td>{{ education.qualification }}</td>
-                    <td>{{ education.university }}</td>
-                </tr>
-            </table>
-
-            <div class="profile-section">
-                <h3>Professional Accreditations</h3>
-                <table>
-                    <tr *ngFor="let accreditation of profile.accreditations">
-                        <td>{{ accreditation.accreditation }}</td>
-                        <td>{{ accreditation.body }}</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="profile-section">
-                <h3>Other Certifications</h3>
-                <table>
-                    <tr *ngFor="let certification of profile.certifications">
-                        <td>{{ certification.certification }}</td>
-                        <td>{{ certification.body }}</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="profile-section">
-                <h3>Skill Profile</h3>
-                <table>
-                    <tr *ngFor="let skill of profile.skills">
-                        <td>{{ skill.skill }}</td>
-                        <td>{{ skill.level }}</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="d-flex align-items-center justify-content-center" *ngFor="let performance of employee.performanceRating;">
-                <em>{{performance?.performanceYear}}:</em>
-                <strong>( {{(performance?.performanceRating).toFixed(1)}} )</strong>
-              </div>           
-
-            <div class="profile-section">
-                <h3>Talent Designations</h3>
-                <table>
-                    <tr>
-                        <td>Potential Ratings</td>
-                        <td>{{employee.potentialRating || 'Z'}}</td>
-                       
-                    </tr>
-                    <tr>
-                        <td>Talent Mapping</td>
-                        <td>{{employee.talentRating || 0}}</td>
-                       
-                    </tr>
-                </table>
-                <p>Is Role Critical: {{ profile.isRoleCritical }}</p>
-                <p>Is Employee an MVP: {{ profile.isMVP }}</p>
-            </div>
-        </div>
-        <div class=" col-md-4 profile-section">
-            <h3>Succession</h3>
-            <p>Is employee a designated successor: {{ profile.succession.isDesignatedSuccessor }}</p>
-            <table>
-                <tr *ngFor="let successor of profile.succession.potentialSuccessors">
-                    <td>{{ successor.role }}</td>
-                    <td>{{ successor.readyStatus }}</td>
-                </tr>
-            </table>
-            <div class="profile-section">
-                <h3>Recent Key Development Interventions</h3>
-                <ul>
-                    <li *ngFor="let intervention of profile.recentKeyDevelopmentInterventions">
-                        {{ intervention }}
-                    </li>
-                </ul>
-            </div>
-        
-            <div class="profile-section">
-                <h3>Talent Development Plans</h3>
-                <ul>
-                    <li *ngFor="let plan of profile.talentDevelopmentPlans">
-                        {{ plan }}
-                    </li>
-                </ul>
-            </div>
-        
-            <div class="profile-section">
-                <h3>Succession Development Plans</h3>
-                <ul>
-                    <li *ngFor="let plan of profile.successionDevelopmentPlans">
-                        {{ plan }}
-                    </li>
-                </ul>
-            </div>
-        
-            <div class="profile-section">
-                <h3>Employee Career Aspirations</h3>
-                <p>Short Term: {{ profile.careerAspirations.shortTerm }}</p>
-                <p>Long Term: {{ profile.careerAspirations.longTerm }}</p>
-            </div>
-
-        </div>
-
-
+    <div class="col-md 4 left-section">
+    <h2>EQUITY GROUP EMPLOYEE TALENT PROFILE</h2>
+      <h3>Personal & Organisation Information</h3>
+      <p><strong>Name:</strong> Joe Bloggs</p>
+      <p><strong>Position Title:</strong> Group Head of Employee Relations</p>
+      <p><strong>Level:</strong> General Manager</p>
+      <p><strong>Department:</strong> Group HR</p>
+      <p><strong>Name Line Manager:</strong> David Ssegawa</p>
+      <p><strong>Position Title of Line Manager:</strong> Group Director HR Operations</p>
+      <div class="photo">
+        <img src="../../../assets/img/owner_photo.PNG" alt="Profile Photo" class="profile-photo">
+      </div>
+  
+      <h3>Previous Roles Held</h3>
+      <p><strong>Position Title 1:</strong> </p>
+      <p><strong>Employer:</strong></p>
+      <p><strong>Position Title 2:</strong></p>
+      <p><strong>Employer:</strong></p>
     </div>
-
-</div>
+  
+    <div class="col-md 4 middle-section">
+      <h3>Employee Education </h3>
+      <p><strong>Qualification:</strong> MBA</p>
+      <p><strong>Name of University:</strong> UoN</p>
+      <p><strong>Name of Qualification:</strong> BSc Bio Medical Engineering</p>
+      <p><strong>Name of University:</strong> UoN</p>
+  
+      <h3>Professional Accreditations </h3>
+      <p><strong>Accreditation:</strong> Chartered MCIPD</p>
+      <p><strong>Accrediting Body:</strong> CIPD UK</p>
+  
+      <h3>Other Certifications </h3>
+      <p><strong>Certification:</strong> Executive Coach</p>
+      <p><strong>Certifying Body:</strong> AoEC</p>
+  
+      <h3>Skill Profile</h3>
+      <p><strong>Coding in Java</strong></p>
+      <p><strong>Proficiency Level:</strong> Advanced</p>
+  
+      <h3>Performance History</h3>
+      <p><strong>Half Year 2023:</strong> 4.0</p>
+  
+      <h3>Talent Designations </h3>
+      <p><strong>Potential Ratings:</strong> 2023: A, 2022: B</p>
+      <p><strong>Talent Mapping:</strong>2023: H1, 2022: H1 </p>
+      <p><strong>Is Role Critical:</strong>Yes/No </p>
+      <p><strong>Is Employee an MVP:</strong>Yes/No </p>
+    </div>
+    <div class="col-md 4 right-section">
+        <h3>Employee Education </h3>
+        <p><strong>Qualification:</strong> MBA</p>
+        <p><strong>Name of University:</strong> UoN</p>
+        <p><strong>Name of Qualification:</strong> BSc Bio Medical Engineering</p>
+        <p><strong>Name of University:</strong> UoN</p>
+    
+        <h3>Professional Accreditations </h3>
+        <p><strong>Accreditation:</strong> Chartered MCIPD</p>
+        <p><strong>Accrediting Body:</strong> CIPD UK</p>
+    
+        <h3>Other Certifications </h3>
+        <p><strong>Certification:</strong> Executive Coach</p>
+        <p><strong>Certifying Body:</strong> AoEC</p>  
+    </div>
+    </div>
+  </div>
+  

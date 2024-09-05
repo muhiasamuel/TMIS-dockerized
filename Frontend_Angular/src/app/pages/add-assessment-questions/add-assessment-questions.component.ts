@@ -30,13 +30,13 @@ export class AddAssessmentQuestionsComponent implements OnInit{
     assessmentName:new FormControl(""),
     assessmentDescription:new FormControl(""),
     endDate : new FormControl(new Date().toISOString()),
-    potentialAttributeId:new FormControl(""),
+    // potentialAttributeId:new FormControl(""),
 
 
   })
-  questionForm: FormGroup = new FormGroup({
-    questionList: new FormArray([this.getQuestionFields()]),
-  });
+  // questionForm: FormGroup = new FormGroup({
+  //   questionList: new FormArray([this.getQuestionFields()]),
+  // });
  
   stepperOrientation: Observable<StepperOrientation>;  
      
@@ -59,123 +59,31 @@ export class AddAssessmentQuestionsComponent implements OnInit{
       console.log(this.user);
       
     }
-    this.getAssessmentAttribute()
+   // this.getAssessmentAttribute()
   }
-  getQuestionFields(): FormGroup {
-    return new FormGroup({
-      question_description: new FormControl(""),
-      questionChoices: new FormGroup({
-        questionChoicesArray: new FormArray([this.putNewChoices()]),
-      }),
-    });
-  }
+ 
+  //adding assessments and assessment questions
+  submitAssesementDetails(){
 
-  putNewChoices() {
-    return new FormGroup({
-      choice_name: new FormControl(""),
-      choice_value: new FormControl(""),
-    });
-  }
-
-  questionListArray() {
-    return this.questionForm.get("questionList") as FormArray;
-  }
-
-  addQuestion() {
-    this.questionListArray().push(this.getQuestionFields());
-  }
-
-  removeQuestion(i: number) {
-    this.questionListArray().removeAt(i);
-  }
-
-  choicesFormGroup(i: number) {
-    return this.questionListArray().at(i).get("questionChoices") as FormGroup;
-  }
-
-  choicesArray(i: number) {
-    return this.choicesFormGroup(i).get("questionChoicesArray") as FormArray;
-  }
-
-  addNewSubject(i: number) {
-    this.choicesArray(i).push(this.putNewChoices());
-  }
-
-  removeNewChoice(i: number, j: number) {
-    this.choicesArray(i).removeAt(j);
-  }
-  getAddedAttributes(newItem: any) {
-    this.attributes = newItem.item
-    if (this.stepper) {
-      this.stepper.next();
-    }
-    console.log("12345678",this.attributes);
-  }
-  isStepComplete(): boolean {
-    return this.attributes && this.attributes.length > 0;
-  }
-
-  getFormData() {
-    let serverData: any = [],
-     targetData = JSON.parse(JSON.stringify(this.assessmentForm.value)),
-      tempquestionFormData = JSON.parse(JSON.stringify(this.questionForm.value));
-    tempquestionFormData.questionList.forEach((element: any) => {
-      let tempObj: any = {
-        assessmentQuestionDescription: element.question_description,
-        choices: [],
-      };
-        // Add choices with value and name as 1, 2, 3, 4, 5, 6
-        for (let i = 1; i <= 6; i++) {
-          let tempSubObj: any = {
-            choiceName: i.toString(),
-            choiceValue: i.toString(),
-          };
-          tempObj.choices.push(tempSubObj);
-        }
-        //add choices from inputs///....
-      // element.questionChoices.questionChoicesArray.forEach(
-      //   (elementSubjectObj: any) => {
-      //     let tempSubObj: any = {
-      //       choiceName: elementSubjectObj.choice_name,
-      //       choiceValue: elementSubjectObj.choice_value,
-      //     };
-      //     tempObj.choices.push(tempSubObj);
-      //   }
-      // );
-      serverData.push(tempObj);
-    });
+    let targetData = this.assessmentForm.value
     const formattedEndDate = moment(targetData.endDate).format('YYYY-MM-DD');
     targetData = {
       ...targetData,
+      assessmentName: this.assessmentForm.value.assessmentName + ' ' + " ON " + ' ' + moment().format('YYYY-MM-DD hh:mm A'),
       endDate: formattedEndDate,
       createdAt: moment().format('YYYY-MM-DD')
     };
 
-   this.addAssessmentQuestions(targetData,serverData)
+   //this.addAssessmentQuestions(targetData,serverData)
 
 
     console.log("target data",targetData);
     
     
-    console.log(serverData);  // This is the variable which contain all the form data
-  
-  }
-  //adding assessments and assessment questions
-  submitAssesementDetails(){
-    
-  }
-  addAssessmentQuestions(targetData:any, serverData:any){
-   const attributeId = targetData.potentialAttributeId
-   if (!attributeId) {
-    this.snackbar.open("attribute is required", "Close", {duration: 3000})
-
-   }else{
-    this.http.createAssessment(attributeId,targetData).subscribe(
+    this.http.postAssesement(targetData, this.user.user.userId).subscribe(
       ((res) =>{
         console.log("");
         let assessments = res.item.assessments;
-        let lastIndex =  assessments.length - 1;
-        this.assessmentData = res.item.assessments[lastIndex]
         console.log("assess",res);
         
       }),
@@ -185,54 +93,15 @@ export class AddAssessmentQuestionsComponent implements OnInit{
         
       }),
       ()=>{
-        console.log("1234567890", this.assessmentData);
-        
-        if (!this.assessmentData) {
-          window.alert("assessment empty")
-        }else{
-          const assId = this.assessmentData?.assessmentId
-          this.http.createAssessmentQuestions(assId, serverData).subscribe(
-            ((res) =>{
-              console.log(res);
-            }),
-            ((error) =>{
-              this.snackbar.open(error.error.message, "Close", {duration: 3000})
-            }),
-            () => {
-              this.snackbar.open("Assignment Added successifuly", "Close", {duration: 3000})
-              this.dialog.close()
-            }
-          )
-        }
+        this.snackbar.open("Assesment added sucessfully", "Close", {duration: 3000})
+        this.dialog.close()
+      }  
+    
+    )}
 
-      }
-    )
-   }
-  }
 
 //getting attributes, assessment and assessment questions
-getAssessmentAttribute(){
 
-  this.http.getAssessments(this.user.user.userId).subscribe(
-
-    ((res)=>{
-      if (res) {
-        this.assessmentAttributes= res?.item
-
-        console.log("request successful",this.assessmentAttributes);
-      }else{
-          window.alert('data not available')
-      }
-    }),
-    ((error)=>{
-      console.error("request hqas an error",error);
-    }),
-    ()=>{
-      console.log("success");
-      
-    }
-  )
-}
 closeDialog(){
   this.dialog.close()
 }

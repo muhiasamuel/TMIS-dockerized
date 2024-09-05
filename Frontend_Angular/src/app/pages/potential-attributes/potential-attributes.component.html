@@ -1,176 +1,116 @@
-<mat-tab-group>
-  <mat-tab>
-    <ng-template mat-tab-label> Assesement </ng-template>
+<div class='container-fluid'>
+  <mat-tab-group>
+    <mat-tab>
+      <ng-template mat-tab-label> Assesement </ng-template>
 
-    <div class="container-fluid" *ngIf="Assesement; else error">
-      <div
-        class="row card topHeader radii d-flex align-items-center justify-content-between mb-4"
-      >
-        <div
-          class="col-sm-12 d-flex align-items-center justify-content-between"
-        >
-          <p class="ms-3 title">{{ name }}</p>
-          <button
-          [disabled] = "status"
-            class="btn btn-primary m-3"
-            (click)="openAssesementDialog()"
-            *ngIf="
-              systemUser.user.role.roleName == 'manager' ||
-                systemUser.user.role.roleName == 'TopManager';
-              else showNumber
-            "
-          >
-            Add Assesement
-          </button>
+      <div *ngIf="Assesement; else error">
+        <div class="row card topHeader  d-flex align-items-center justify-content-between mb-4">
+          <div class="col-sm-12 d-flex align-items-center justify-content-between">
+            <p class="ms-3 title">{{ name }}</p>
+            <div class="assessment-type d-flex align-items-center justify-content-center">
+              <p class="card-category">Select type of assessment to send:</p>
+              <mat-form-field appearance="fill">
+                <mat-label>Select Assessment Type</mat-label>
+                <mat-select [(value)]="selectedAssessmentType">
+                  <mat-option value="quick">Quick Assessment</mat-option>
+                  <mat-option value="custom">Customised Assessment</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
 
-          <ng-template #showNumber>
-            <p class="m-3">Total Assesements: {{ Assesement.length }}</p>
-          </ng-template>
+            <button [disabled]="status" class="btn btn-primary m-3" (click)="openAssesementDialog()" *ngIf="selectedAssessmentType === 'custom' && 
+              (systemUser.user.role.roleName === 'manager' || 
+              systemUser.user.role.roleName === 'TopManager')">
+              Customised Assessment
+            </button>
+
+            <button [disabled]="status" class="btn btn-primary m-3" (click)="sendAssessment()" *ngIf="selectedAssessmentType === 'quick' && 
+              (systemUser.user.role.roleName === 'manager' || 
+              systemUser.user.role.roleName === 'TopManager')">
+              Quick Assessment
+            </button>
+
+
+            <ng-template #showNumber>
+              <p class="m-3">Total Assesements: {{ Assesement.length }}</p>
+            </ng-template>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="row vh-75 mt-3">
-      <div class="col-sm-8">
-        <div class="w-100">
-          <h3 class="section-title">Assesements</h3>
-          <p class="section-info">
-            Assesements Enrolled with each assesement being enrolled on quartely
-            basis
-          </p>
-        </div>
-        <div class="row">
-          <div class="col-sm-4 mb-3" *ngFor="let assesement of Assesement">
-            <div  class="card attribute-card d-flex flex-column align-items-center justify-content-between p-3">
-              <p class="assesement-display">{{assesement.assessmentName}}</p>
-              <p class="assesement-display">{{assesement.assessmentDescription}}</p>
-              <p class="assesement-display">End Date:{{assesement.endDate | date}}</p>
+      <div class="row mt-3">
+        <div class="col-sm-8">
+          <div class="">
+            <div appearance="fill" class="mb-3">
+              <!-- <mat-label>Search</mat-label> -->
+              <input type="text" [(ngModel)]="filterTerm" (ngModelChange)="filterSearchData()" placeholder="Search"
+                class="filter-input">
             </div>
           </div>
-        </div>
-      </div>
-      <div class="col-sm-4">
-        <div class="card bestAttribute radii p-3 mb-3">
-          <p class="text-center attribute-title">Assesement statistics</p>
-          <p>Total Attributes:</p>
-          <p>Attempted by all:</p>
-          <p>Attempted by none:</p>
-        </div>
-        <div class="card bestAttribute radii p-3 mb-3">
-          <p class="text-center attribute-title">
-            Best performed Assesement
-          </p>
-          <p>Assesement name:</p>
-          <p>Done by 10 employees</p>
-          <p>Employee Average score:</p>
-        </div>
-        <div class="card bestAttribute radii p-3">
-          <p class="text-center attribute-title">
-            Poorly performed Assesement
-          </p>
-          <p>Assesement name:</p>
-          <p>Done by 10 employees</p>
-          <p>Employee Average score:</p>
-        </div>
-      </div>
-    </div>
-  </mat-tab>
-
-  <mat-tab>
-    <ng-template mat-tab-label> Potential Attribute </ng-template>
-
-    <div class="container-fluid vh-100" *ngIf="potentialAttribute; else error">
-      <div
-        class="row card topHeader radii d-flex align-items-center justify-content-between mb-4"
-      >
-        <div
-          class="col-sm-12 d-flex align-items-center justify-content-between"
-        >
-          <p class="ms-3 title">{{ title }}</p>
-          <button
-            class="btn btn-primary m-3"
-            (click)="openDialog()"
-            *ngIf="
-              systemUser.user.role.roleName == 'manager' ||
-                systemUser.user.role.roleName == 'TopManager';
-              else showNumber
-            "
-          >
-            Add Attribute
-          </button>
-          <ng-template #showNumber>
-            <p class="m-3">Total attributes: {{ potentialAttribute.length }}</p>
-          </ng-template>
-        </div>
-      </div>
-
-      <div class="row vh-75 mt-3">
-        <div class="col-sm-8">
-          <div class="w-100">
-            <h3 class="section-title">Potential Attributes</h3>
-            <p class="section-info">
-              Potential attributes are the traits you naturally have that make
-              you unique and can determine your effectiveness in a certain job
-              role. These qualities can be used to further enhance your
-              suitability for a job when paired with skills that you've learned
-              through experience.
-            </p>
-          </div>
           <div class="row">
-            <div class="col-sm-4 mb-3" *ngFor="let att of potentialAttribute">
-              <div [routerLink]="'/singleAtt/' + att.potentialAttributeId">
-                <div
-                  class="card attribute-card d-flex flex-column align-items-center justify-content-between p-3"
-                >
-                  <p class="attribute-name">{{ att.potentialAttributeName }}</p>
-                  <p class="attribute-description">{{att.potentialAttributeDescription}}</p>
-                </div>
+            <div class="col-sm-4 mb-3" *ngFor="let assesement of Assesement">
+              <div class="card attribute-card d-flex flex-column align-items-center justify-content-between p-3"
+                [ngStyle]="{'background-color': assesement.status =='Expired'? 'Indian Red ' : 'green', 'color': assesement.status =='Expired'? 'black ' : 'white'}">
+                <h6 class="assesement-display">{{assesement.assessmentName}}</h6>
+                <p class="assesement-display">{{assesement.assessmentDescription}}</p>
+                <p class="assesement-display">End Date:{{assesement.endDate | date}}</p>
               </div>
             </div>
           </div>
         </div>
         <div class="col-sm-4">
-          <div class="card bestAttribute radii p-3 mb-3">
-            <p class="text-center attribute-title">Attributes statistics</p>
-            <p>Total Attributes:</p>
+          <div class="card bestAttribute  p-3 mb-3">
+            <p class="text-center attribute-title">Assesement statistics</p>
+            <p>Total Assesements:</p>
             <p>Attempted by all:</p>
             <p>Attempted by none:</p>
           </div>
-          <div class="card bestAttribute radii p-3 mb-3">
+          <div class="card bestAttribute  p-3 mb-3">
             <p class="text-center attribute-title">
-              Best performed Potential Attribute
+              Best performed Assesement
             </p>
-            <p>Attribute name:</p>
+            <p>Assesement name:</p>
             <p>Done by 10 employees</p>
             <p>Employee Average score:</p>
           </div>
-          <div class="card bestAttribute radii p-3">
+          <div class="card bestAttribute  p-3">
             <p class="text-center attribute-title">
-              Poorly performed Potential Attribute
+              Poorly performed Assesement
             </p>
-            <p>Attribute name:</p>
+            <p>Assesement name:</p>
             <p>Done by 10 employees</p>
             <p>Employee Average score:</p>
           </div>
         </div>
       </div>
-    </div>
+      <div class="pagination mt-3">
+        <button (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
+        <span>Page {{currentPage}} of {{totalPages}}</span>
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+      </div>
+    </mat-tab>
 
-    <ng-template #error class="else">
-      <div class="container">
-        <div
-          class="row card topHeader radii d-flex align-items-center justify-content-between mb-4"
-        >
-          <div
-            class="col-sm-12 d-flex align-items-center justify-content-between"
-          >
-            <p class="ms-3 title">{{ systemUser.userFullName }} {{ title }}</p>
-            <button class="btn btn-primary m-3" (click)="openDialog()">
+    <mat-tab>
+      <ng-template mat-tab-label> Potential Attribute </ng-template>
+
+      <div class="container-fluid vh-100" *ngIf="potentialAttribute; else error">
+        <div class="row card topHeader  d-flex align-items-center justify-content-between mb-4">
+          <div class="col-sm-12 d-flex align-items-center justify-content-between">
+            <p class="ms-3 title">{{ title }}</p>
+            <button class="btn btn-primary m-3" (click)="openDialog()" *ngIf="
+                systemUser.user.role.roleName == 'manager' ||
+                  systemUser.user.role.roleName == 'TopManager';
+                else showNumber
+              ">
               Add Attribute
             </button>
+            <ng-template #showNumber>
+              <p class="m-3">Total attributes: {{ potentialAttribute.length }}</p>
+            </ng-template>
           </div>
         </div>
-        <div class="row d-flex align-items-center justify-content-between">
+
+        <div class="row vh-75 mt-3">
           <div class="col-sm-8">
             <div class="w-100">
               <h3 class="section-title">Potential Attributes</h3>
@@ -178,43 +118,29 @@
                 Potential attributes are the traits you naturally have that make
                 you unique and can determine your effectiveness in a certain job
                 role. These qualities can be used to further enhance your
-                suitability for a job when paired with skills that you've
-                learned through experience.
+                suitability for a job when paired with skills that you've learned
+                through experience.
               </p>
             </div>
-            <h3 class="text-center oops-title">Ooops</h3>
-            <p class="oops-message">
-              Dear {{ systemUser.userFullName }} <br />
-              You currently don't have any potential attributes. Potential
-              attributes will help you achieve the following:
-            </p>
-            <ul class="oops-list">
-              <ul>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-              </ul>
-            </ul>
-            <p class="oops-message">
-              Please click the button below to add some.
-            </p>
-            <button class="btn btn-success">Add Potential Attribute</button>
+            <div class="row">
+              <div class="col-sm-4 mb-3" *ngFor="let att of potentialAttribute">
+                <div [routerLink]="'/singleAtt/' + att.potentialAttributeId">
+                  <div class="card attribute-card d-flex flex-column align-items-center justify-content-between p-3">
+                    <p class="attribute-name">{{ att.potentialAttributeName }}</p>
+                    <p class="attribute-description">{{att.potentialAttributeDescription}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="col-sm-4">
-            <div class="card bestAttribute radii p-3 mb-3">
+            <div class="card bestAttribute  p-3 mb-3">
               <p class="text-center attribute-title">Attributes statistics</p>
               <p>Total Attributes:</p>
               <p>Attempted by all:</p>
               <p>Attempted by none:</p>
             </div>
-            <div class="card bestAttribute radii p-3 mb-3">
+            <div class="card bestAttribute  p-3 mb-3">
               <p class="text-center attribute-title">
                 Best performed Potential Attribute
               </p>
@@ -222,7 +148,7 @@
               <p>Done by 10 employees</p>
               <p>Employee Average score:</p>
             </div>
-            <div class="card bestAttribute radii p-3">
+            <div class="card bestAttribute  p-3">
               <p class="text-center attribute-title">
                 Poorly performed Potential Attribute
               </p>
@@ -233,6 +159,81 @@
           </div>
         </div>
       </div>
-    </ng-template>
-  </mat-tab>
-</mat-tab-group>
+
+      <ng-template #error class="else">
+        <div class="container">
+          <div class="row card topHeader  d-flex align-items-center justify-content-between mb-4">
+            <div class="col-sm-12 d-flex align-items-center justify-content-between">
+              <p class="ms-3 title">{{ systemUser.userFullName }} {{ title }}</p>
+              <button class="btn btn-primary m-3" (click)="openDialog()">
+                Add Attribute
+              </button>
+            </div>
+          </div>
+          <div class="row d-flex align-items-center justify-content-between">
+            <div class="col-sm-8">
+              <div class="w-100">
+                <h3 class="section-title">Potential Attributes</h3>
+                <p class="section-info">
+                  Potential attributes are the traits you naturally have that make
+                  you unique and can determine your effectiveness in a certain job
+                  role. These qualities can be used to further enhance your
+                  suitability for a job when paired with skills that you've
+                  learned through experience.
+                </p>
+              </div>
+              <h3 class="text-center oops-title">Ooops</h3>
+              <p class="oops-message">
+                Dear {{ systemUser.userFullName }} <br />
+                You currently don't have any potential attributes. Potential
+                attributes will help you achieve the following:
+              </p>
+              <ul class="oops-list">
+                <ul>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                </ul>
+              </ul>
+              <p class="oops-message">
+                Please click the button below to add some.
+              </p>
+              <button class="btn btn-success">Add Potential Attribute</button>
+            </div>
+            <div class="col-sm-4">
+              <div class="card bestAttribute  p-3 mb-3">
+                <p class="text-center attribute-title">Attributes statistics</p>
+                <p>Total Attributes:</p>
+                <p>Attempted by all:</p>
+                <p>Attempted by none:</p>
+              </div>
+              <div class="card bestAttribute  p-3 mb-3">
+                <p class="text-center attribute-title">
+                  Best performed Potential Attribute
+                </p>
+                <p>Attribute name:</p>
+                <p>Done by 10 employees</p>
+                <p>Employee Average score:</p>
+              </div>
+              <div class="card bestAttribute  p-3">
+                <p class="text-center attribute-title">
+                  Poorly performed Potential Attribute
+                </p>
+                <p>Attribute name:</p>
+                <p>Done by 10 employees</p>
+                <p>Employee Average score:</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>
