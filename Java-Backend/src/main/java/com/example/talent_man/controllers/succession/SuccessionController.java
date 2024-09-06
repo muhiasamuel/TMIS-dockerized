@@ -26,6 +26,10 @@ public class SuccessionController {
         return res;
     }
 
+    @GetMapping("/details")
+    public List<SuccessionPlanResponseDto> getSuccessionPlanDetails() {
+        return successionPlanService.getSuccessionPlanDetails();
+    }
     @GetMapping
     public ApiResponse<List<SuccessionPlanDto>> getAllSuccessionPlans() {
         List<SuccessionPlanDto> plans = successionPlanService.getAllSuccessionPlans();

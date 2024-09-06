@@ -14,15 +14,48 @@
         <ng-template id="matStepLabel" matStepLabel>
           <span>Role Name</span>
         </ng-template>
-        <mat-label class="mb-4">
-          <span>Add a Role To Assess</span>
-        </mat-label>
-        <br>
-        <mat-form-field id="matinput">
+        <div class="d-flex align-items-center ">
+          <div>
+            <mat-label class="mb-4">
+              <span>Select Department Where Role Belongs</span>
+            </mat-label>
+            <br>
+            <mat-form-field appearance="fill" class="full-width">
 
-          <input matInput formControlName="roleName" placeholder="Enter Role Name" required>
-        </mat-form-field>
-        <br>
+              <mat-label>Select Department</mat-label>
+              <mat-select formControlName="department">
+                <mat-option *ngFor="let name of department" [value]="name.depId" (click)="getPosition()">{{ name.depName
+                  }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="mx-5">
+            <mat-label class="mb-4">
+              <span>Add a Role To Assess</span>
+            </mat-label>
+            <br>
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Select The Role</mat-label>
+              <input type="text" placeholder="Pick one" formControlName="roleName" aria-label="roleName" matInput [formControl]="myControl"
+                [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete" >
+                @for (option of filteredOptions | async; track option) {
+                <mat-option [value]="option.positionName">{{option.positionName}}</mat-option>
+                }
+              </mat-autocomplete>
+
+              <!-- <mat-label>Position</mat-label>
+              <mat-select formControlName="roleName">
+                <mat-option *ngFor="let name of positions" [value]="name.positionName">{{ name.positionName
+                  }}</mat-option>
+              </mat-select> -->
+            </mat-form-field>
+            <br>
+          </div>
+
+        </div>
+
         <div>
           <button class="btn btn-success text-white" matStepperNext>Next</button>
         </div>
@@ -134,7 +167,7 @@
     </mat-step>
 
     <mat-step [stepControl]="currentStateFormGroup" *ngIf="average >= 3.5">
-      <form [formGroup]="currentStateFormGroup" >
+      <form [formGroup]="currentStateFormGroup">
         <ng-template matStepLabel>
           <span> Current State</span>
         </ng-template>

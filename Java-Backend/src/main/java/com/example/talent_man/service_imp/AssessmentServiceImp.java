@@ -13,6 +13,7 @@ import com.example.talent_man.repos.PotentialAttributeRepo;
 import com.example.talent_man.repos.UserManSelectedQuestionAnswerRepository;
 import com.example.talent_man.repos.user.UserRepo;
 import com.example.talent_man.services.AssessmentService;
+import com.example.talent_man.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,9 +33,44 @@ public class AssessmentServiceImp implements AssessmentService {
     @Autowired
     AverageScoreRepo averageScoreRepo;
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private UserManSelectedQuestionAnswerRepository userManSelectedQuestionAnswerRepo;
     @Override
     public Assessment addAss(Assessment ass) {
+        // Set the subject and message body for the email
+        String subject = "New Assessment Available: " + ass.getAssessmentName();
+        String messageBody = "Dear " + "[User's Full Name]," + "\n\n"
+                + "We are pleased to inform you that a new assessment titled '" + ass.getAssessmentName() + "' has been created and is now available for you to complete.\n"
+                + "Please log in to your account and complete the assessment before the deadline: " + ass.getEndDate() + ".\n\n"
+//                + "Assessment Instructions: [Insert any specific instructions or guidelines].\n\n"
+//                + "Click here to access the assessment: [Insert link to the assessment]\n\n"
+                + "Thank you,\n"
+                + "Your Talent Management Team";
+
+        // Fetch all users from the database
+        List<User> users = userRepo.findAll();
+
+        // Loop through each user and send the email
+        for (User user : users) {
+            if (user.getEmail() != null && !user.getEmail().isEmpty()) {
+                try {
+                    // Personalize the message for each user
+                    String personalizedMessage = messageBody.replace("[User's Full Name]", user.getUserFullName());
+                    emailService.sendEmail(user.getEmail(), subject, personalizedMessage);
+                    System.out.println("Email sent to: " + user.getEmail());
+                } catch (Exception e) {
+                    // Handle any potential email sending issues
+                    System.err.println("Failed to send email to: " + user.getEmail());
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("User " + user.getUserFullName() + " does not have an email.");
+            }
+        }
+
+        // Save the assessment to the repository
         return repo.save(ass);
     }
 

@@ -79,6 +79,9 @@ public class UserServiceImp implements UserService {
         return repo.save(manager);
     }
 
+    public Manager save(Manager manager) {
+        return repo.save(manager);
+    }
     @Override
     public User getByUsername(String username) {
         return repo.findByUsername(username);

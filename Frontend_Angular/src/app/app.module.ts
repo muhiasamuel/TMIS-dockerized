@@ -46,6 +46,7 @@ import { MatCardModule } from '@angular/material/card';
 import {MatListModule} from '@angular/material/list';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 import { BaseChartDirective  } from 'ng2-charts';
 
@@ -182,10 +183,12 @@ import { SuccessionDisplayComponent } from './pages/succession-plan/succession-d
     MatDatepickerModule,
     AsyncPipe,
     AppRoutingModule,
+
     BrowserAnimationsModule,
     MatStepperModule,
     MatTableModule,
     BaseChartDirective,
+    MatAutocompleteModule,
     MatRadioModule,
     MatPaginatorModule,
     MatTableModule,
@@ -214,6 +217,7 @@ import { SuccessionDisplayComponent } from './pages/succession-plan/succession-d
     MatGridListModule,
     MatTabsModule,
     MatGridListModule,
+    
     CommonModule,
     
     ToastrModule.forRoot()

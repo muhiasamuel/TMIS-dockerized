@@ -21,6 +21,8 @@ public interface UserService {
     User getByUsername(String username);
     //Read
     Manager getManagerById(int id);
+
+     Manager save(Manager manager);
     Manager getManagerByUserName(String username);
     Employee getEmployeeByUserName(String username);
 
