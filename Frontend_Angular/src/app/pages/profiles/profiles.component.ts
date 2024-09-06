@@ -18,7 +18,7 @@ interface Profile {
   certifications: { certification: string; body: string }[];
   skills: { skill: string; level: string }[];
   performanceHistory: { period: string; rating: number }[];
-  talentDesignations: { potential2023: string; potential2022: string; mapping2023: string; mapping2022: string };
+  talentDesignations: { potentialrating2023: string; potentialrating2022: string; mapping2023: string; mapping2022: string };
   isRoleCritical: string;
   isMVP: string;
   succession: { isDesignatedSuccessor: string; potentialSuccessors: { role: string; readyStatus: string }[] };
@@ -43,27 +43,109 @@ export class ProfilesComponent implements OnInit {
   photo1:string = ''
   managerId: number;
   EmployeeTalentRating: any;
-  profile: any;
-
+  
+  authUser:any;
+   profile: Profile = {
+    name: "Jane Doe",
+    positionTitle: "Senior Software Engineer",
+    level: "Senior",
+    department: "Engineering",
+    lineManagerName: "John Smith",
+    lineManagerPositionTitle: "Engineering Manager",
+    photo: "https://example.com/photos/jane_doe.jpg",
+    previousRoles: [
+      { positionTitle: "Software Engineer", employer: "Tech Solutions Inc." },
+      { positionTitle: "Junior Software Developer", employer: "Innovate Ltd." }
+    ],
+    education: [
+      { qualification: "Master of Science in Computer Science", university: "Stanford University" },
+      { qualification: "Bachelor of Science in Computer Science", university: "University of California, Berkeley" }
+    ],
+    accreditations: [
+      { accreditation: "Certified Scrum Master", body: "Scrum Alliance" },
+      { accreditation: "AWS Certified Solutions Architect", body: "Amazon Web Services" }
+    ],
+    certifications: [
+      { certification: "Certified Ethical Hacker", body: "EC-Council" },
+      { certification: "PMP", body: "Project Management Institute" }
+    ],
+    skills: [
+      { skill: "JavaScript", level: "Expert" },
+      { skill: "Angular", level: "Advanced" },
+      { skill: "Python", level: "Intermediate" }
+    ],
+    performanceHistory: [
+      { period: "Q1 2024", rating: 4.5 },
+      { period: "Q4 2023", rating: 4.7 }
+    ],
+    talentDesignations: {
+      potentialrating2023: "High Potential",
+      potentialrating2022: "High Potential",
+      mapping2023: "Leadership",
+      mapping2022: "Technical Expert"
+    },
+    isRoleCritical: "Yes",
+    isMVP: "No",
+    succession: {
+      isDesignatedSuccessor: "Yes",
+      potentialSuccessors: [
+        { role: "Engineering Lead", readyStatus: "Ready" },
+        { role: "Principal Engineer", readyStatus: "Ready Soon" }
+      ]
+    },
+    recentKeyDevelopmentInterventions: [
+      "Leadership Training Program",
+      "Advanced Angular Workshop"
+    ],
+    talentDevelopmentPlans: [
+      "Complete Advanced Leadership Training",
+      "Gain additional certifications in cloud technologies"
+    ],
+    successionDevelopmentPlans: [
+      "Mentor potential successors",
+      "Prepare detailed succession plan for critical projects"
+    ],
+    careerAspirations: {
+      shortTerm: "Lead a major product development project",
+      longTerm: "Become a Chief Technology Officer (CTO)"
+    }
+  };
+  
 
   constructor( private route: ActivatedRoute, private http:HttpServiceService, private router:Router) { }
 
   ngOnInit(): void {
+
+    console.log("sadsfdf", this.profile);
+    
+    const user = localStorage.getItem("user")
+    if (user) {
+      this.authUser = JSON.parse(user)
+      this.managerId = this.authUser.user.userId
+    }
+
     this.route.queryParams.subscribe(params => {
       this.userId = params['userId'];
     });
+
+    if (this.userId) {
+      this.getEmployeeInfo(this.userId)
+
+    } else {
+      this.getEmployeeInfo(this.managerId)
+
+    }
   
     console.log(this.userId);
     
-    this.getEmployeeInfo()
     this.getEmployeePerformance()
     this.getEmployeeTalentRating()
     this.getEmployeeSuccessionInfo()
 
    }
 
-   getEmployeeInfo(){
-    this.http.getEmployeeById(this.userId).subscribe(
+   getEmployeeInfo(id:any){
+    this.http.getEmployeeById(id).subscribe(
       ((res) => {
         console.log("stexooooo",res.item);
         this.employeeInfo = res.item;
