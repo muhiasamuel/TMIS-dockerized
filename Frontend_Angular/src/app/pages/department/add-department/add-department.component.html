@@ -1,40 +1,46 @@
-<div class="container">  
-    
-    <h5> Add Departments</h5>  
-      
-    <form [formGroup]="departmentForm" (ngSubmit)="onSubmit()" >
-        <table class="table table-striped" formArrayName="departments">  
-            <tr>  
-            <th colspan="2">Add Multiple Departments:</th> 
-            </tr>  
-            <tr *ngFor="let quantity of departments().controls; let i=index" [formGroupName]="i">  
-            <td>  
-                Department Name :  
-                <input type="text" formControlName="departmentName" class="form-control" required> 
-                </td>  
-            
-            <td class="my-2">  
-                Position Name:  
-                <input type="text" formControlName="positionName" class="form-control" required>  
-            </td>  
-            <td>  
-                <button (click)="removeDepartment(i)" style="background-color: brown;" class="btn btn-danger">Remove</button>  
-            </td>  
-            </tr>
-            <td><button  (click)=" addDepartment()" type="button" class="btn btn-md btn-primary my-4 ">Add More</button></td>  
-        </table>  
-        <ng-container *ngIf="isSubmitting; else elseTemplate">
-            <button class="btn btn-primary" type="button" disabled>
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                <span class="sr-only">Submitting</span>
+<div class="container">
+  <h5>Add Departments</h5>
+  <form [formGroup]="departmentForm" (ngSubmit)="onSubmit()">
+    <table class="table table-striped">
+      <tr>
+        <th>Department Name</th>
+        <!-- <th>Position Name(s)</th> -->
+        <!-- <th>Actions</th> -->
+      </tr>
+      <tr>
+        <td>
+          <input type="text" formControlName="depName" class="form-control" placeholder="Department Name" required />
+        </td>
+      </tr>
+
+      <div formArrayName="positionList" class="">
+        <tr *ngFor="let position of getPositionList().controls; let j = index" [formGroupName]="j">
+            <td class="col-sm-4">
+              <input type="text" formControlName="pname" class="form-control" placeholder="Position Name" required />
+            </td>
+            <td class="col-sm-1">
+              <button (click)="removePosition(j)" type="button" class="btn btn-danger">
+                Remove Position
               </button>
-        </ng-container>
-        <ng-template #elseTemplate>
-            <button class="btn btn-success btn-md" id="submit" type="submit" [disabled]="!departmentForm.valid">Submit</button>            
-        </ng-template>
-        
-      
-    </form>  
-    
-      
+            </td>
+        </tr>
+      </div>
+    </table>
+    <div class="button">
+      <button (click)="addPosition()" id="add-position" type="button" class="btn btn-secondary">
+        Add Position
+      </button>
+    </div>
+    <ng-container *ngIf="isSubmitting; else elseTemplate">
+      <button class="btn btn-primary" type="button" disabled>
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        <span class="sr-only">Submitting</span>
+      </button>
+    </ng-container>
+    <ng-template #elseTemplate>
+      <button class="btn btn-success btn-md" id="submit" type="submit">
+        Submit
+      </button>
+    </ng-template>
+  </form>
 </div>

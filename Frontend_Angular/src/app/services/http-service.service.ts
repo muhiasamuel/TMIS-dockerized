@@ -333,6 +333,13 @@ postAssesement(data:any, userId:number): Observable<any>{
   return this.http.post<any>(url,data)
 }
 
+postSuccessionDrive(data:any): Observable<any>{
+// http://localhost:8080/v1/api/successionDrivers
+
+const url =`${this.serverUrl}successionDrivers`
+return this.http.post<any>(url,data)
+}
+
 
 }
 
