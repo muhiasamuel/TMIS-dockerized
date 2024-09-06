@@ -12,24 +12,26 @@ export const ROUTES: RouteInfo[] = [
     { path: '/dashboard',     title: 'Dashboard',         icon:'nc-bank',       class: 'text-dark', userType: true},
     { path: '/potential-attributes',     title: 'Assesements',         icon:'nc-paper',       class: 'text-dark' , userType: true},
     { path: '/assess-my-potential',         title: 'assess my Potential',             icon:'nc-user-run',    class: 'text-dark' , userType: true},
-    { path: '/assess-my-team',         title: 'assess my Team',             icon:'nc-diamond',    class: 'text-dark' , userType: true},
+    { path: '/assess-my-team',         title: 'assess my Team',             icon:'nc-zoom-split',    class: 'text-dark' , userType: true},
 
-    { path: '/user',          title: 'Assessment Reports',      icon:'nc-single-copy-04',  class: ''  , userType: true},
+    //{ path: '/user',          title: 'Assessment Reports',      icon:'nc-single-copy-04',  class: ''  , userType: true},
     { path: '/critical-roles-home', title: 'Assess Critical Roles',     icon:'nc-bulb-63',    class: '' , userType: true },    
-    { path: '/skills-view',         title: 'Assess Critical Skills',        icon:'nc-bulb-63',    class: '' , userType: true },
+    { path: '/skills-view',         title: 'Assess Critical Skills',        icon:'nc-diamond',    class: '' , userType: true },
     { path: '/mvps',          title:`MVP'S`,      icon:'nc-money-coins',  class: '' , userType: true },
     { path: '/HIPOs',          title:`HIPOs`,      icon:'nc-money-coins',  class: '' , userType: true },
     
     { path: '/talent-mapping',    title: 'Talent Mapping',        icon:'nc-caps-small', class: ''  , userType: true},
     { path: '/succession-plan',    title: 'Succession Plans',        icon:'nc-bulb-63', class: '' , userType: true },
     { path: '/profiles',          title: 'My Profile',      icon:'nc-single-02',  class: ''  , userType: true}, 
-    { path: '/MyTeamsProfile',          title: 'My Teams Profiles',     icon: 'nc-bank',  class: ''  , userType: true},  
-    { path: '/departments',          title: 'Department',     icon: 'nc-badge',  class: ''  , userType: true},  
+    { path: '/MyTeamsProfile',          title: 'My Teams Profiles',     icon: 'nc-badge',  class: ''  , userType: true},  
+    { path: '/departments',          title: 'Department',     icon: 'nc-bank',  class: ''  , userType: true},  
 
 ];
 
 export const ROUTES_EMPLOYEE: RouteInfo[] = [
     { path: '/dashboard',     title: 'Dashboard',         icon:'nc-bank',       class: 'text-dark', userType: true},
+    { path: '/potential-attributes',     title: 'Assesements',         icon:'nc-paper',       class: 'text-dark' , userType: true},
+
     { path: '/assess-my-potential',         title: 'assess my Potential',             icon:'nc-diamond',    class: 'text-dark' , userType: true},
     { path: '/user',          title: 'Profiles',      icon:'nc-single-02',  class: ''  , userType: true},
     // { path: '/mvps',          title:`MVP'S`,      icon:'nc-money-coins',  class: '' , userType: true },   

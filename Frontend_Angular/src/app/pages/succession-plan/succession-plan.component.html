@@ -1,135 +1,147 @@
-<div class="container-fluid">
-  <form [formGroup]="myForm" (ngSubmit)="onSubmitted()">
-    <ol class="breadcrumb-arrow align-items-center">
-      <li><a>Succession</a></li>
-      <li><a>Planning</a></li>
-    </ol>
-    <div class="example-small-box mat-elevation-z4">
-      <div class="d-flex justify-content-end align-items-center m-1 bg-light">
-        <div class="card-category mx-4">
-          <h6>Select From The Dropdown To Add More Columns Regarding The Successor</h6>
-        </div>
-        <mat-form-field appearance="fill">
-          <mat-label>Select Column to Add</mat-label>
-          <mat-select (selectionChange)="onColumnSelect($event.value)">
-            <mat-option *ngFor="let column of availableColumns" [value]="column">
-              {{ column }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <div class="table-responsive">
-        <table class="table table-bordered table-hover excel-table" id="sp">
-          <thead>
-            <tr>
-              <th scope="col">Department</th>
-              <th scope="col">Succession Driver</th>
-              <th scope="col">Key Role</th>
-              <th scope="col">Current Role Holder</th>
-              <th scope="col">Retention Risk Rating (H,M,L)</th>
-              <th *ngIf="showReadyNow" scope="col" class="header-with-remove">
-                Ready Now (RN) <span *ngIf="getFormArray('readyNow').length > 0">({{ getFormArray('readyNow').length }} record(s) added)</span>
-                <button mat-icon-button (click)="onColumnRemove('Ready Now (RN)')" aria-label="Remove column">
-                  <mat-icon>close</mat-icon>
-                </button>
-              </th>
-              <th *ngIf="showReadyAfterTwoYears">
-                Ready in 1-2 Years (R1-2) <span *ngIf="getFormArray('readyAfterTwoYears').length > 0">({{ getFormArray('readyAfterTwoYears').length }} record(s) added)</span>
-                <button mat-icon-button (click)="onColumnRemove('Ready in 1-2 Years (R1-2)')" aria-label="Remove column">
-                  <mat-icon>close</mat-icon>
-                </button>
-              </th>
-              <th *ngIf="showReadyMoreThanTwoYears">
-                Ready in More Than 2 Years (R>2) <span *ngIf="getFormArray('readyMoreThanTwoYears').length > 0">({{ getFormArray('readyMoreThanTwoYears').length }} record(s) added)</span>
-                <button mat-icon-button (click)="onColumnRemove('Ready in More Than 2 Years (R>2)')" aria-label="Remove column">
-                  <mat-icon>close</mat-icon>
-                </button>
-              </th>
-              <th *ngIf="showExternalSuccessor">
-                External Ready Successor (Name, Current Role, Organisation) <span *ngIf="getFormArray('externalSuccessor').length > 0">({{ getFormArray('externalSuccessor').length }} record(s) added)</span>
-                <button mat-icon-button (click)="onColumnRemove('External Ready Successor')" aria-label="Remove column">
-                  <mat-icon>close</mat-icon>
-                </button>
-              </th>
-              <th scope="col">Submit</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <mat-form-field appearance="fill">
-                  <mat-label>Select Department</mat-label>
-                  <mat-select formControlName="departmentId">
-                    <mat-option *ngFor="let department of departments" [value]="department.depId">
-                      {{department.depName}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </td>
-              <td>
-                <mat-form-field appearance="fill">
-                  <mat-label>Select Succession Driver</mat-label>
-                  <mat-select formControlName="driverId">
-                    <mat-option *ngFor="let driver of drivers" [value]="driver.driverId">
-                      {{driver.driverName}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </td>
-              <td>
-                <mat-form-field appearance="fill">
-                  <mat-label>Select Key Role</mat-label>
-                    <mat-select formControlName="positionId" (click)="getPosition()" >
-                      @for (position of positions; track positions) {
-                        <mat-option [value]="position.pid">{{position.positionName}}</mat-option>
-                      }
-                  </mat-select>
-                </mat-form-field>
-              </td>
-              <td>
-                <mat-form-field appearance="fill">
-                  <mat-label>Select Current Role Holder</mat-label>
-                  <mat-select formControlName="currentRoleHolderId" (click) ="getPositionHolder()">
-                    <mat-option *ngFor="let employee of positioHolder" [value]="employee.id">
-                      {{employee.firstName}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </td>
-              <td>
-                <mat-form-field appearance="fill">
-                  <mat-label>Select Retention Risk</mat-label>
-                  <mat-select formControlName="retentionRiskRating">
-                    <mat-option value="High">High</mat-option>
-                    <mat-option value="Medium">Medium</mat-option>
-                    <mat-option value="Low">Low</mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </td>
-              <td *ngIf="showReadyNow">
-                <span>{{ getFormArray('readyNow').length }} record(s) added </span>
-                <button type="button" (click)="openReadyNowDialog()">Add New Record</button>
-              </td>
-              <td *ngIf="showReadyAfterTwoYears">
-                <span>{{ getFormArray('readyAfterTwoYears').length }} record(s) added</span>
-                <button type="button" (click)="openReadyTwoDialog()">Add New Record</button>
-              </td>
-              <td *ngIf="showReadyMoreThanTwoYears">
-                <span>{{ getFormArray('readyMoreThanTwoYears').length }} record(s) added</span>
-                <button type="button" (click)="openReadyMoreDialog()">Add New Record</button>
-              </td>
-              <td *ngIf="showExternalSuccessor">
-                <span>{{ getFormArray('externalSuccessor').length }} record(s) added</span>
-                <button type="button" (click)="openExternalSuccessorDialog()">Add New Record</button>
-              </td>
-              <td>
-                <button type="submit" mat-raised-button color="primary">Submit</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </form>
+<div>
+  <ol class="breadcrumb-arrow align-items-center">
+    <li><a>Succession</a></li>
+    <li><a>Planning</a></li>
+  </ol>
 </div>
+<mat-tab-group class="mt-5">
+  <mat-tab>
+    <ng-template mat-tab-label class="mat-header"> SUCCESSION PLAN</ng-template>
+    <div class="container-fluid">
+      <form [formGroup]="myForm" (ngSubmit)="onSubmitted()">
+        <div class="example-small-box mat-elevation-z4">
+          <div class="d-flex justify-content-end align-items-center m-1 bg-light">
+            <div class="card-category mx-4">
+              <h6>Select From The Dropdown To Add More Columns Regarding The Successor</h6>
+            </div>
+            <mat-form-field appearance="fill">
+              <mat-label>Select Column to Add</mat-label>
+              <mat-select (selectionChange)="onColumnSelect($event.value)">
+                <mat-option *ngFor="let column of availableColumns" [value]="column">
+                  {{ column }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+    
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover excel-table" id="sp">
+              <thead>
+                <tr>
+                  <th scope="col">Department</th>
+                  <th scope="col">Succession Driver</th>
+                  <th scope="col">Key Role</th>
+                  <th scope="col">Current Role Holder</th>
+                  <th scope="col">Retention Risk Rating (H,M,L)</th>
+                  <th *ngIf="showReadyNow" scope="col" class="header-with-remove">
+                    Ready Now (RN) <span *ngIf="getFormArray('readyNow').length > 0">({{ getFormArray('readyNow').length }} record(s) added)</span>
+                    <button mat-icon-button (click)="onColumnRemove('Ready Now (RN)')" aria-label="Remove column">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </th>
+                  <th *ngIf="showReadyAfterTwoYears">
+                    Ready in 1-2 Years (R1-2) <span *ngIf="getFormArray('readyAfterTwoYears').length > 0">({{ getFormArray('readyAfterTwoYears').length }} record(s) added)</span>
+                    <button mat-icon-button (click)="onColumnRemove('Ready in 1-2 Years (R1-2)')" aria-label="Remove column">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </th>
+                  <th *ngIf="showReadyMoreThanTwoYears">
+                    Ready in More Than 2 Years (R>2) <span *ngIf="getFormArray('readyMoreThanTwoYears').length > 0">({{ getFormArray('readyMoreThanTwoYears').length }} record(s) added)</span>
+                    <button mat-icon-button (click)="onColumnRemove('Ready in More Than 2 Years (R>2)')" aria-label="Remove column">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </th>
+                  <th *ngIf="showExternalSuccessor">
+                    External Ready Successor (Name, Current Role, Organisation) <span *ngIf="getFormArray('externalSuccessor').length > 0">({{ getFormArray('externalSuccessor').length }} record(s) added)</span>
+                    <button mat-icon-button (click)="onColumnRemove('External Ready Successor')" aria-label="Remove column">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </th>
+                  <th scope="col">Submit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <mat-form-field appearance="fill">
+                      <mat-label>Select Department</mat-label>
+                      <mat-select formControlName="departmentId">
+                        <mat-option *ngFor="let department of departments" [value]="department.depId">
+                          {{department.depName}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="fill">
+                      <mat-label>Select Succession Driver</mat-label>
+                      <mat-select formControlName="driverId">
+                        <mat-option *ngFor="let driver of drivers" [value]="driver.driverId">
+                          {{driver.driverName}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="fill">
+                      <mat-label>Select Key Role</mat-label>
+                        <mat-select formControlName="positionId" (click)="getPosition()" >
+                          @for (position of positions; track positions) {
+                            <mat-option [value]="position.pid">{{position.positionName}}</mat-option>
+                          }
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="fill">
+                      <mat-label>Select Current Role Holder</mat-label>
+                      <mat-select formControlName="currentRoleHolderId" (click) ="getPositionHolder()">
+                        <mat-option *ngFor="let employee of positioHolder" [value]="employee.id">
+                          {{employee.firstName}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="fill">
+                      <mat-label>Select Retention Risk</mat-label>
+                      <mat-select formControlName="retentionRiskRating">
+                        <mat-option value="High">High</mat-option>
+                        <mat-option value="Medium">Medium</mat-option>
+                        <mat-option value="Low">Low</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+                  <td *ngIf="showReadyNow">
+                    <span>{{ getFormArray('readyNow').length }} record(s) added </span>
+                    <button type="button" (click)="openReadyNowDialog()">Add New Record</button>
+                  </td>
+                  <td *ngIf="showReadyAfterTwoYears">
+                    <span>{{ getFormArray('readyAfterTwoYears').length }} record(s) added</span>
+                    <button type="button" (click)="openReadyTwoDialog()">Add New Record</button>
+                  </td>
+                  <td *ngIf="showReadyMoreThanTwoYears">
+                    <span>{{ getFormArray('readyMoreThanTwoYears').length }} record(s) added</span>
+                    <button type="button" (click)="openReadyMoreDialog()">Add New Record</button>
+                  </td>
+                  <td *ngIf="showExternalSuccessor">
+                    <span>{{ getFormArray('externalSuccessor').length }} record(s) added</span>
+                    <button type="button" (click)="openExternalSuccessorDialog()">Add New Record</button>
+                  </td>
+                  <td>
+                    <button type="submit" mat-raised-button color="primary">Submit</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </form>
+    </div>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label> SUCCESSION PLAN DISPLAY </ng-template>
+    <app-succession-display></app-succession-display>
+  </mat-tab>
+</mat-tab-group>

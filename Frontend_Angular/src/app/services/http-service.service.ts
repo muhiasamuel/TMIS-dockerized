@@ -21,15 +21,13 @@ export class HttpServiceService {
   //  serverUrl: string = 'http://192.168.2.21:8080';
 
 
-
-
-
   // serverUrl: string = 'http://192.168.89.11:8080';
  // serverUrl: string = 'http://192.168.89.11:8080';
 
   // serverUrl
   serverUrl: string = 'http://localhost:8080/v1/api/';
 
+  //serverUrl: string = 'http://192.168.90.38:8080/v1/api/';
 
   //serverUrl: string = environment.API_BASE_URL;
   //  serverUrl: string = 'http://192.168.2.21:8080';

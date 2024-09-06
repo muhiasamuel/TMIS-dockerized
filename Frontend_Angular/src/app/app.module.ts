@@ -100,6 +100,7 @@ import { AssessmentHistoryInfoComponent } from './assessment-history-info/assess
 import { AssessmentLineGraphComponent } from './graphs/assessment-line-graph/assessment-line-graph.component';
 import { AssessmentBarGraphComponent } from './graphs/assessment-bar-graph/assessment-bar-graph.component';
 import { ExternalSuccessorComponent } from './pages/succession-plan/external-successor/external-successor.component';
+import { SuccessionDisplayComponent } from './pages/succession-plan/succession-display/succession-display.component';
 
 
 
@@ -172,6 +173,7 @@ import { ExternalSuccessorComponent } from './pages/succession-plan/external-suc
     AssessmentLineGraphComponent,
     AssessmentBarGraphComponent,
     ExternalSuccessorComponent,
+    SuccessionDisplayComponent,
     
    
   ],
