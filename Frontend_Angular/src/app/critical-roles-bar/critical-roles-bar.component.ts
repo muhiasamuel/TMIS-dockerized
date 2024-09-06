@@ -121,14 +121,14 @@ export class CriticalRolesBarComponent {
             borderWidth: 1,
             //backgroundColor: colorCode
             backgroundColor: [
-              'rgba(248, 41, 43, 0.5)',
-              'rgba(229, 189, 12, 0.5)',
+              'rgba(8, 1, 3, 0.5)',
+              'rgba(9, 89, 212, 0.5)',
               'rgba(40, 170, 45, 0.5)'
             ],
             borderColor: [
-              'rgba(248, 41, 43, 1)',
-              'rgba(229, 189, 12, 1)',
-              'rgba(40, 170, 45, 1)'
+              'rgba(248, 41, 43, 0.1)',
+              'rgba(229, 189, 12, 0.1)',
+              'rgba(40, 170, 45, 0.1)'
             ],
           }
           

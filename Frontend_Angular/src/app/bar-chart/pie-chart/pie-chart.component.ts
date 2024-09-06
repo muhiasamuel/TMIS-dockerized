@@ -73,7 +73,7 @@ export class PieChartComponent implements OnInit {
 
     this.pieChartData.labels = Object.keys(scores);
     this.pieChartData.datasets[0].data = Object.values(scores);
-    this.pieChartData.datasets[0].backgroundColor = Object.keys(scores).map((_, index) => `hsl(${index * 70}, 70%, 30%)`);
+    this.pieChartData.datasets[0].backgroundColor = Object.keys(scores).map((_, index) => `hsla(${index * 70}, 70%, 30%, 0.8)`);
 
     this.createPieChart();
   }

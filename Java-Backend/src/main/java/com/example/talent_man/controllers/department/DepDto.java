@@ -15,4 +15,6 @@ import java.util.List;
 public class DepDto implements Serializable {
     private String depName;
     private List<PositionDto> positionList;
+    private Integer managerId; // Add this field to reference the Manager
+
 }

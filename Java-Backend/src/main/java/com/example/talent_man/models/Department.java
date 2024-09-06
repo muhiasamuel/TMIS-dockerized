@@ -1,6 +1,5 @@
 package com.example.talent_man.models;
 
-import com.example.talent_man.models.succession.SuccessionPlan;
 import com.example.talent_man.models.user.Manager;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -30,10 +29,11 @@ public class Department implements Serializable {
     @JsonManagedReference
     private List<Position> departmentPositions = new ArrayList<>();
 
-
-//    @OneToOne(mappedBy = "department", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JsonBackReference
-//    private SuccessionPlan plan;
+    // Add a relationship to the Manager
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "manager_id")
+    @JsonBackReference
+    private Manager manager;
 
     @Override
     public int hashCode() {

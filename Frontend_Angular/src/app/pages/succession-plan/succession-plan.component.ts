@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpServiceService } from '../../services/http-service.service';
 import { ReadyNowDialogComponent } from '../../succession-plan/ready-now-dialog/ready-now-dialog.component';
@@ -25,13 +25,24 @@ export class SuccessionPlanComponent implements OnInit {
   positions: any;
   positioHolder:any;
 
+   // State to track input visibility
+   showForm = false;
+  
+   // State to track input value
+   inputValue = '';
+   driveForm:FormGroup
+ 
 
   constructor(
     private formBuilder: FormBuilder,
     private http: HttpServiceService,
     public dialog: MatDialog,
     private snackBar: MatSnackBar
-  ) {}
+  ) {
+    this.driveForm =this.formBuilder.group({
+      driverName:['', Validators.required]
+    });
+  }
 
   ngOnInit() {
     this.getSuccessionDrivers();
@@ -248,5 +259,26 @@ export class SuccessionPlanComponent implements OnInit {
     }
 
     this.availableColumns.push(column); // Add back to dropdown
+  }
+
+  // submit Form
+  onSubmit(){
+    console.log('driversForm',this.driveForm.value);
+    
+    this.http.postSuccessionDrive(this.driveForm.value).subscribe(
+      ((res)=>{
+        this.snackBar.open('Succession drive added sucessfully!', 'Close', {
+          duration: 3000,
+          panelClass: ['success-snackbar'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top'
+        });
+        
+      }),
+      ((error)=>{}),
+      ()=>{
+        this.showForm = false
+      }
+    )
   }
 }

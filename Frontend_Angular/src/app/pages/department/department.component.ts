@@ -14,13 +14,25 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class DepartmentComponent implements OnInit, AfterViewInit {
   departments: any[] = [];
   dataSource = new MatTableDataSource<any>();
-  displayedColumns: string[] = ['index', 'depId', 'depName', 'positionName'];
+  displayedColumns: string[] = ['index', 'depName', 'positionName'];
   matDialog: MatDialog = inject(MatDialog);
   http: HttpServiceService = inject(HttpServiceService);
   snackbar: MatSnackBar = inject(MatSnackBar)
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  displayLimit = 2; // Number of positions to show initially
+  showAll = false; // Flag to track if all positions are being displayed
+
+  // Method to toggle between showing all positions and the limited set
+  toggleView(element: any) {
+    if (!this.showAll) {
+      this.displayLimit = element.departmentPositions.length; // Show all positions
+    } else {
+      this.displayLimit = 2; // Reset to initial limit
+    }
+    this.showAll = !this.showAll; // Toggle the showAll flag
+  }
   ngOnInit() {
     this.getDepartment();
   }

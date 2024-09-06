@@ -1,5 +1,6 @@
 package com.example.talent_man.service_imp;
 
+import com.example.talent_man.controllers.succession.SuccessionPlanResponseDto;
 import com.example.talent_man.dto.succession.ProposedInterventionDto;
 import com.example.talent_man.dto.succession.ReadyUserDto;
 import com.example.talent_man.dto.succession.SuccessionPlanDto;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -113,6 +115,7 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
                     externalSuccessor.setContactInfo(externalDto.getContactInfo());
                     externalSuccessor.setCurrentPosition(externalDto.getCurrentPosition());
                     externalSuccessor.setCurrentCompany(externalDto.getCurrentCompany());
+                    externalSuccessor.setSuccessionPlan(successionPlan);
                     externalSuccessor.setReasonForSelection(externalDto.getReasonForSelection());
                     externalSuccessor.setExpectedStartDate(externalDto.getExpectedStartDate());
 
@@ -167,6 +170,54 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
         return successionPlanRepository.findAll().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SuccessionPlanResponseDto> getSuccessionPlanDetails() {
+        List<SuccessionPlanRepository.SuccessionPlanProjection> projections = successionPlanRepository.getSuccessionPlanDetails();
+        return projections.stream().map(this::mapToDto).collect(Collectors.toList());
+    }
+
+    private SuccessionPlanResponseDto mapToDto(SuccessionPlanRepository.SuccessionPlanProjection projection) {
+        SuccessionPlanResponseDto dto = new SuccessionPlanResponseDto();
+
+        dto.setPlanId(projection.getPlanId());
+        dto.setRiskRating(projection.getRiskRating());
+        dto.setCurrentRoleHolderId(projection.getCurrentRoleHolderId());
+        dto.setCurrentRoleHolderName(projection.getCurrentRoleHolderName());
+        dto.setDepartmentId(projection.getDepartmentId());
+        dto.setDepartmentName(projection.getDepartmentName());
+        dto.setPositionId(projection.getPositionId());
+        dto.setPositionName(projection.getPositionName());
+        dto.setDriverId(projection.getDriverId());
+        dto.setDriverName(projection.getDriverName());
+
+        // Mapping the nested lists or objects
+        SuccessionPlanResponseDto.ReadyUserDto readyUserDto = new SuccessionPlanResponseDto.ReadyUserDto();
+        readyUserDto.setReadyUserName(projection.getReadyUserName());
+        readyUserDto.setReadinessLevel(projection.getReadinessLevel());
+        dto.setReadyUsers(Collections.singletonList(readyUserDto));  // Assuming only one user for now
+
+        SuccessionPlanResponseDto.InterventionDto interventionDto = new SuccessionPlanResponseDto.InterventionDto();
+        interventionDto.setInterventionDescription(projection.getInterventionDescription());
+        interventionDto.setInterventionType(projection.getInterventionType());
+        //interventionDto.setInterventionCount(projection.getInterventionCount());
+        readyUserDto.setInterventions(Collections.singletonList(interventionDto));  // Assuming one intervention
+
+        SuccessionPlanResponseDto.DevelopmentNeedDto developmentNeedDto = new SuccessionPlanResponseDto.DevelopmentNeedDto();
+        developmentNeedDto.setDevelopmentNeedDescription(projection.getDevelopmentNeedDescription());
+        developmentNeedDto.setDevelopmentNeedType(projection.getDevelopmentNeedType());
+        readyUserDto.setDevelopmentNeeds(Collections.singletonList(developmentNeedDto));  // Assuming one development need
+
+        // Mapping ExternalSuccessorDto
+        SuccessionPlanResponseDto.ExternalSuccessorDto externalSuccessorDto = new SuccessionPlanResponseDto.ExternalSuccessorDto();
+        externalSuccessorDto.setExternalSuccessorContact(projection.getExternalSuccessorContact());
+        externalSuccessorDto.setExternalSuccessorCurrentComp(projection.getExternalSuccessorCurrentComp());
+        externalSuccessorDto.setExternalSuccessorPosition(projection.getExternalSuccessorPosition());
+        externalSuccessorDto.setExternalSuccessorName(projection.getExternalSuccessorName());
+        externalSuccessorDto.setExternalSuccessorSelectionReason(projection.getExternalSuccessorSelectionReason());
+        dto.setExternalSuccessors(Collections.singletonList(externalSuccessorDto));
+        return dto;
     }
 
     @Override
@@ -258,6 +309,7 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
                                 intervention.setType(interventionDto.getType());
                                 intervention.setDescription(interventionDto.getDescription());
                                 intervention.setStatus(interventionDto.getStatus());
+                                intervention.setSuccessionPlan(successionPlan);
                                 intervention.setStartDate(interventionDto.getStartDate());
                                 intervention.setEndDate(interventionDto.getEndDate());
                                 intervention.setReadyUser(savedReadyUser);
@@ -275,6 +327,7 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
                                 need.setNeedType(needDto.getNeedType());
                                 need.setDescription(needDto.getDescription());
                                 need.setReadyUser(savedReadyUser);
+                                need.setSuccessionPlan(successionPlan);
                                 return need;
                             })
                             .collect(Collectors.toList());
@@ -365,6 +418,7 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
         return externalSuccessors.stream().map(externalSuccessor -> {
             ExternalSuccessorDto externalSuccessorDto = new ExternalSuccessorDto();
             externalSuccessorDto.setName(externalSuccessor.getName());
+
             externalSuccessorDto.setContactInfo(externalSuccessor.getContactInfo());
             externalSuccessorDto.setCurrentPosition(externalSuccessor.getCurrentPosition());
             externalSuccessorDto.setCurrentCompany(externalSuccessor.getCurrentCompany());

@@ -16,7 +16,7 @@
       <li *ngFor="let menuItem of menuItems" routerLinkActive="active" class="{{menuItem.class}}">
         <a [routerLink]="[menuItem.path]" *ngIf="menuItem.userType">
           <i class="nc-icon {{menuItem.icon}}" style="color: white;"></i>
-          <p style="color: white; font-weight: 500;">{{menuItem.title}}</p>
+          <p style="color: white; font-weight: 500; font-size: 12px;">{{menuItem.title}}</p>
         </a>
       </li>
     </ng-container>
@@ -24,7 +24,7 @@
   <!-- Hidden sidebar content -->
   <div class="sidebar-hidden active">
     <!-- Place your additional sidebar content here -->
-    <li *ngFor="let menuItem of menuItems" routerLinkActive="active" class="{{menuItem.class}}">
+    <li style="font-size: 10px !important;" *ngFor="let menuItem of menuItems" routerLinkActive="active" class="{{menuItem.class}}">
       <a [routerLink]="[menuItem.path]" *ngIf="menuItem.userType">
         <i class="nc-icon {{menuItem.icon}}" style="color: white;"></i>
       </a>

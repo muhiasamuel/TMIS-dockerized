@@ -7,6 +7,7 @@ import { error, log } from 'console';
 import { Dialog } from '@angular/cdk/dialog';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { map, Observable, startWith } from 'rxjs';
 
 /**
  * @title Stepper that displays errors in the steps
@@ -31,23 +32,37 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     authUser:any;
     strategy: any;
     isSubmitting:boolean = false;
-
+    department:any;
+    positions:any;
     formData:any;
     isEditable = false;
     selectedScore!: string;
     average:number;
     scores: any[] = [1, 2, 3, 4, 5 ];
+    myControl = new FormControl('');
+
+    filteredOptions: Observable<any[]>;
 
     ngOnInit() {
+      this.getDepartments()
+
+    
+      
       const user = localStorage.getItem("user");
        if (user) {
          this.authUser = JSON.parse(user)
        }
      }
+     private _filterStates(value: string): any[] {
+      const filterValue = value.toLowerCase();
+  
+      return this.positions.filter(state => state.positionName.toLowerCase().includes(filterValue));
+    }
     // Form Groups for each step with relevant controls
     constructor(private http: HttpServiceService,private snack :MatSnackBar, private fb:FormBuilder, private dialogref:MatDialogRef<CriticalRolesAssessmentComponent>){
       this.roleNameFormGroup = this.fb.group ({
-        roleName: ['',Validators.required]
+        roleName: [this.myControl,Validators.required],
+        department:[],
       });
     
       this.strategicImportanceFormGroup  = this.fb.group ({
@@ -123,7 +138,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     }
    async processValues() {
     
-      const roleName = this.roleNameFormGroup?.get('roleName')?.value;
+      const roleName = this.roleNameFormGroup?.get('roleName')?.value.value;
       const strategicImportanceValue = this.strategicImportanceFormGroup?.get('strategicImportance')?.value;
       const revenueImpactValue = this.revenueImpactFormGroup?.get('revenueImpact')?.value;
       const vacancyRiskValue = this.vacancyRiskFormGroup?.get('vacancyRisk')?.value;
@@ -186,5 +201,32 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     //dialog close
     dialogClose(){
       this.dialogref.close()
+    }
+
+    getDepartments(){
+      this.http.getDepartments().subscribe(
+        ((response)=> {
+          console.log("deps", response.item);
+          
+          this.department = response.item
+        }),
+        ((error) =>{
+          console.error(error);        
+        }),
+        () => {}
+      )
+    }
+    //filter selected department positions
+    getPosition() {
+  
+      console.log("form", this.roleNameFormGroup.value.department);
+      const positions = this.department.filter(item => item.depId === this.roleNameFormGroup.value.department)
+      this.positions = positions[0].departmentPositions
+      console.log("positions", this.positions);
+
+      this.filteredOptions = this.myControl.valueChanges.pipe(
+        startWith(''),
+        map(state => (state ? this._filterStates(state) : this.positions.slice())),
+      );
     }
 }
