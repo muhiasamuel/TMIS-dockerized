@@ -1,6 +1,7 @@
 package com.example.talent_man.models;
 
 import com.example.talent_man.models.user.User;
+import com.example.talent_man.utils.YearAttributeConverter;
 import com.example.talent_man.utils.YearDeserializer;
 import com.example.talent_man.utils.YearSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,12 +26,13 @@ public class Performance {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Convert(converter = YearAttributeConverter.class) // Use custom converter for Year
     private Year year;
-    private int quarter; // 1 for Q1, 2 for Q2, 3 for Q3
+
+    private int quarter;
     private double performanceMetric;
 
-    public Performance() {
-    }
+    public Performance() {}
 
     public Performance(Long id, User user, Year year, int quarter, double performanceMetric) {
         this.id = id;
@@ -39,5 +41,4 @@ public class Performance {
         this.quarter = quarter;
         this.performanceMetric = performanceMetric;
     }
-    // Constructors, getters, setters
 }

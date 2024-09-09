@@ -11,8 +11,12 @@ import com.example.talent_man.services.PerformanceService;
 import com.example.talent_man.utils.ApiResponse;
 import com.example.talent_man.utils.CombinedDataResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,15 +32,102 @@ public class PerformanceController {
     @Autowired
     private PerformanceRepository repository;
 
-    @PostMapping("/create/users/{userId}")
-    public ApiResponse<Object> createPerformanceForUser(@PathVariable int userId, @RequestBody PerformanceRequestDto performanceRequestDto) {
-        Performance performance = performanceService.createPerformanceForUser(userId, performanceRequestDto);
-        ApiResponse<Object> res = new ApiResponse<>();
-        res.setMessage("Performance added successfully ");
-        res.setStatus(200);
-        res.setItem(performance);
-        return res;
-    }
+        @PostMapping("/add-for-user/{pf}")
+        public ApiResponse<Void> addPerformanceForUser(
+                @PathVariable String pf,
+                @RequestBody List<PerformanceRequestDto> performanceDtos) {
+
+            ApiResponse<Void> response = new ApiResponse<>();
+
+            try {
+                ResponseEntity<ApiResponse<String>> serviceResponse = performanceService.addPerformanceForUser(pf, performanceDtos);
+                response.setMessage(serviceResponse.getBody().getMessage());
+                response.setStatus(serviceResponse.getStatusCodeValue());
+                response.setItem(null); // Optionally set item to null or leave it out
+            } catch (Exception e) {
+                response.setMessage("Error adding performances: " + e.getMessage());
+                response.setStatus(500);
+                response.setItem(null); // Optionally set item to null or leave it out
+            }
+
+            return response;
+        }
+
+        @PostMapping("/import")
+        public ApiResponse<Void> importPerformancesFromExcel(@RequestParam("file") MultipartFile file) {
+
+            ApiResponse<Void> response = new ApiResponse<>();
+
+            try {
+                // Convert MultipartFile to InputStream
+                InputStream inputStream = file.getInputStream();
+                ResponseEntity<ApiResponse<String>> serviceResponse = performanceService.importPerformancesFromExcel(inputStream);
+                response.setMessage(serviceResponse.getBody().getMessage());
+                response.setStatus(serviceResponse.getStatusCodeValue());
+                response.setItem(null); // Optionally set item to null or leave it out
+            } catch (Exception e) {
+                response.setMessage("Error importing performances: " + e.getMessage());
+                response.setStatus(500);
+                response.setItem(null); // Optionally set item to null or leave it out
+            }
+
+            return response;
+        }
+
+        @GetMapping("/get-by-user/{pf}")
+        public ApiResponse<List<PerformanceRequestDto>> getPerformancesByUser(@PathVariable String pf) {
+
+            ApiResponse<List<PerformanceRequestDto>> response = new ApiResponse<>();
+
+            try {
+                List<PerformanceRequestDto> performances = performanceService.getPerformancesByUser(pf);
+
+                if (performances.isEmpty()) {
+                    response.setMessage("No performances found for user with PF number: " + pf);
+                    response.setStatus(404);
+                    response.setItem(null); // Optionally set item to null or leave it out
+                } else {
+                    response.setMessage("Performances retrieved successfully for user with PF number: " + pf);
+                    response.setStatus(200);
+                    response.setItem(performances);
+                }
+            } catch (Exception e) {
+                response.setMessage("Error retrieving performances: " + e.getMessage());
+                response.setStatus(500);
+                response.setItem(null); // Optionally set item to null or leave it out
+            }
+
+            return response;
+        }
+
+        @PostMapping("/create/users/{userId}")
+        public ApiResponse<Object> createPerformanceForUser(
+                @PathVariable int userId,
+                @RequestBody PerformanceRequestDto performanceRequestDto) {
+
+            ApiResponse<Object> res = new ApiResponse<>();
+
+            try {
+                Performance performance = performanceService.createPerformanceForUser(userId, performanceRequestDto);
+                res.setMessage("Performance added successfully");
+                res.setStatus(HttpStatus.OK.value());
+                res.setItem(performance);
+            } catch (IllegalArgumentException e) {
+                // Handle specific exception
+                res.setMessage(e.getMessage());
+                res.setStatus(HttpStatus.BAD_REQUEST.value());
+                res.setItem(null);
+            } catch (Exception e) {
+                // Handle generic exceptions
+                res.setMessage("An error occurred while creating the performance record");
+                res.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+                res.setItem(null);
+            }
+
+            return res;
+        }
+
+
 
     @GetMapping("/talentMapping/{managerId}")
     public ApiResponse<Object> getUserPerformancesByManagerId(@PathVariable int managerId) {

@@ -1,4 +1,5 @@
 package com.example.talent_man.service_imp;
+//import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.example.talent_man.dto.*;
 import com.example.talent_man.models.Performance;
@@ -6,14 +7,18 @@ import com.example.talent_man.models.user.User;
 import com.example.talent_man.repos.PerformanceRepository;
 import com.example.talent_man.repos.user.UserRepo;
 import com.example.talent_man.services.PerformanceService;
+import com.example.talent_man.utils.ApiResponse;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.time.Year;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PerformanceServiceImpl implements PerformanceService {
@@ -24,6 +29,11 @@ public class PerformanceServiceImpl implements PerformanceService {
     @Autowired
     private PerformanceRepository performanceRepository;
 
+    // Method to convert YearDto to java.time.Year
+
+    private Year toYear(YearDto yearDto) {
+        return Year.of(yearDto.getValue());
+    }
     @Override
     public Performance createPerformanceForUser(int userId, PerformanceRequestDto performanceRequestDto) {
         // Find the user by userId
@@ -31,7 +41,20 @@ public class PerformanceServiceImpl implements PerformanceService {
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
         // Convert YearDto to java.time.Year
-        Year year = toYear(performanceRequestDto.getYear());
+        Year year;
+        try {
+            year = toYear(performanceRequestDto.getYear());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid year format in request", e);
+        }
+
+        // Check if a performance record for the same year and quarter already exists for the user
+        boolean exists = performanceRepository.existsByUserAndYearAndQuarter(user, year, performanceRequestDto.getQuarter());
+        if (exists) {
+            throw new IllegalArgumentException("Performance record already exists for user with ID " + userId +
+                    " for year " + year + " and quarter " + performanceRequestDto.getQuarter());
+        }
+
 
         // Create a new Performance entity and set its fields
         Performance performance = new Performance();
@@ -40,14 +63,172 @@ public class PerformanceServiceImpl implements PerformanceService {
         performance.setQuarter(performanceRequestDto.getQuarter());
         performance.setPerformanceMetric(performanceRequestDto.getPerformanceMetric());
 
-        // Save the performance
-        return performanceRepository.save(performance);
+        // Save the performance and return it
+        try {
+            return performanceRepository.save(performance);
+        } catch (Exception e) {
+            throw new RuntimeException("Error saving performance record", e);
+        }
+    }
+    @Override
+    public ResponseEntity<ApiResponse<String>> addPerformanceForUser(String pf, List<PerformanceRequestDto> performanceRequestDtos) {
+        Optional<User> userOptional = userRepository.findByPf(pf);
+
+        // Check if user exists
+        if (!userOptional.isPresent()) {
+            return new ResponseEntity<>(new ApiResponse<>(HttpStatus.NOT_FOUND.value(), "User with PF " + pf + " not found"), HttpStatus.NOT_FOUND);
+        }
+
+        User user = userOptional.get();
+        List<Performance> performances = new ArrayList<>();
+        List<String> errorMessages = new ArrayList<>();
+
+        // Loop through performance DTOs
+        for (PerformanceRequestDto dto : performanceRequestDtos) {
+            Year year;
+            try {
+                // Try converting YearDto to Year
+                year = toYear(dto.getYear());
+            } catch (Exception e) {
+                // Add error message if the year conversion fails
+                errorMessages.add("Invalid year format for PF " + pf + " for year " + dto.getYear().getValue());
+                continue;  // Skip to the next DTO
+            }
+
+            int quarter = dto.getQuarter();
+
+            // Check if a performance for the same year and quarter already exists for the user
+            if (performanceRepository.existsByUserAndYearAndQuarter(user, year, quarter)) {
+                errorMessages.add("Performance record already exists for user with PF " + pf + " for year " + year + " and quarter " + quarter);
+            } else {
+                // Create new performance record if it doesn't exist
+                Performance performance = new Performance();
+                performance.setUser(user);
+                performance.setYear(year);
+                performance.setQuarter(quarter);
+                performance.setPerformanceMetric(dto.getPerformanceMetric());
+                performances.add(performance);
+            }
+        }
+
+        // If there were any errors, return them in the response
+        if (!errorMessages.isEmpty()) {
+            return new ResponseEntity<>(new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), String.join(", ", errorMessages)), HttpStatus.BAD_REQUEST);
+        }
+
+        // Save all valid performance records
+        performanceRepository.saveAll(performances);
+
+        return new ResponseEntity<>(new ApiResponse<>(HttpStatus.OK.value(), "Performances added successfully"), HttpStatus.OK);
     }
 
-    // Method to convert YearDto to java.time.Year
-    private Year toYear(YearDto yearDto) {
-        return Year.of(yearDto.getValue());
+
+    @Override
+    public ResponseEntity<ApiResponse<String>> importPerformancesFromExcel(InputStream inputStream) {
+        try (Workbook workbook = new XSSFWorkbook(inputStream)) {
+            Sheet sheet = workbook.getSheetAt(0); // Assuming data is in the first sheet
+            Iterator<Row> rowIterator = sheet.iterator();
+
+            // Skip header row
+            if (rowIterator.hasNext()) {
+                rowIterator.next();
+            }
+
+            List<Performance> performances = new ArrayList<>();
+            List<String> errors = new ArrayList<>();
+
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                try {
+                    // Read values from each cell
+                    String pf = getCellValueAsString(row.getCell(0)); // PF number should be treated as a string
+                    int yearValue = (int) row.getCell(1).getNumericCellValue(); // Read year as integer
+                    YearDto yearDto = new YearDto(yearValue, false); // Create YearDto
+                    Year year = toYear(yearDto); // Convert YearDto to Year
+                    int quarter = (int) row.getCell(2).getNumericCellValue();
+                    double performanceMetric = row.getCell(3).getNumericCellValue();
+
+                    // Fetch the User based on the PF number
+                    Optional<User> userOptional = userRepository.findByPf(pf);
+                    if (userOptional.isPresent()) {
+                        User user = userOptional.get();
+
+                        // Check if a performance for the same year and quarter already exists for the user
+                        if (performanceRepository.existsByUserAndYearAndQuarter(user, year, quarter)) {
+                            errors.add("Performance record already exists for user with PF number " + pf + " for year " + yearValue + " and quarter " + quarter);
+                            continue; // Skip adding this record
+                        }
+
+                        Performance performance = new Performance();
+                        performance.setUser(user);
+                        performance.setYear(year);
+                        performance.setQuarter(quarter);
+                        performance.setPerformanceMetric(performanceMetric);
+
+                        performances.add(performance);
+                    } else {
+                        errors.add("User with PF number " + pf + " not found.");
+                    }
+                } catch (Exception e) {
+                    errors.add("Error processing row: " + e.getMessage());
+                }
+            }
+
+            // Save all performances
+            if (!performances.isEmpty()) {
+                performanceRepository.saveAll(performances);
+            }
+
+            if (!errors.isEmpty()) {
+                return new ResponseEntity<>(new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), String.join("; ", errors), 400), HttpStatus.BAD_REQUEST);
+            }
+
+            return new ResponseEntity<>(new ApiResponse<>(HttpStatus.OK.value(), "Performances imported successfully", 200), HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace(); // Log exception
+            return new ResponseEntity<>(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Error processing Excel file: " + e.getMessage(), 500), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
+    // Helper method to get cell value as string
+    private String getCellValueAsString(Cell cell) {
+        if (cell == null) {
+            return "";
+        }
+
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    // If it's a date, convert to a string representation
+                    return cell.getDateCellValue().toString();
+                } else {
+                    // Convert numeric value to string
+                    return String.valueOf((long) cell.getNumericCellValue());
+                }
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+            default:
+                return "";
+        }
+    }
+
+
+    @Override
+    public List<PerformanceRequestDto> getPerformancesByUser(String pf) {
+        return performanceRepository.findAll().stream()
+                .filter(performance -> performance.getUser().getPf().equals(pf))
+                .map(performance -> new PerformanceRequestDto(
+                        new YearDto(performance.getYear().getValue(), performance.getYear().isLeap()),
+                        performance.getQuarter(),
+                        performance.getPerformanceMetric()
+                ))
+                .collect(Collectors.toList());
+    }
+    // Method to convert YearDto to java.time.Year
+
 
     @Override
     public List<PerformanceRepository.TalentInterface> getUserPerformancesByManagerId(int managerId) {
@@ -91,6 +272,7 @@ public class PerformanceServiceImpl implements PerformanceService {
 
         return new ArrayList<>(performanceMap.values());
     }
+
 
 
 

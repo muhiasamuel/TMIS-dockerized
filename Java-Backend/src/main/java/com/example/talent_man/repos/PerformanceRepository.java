@@ -3,6 +3,7 @@ package com.example.talent_man.repos;
 
 import com.example.talent_man.dto.HIPOsFullDataDto;
 import com.example.talent_man.models.Performance;
+import com.example.talent_man.models.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,11 +11,14 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 
+import java.time.Year;
 import java.util.Date;
 import java.util.List;
 
 @Repository
 public interface PerformanceRepository extends JpaRepository<Performance, Long> {
+
+    boolean existsByUserAndYearAndQuarter(User user, Year year, int quarter);
 
 
     @Query(value = "SELECT " +

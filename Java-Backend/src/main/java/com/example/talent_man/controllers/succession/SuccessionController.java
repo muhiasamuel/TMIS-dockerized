@@ -26,14 +26,11 @@ public class SuccessionController {
         return res;
     }
 
-    @GetMapping("/details")
-    public List<SuccessionPlanResponseDto> getSuccessionPlanDetails() {
-        return successionPlanService.getSuccessionPlanDetails();
-    }
-    @GetMapping
-    public ApiResponse<List<SuccessionPlanDto>> getAllSuccessionPlans() {
-        List<SuccessionPlanDto> plans = successionPlanService.getAllSuccessionPlans();
-        ApiResponse<List<SuccessionPlanDto>> res = new ApiResponse<>();
+
+    @GetMapping("/getall/succession-plans")
+    public ApiResponse<List<SuccessionPlanResponseDto>> getAllSuccessionPlans() {
+        List<SuccessionPlanResponseDto> plans = successionPlanService.getSuccessionPlanDetails();
+        ApiResponse<List<SuccessionPlanResponseDto>> res = new ApiResponse<>();
 
         if (plans.isEmpty()) {
             // Set the response to 404 Not Found if no plans are found
@@ -51,28 +48,83 @@ public class SuccessionController {
     }
 
 
-    @GetMapping("/{id}")
-    public ApiResponse<SuccessionPlanDto> getSuccessionPlanById(@PathVariable int id) {
-        SuccessionPlanDto plan = successionPlanService.getSuccessionPlanById(id);
-        ApiResponse<SuccessionPlanDto> res = new ApiResponse<>();
+    @GetMapping("/get-by-id/{id}")
+    public ApiResponse<List<SuccessionPlanResponseDto>> getSuccessionPlanById(@PathVariable int id) {
+        List<SuccessionPlanResponseDto> plans = successionPlanService.getSuccessionPlanById(id);
+        ApiResponse<List<SuccessionPlanResponseDto>> res = new ApiResponse<>();
 
-        if (plan == null) {
-            // Set the response to 404 Not Found if no plan is found
-            res.setMessage("Succession plan not found");
+        if (plans.isEmpty()) {
+            // Set the response to 404 Not Found if no plans are found
+            res.setMessage("No succession plans found");
             res.setStatus(404);
             res.setItem(null);  // Optionally set item to null or leave it out
         } else {
-            // Set the response to 200 OK if the plan is found
-            res.setMessage("Succession plan record retrieved successfully");
+            // Set the response to 200 OK if plans are found
+            res.setMessage("Succession plans retrieved successfully");
             res.setStatus(200);
-            res.setItem(plan);
+            res.setItem(plans);
         }
-
         return res;
     }
 
+    //check if user is mapped as a successor
+    @GetMapping("/get-by-Successor-id/{userId}")
+    public ApiResponse<List<SuccessionPlanResponseDto>> getSuccessionPlanByUserId(@PathVariable int userId) {
+        List<SuccessionPlanResponseDto> plans = successionPlanService.getSuccessionPlanByUserId(userId);
+        ApiResponse<List<SuccessionPlanResponseDto>> res = new ApiResponse<>();
 
+        if (plans.isEmpty()) {
+            // Set the response to 404 Not Found if no plans are found
+            res.setMessage("This User Has Not Been Mapped For Any Role");
+            res.setStatus(404);
+            res.setItem(null);  // Optionally set item to null or leave it out
+        } else {
+            // Set the response to 200 OK if plans are found
+            res.setMessage("Succession plans retrieved successfully");
+            res.setStatus(200);
+            res.setItem(plans);
+        }
+        return res;
+    }
 
+    @GetMapping("/get-by-position-id/{positionId}")
+    public ApiResponse<List<SuccessionPlanResponseDto>> getSuccessionPlanByPosition(@PathVariable int positionId) {
+        List<SuccessionPlanResponseDto> plans = successionPlanService.getSuccessionPlanByPosition(positionId);
+        ApiResponse<List<SuccessionPlanResponseDto>> res = new ApiResponse<>();
+
+        if (plans.isEmpty()) {
+            // Set the response to 404 Not Found if no plans are found
+            res.setMessage("This User Has Not Been Mapped For Any Role");
+            res.setStatus(404);
+            res.setItem(null);  // Optionally set item to null or leave it out
+        } else {
+            // Set the response to 200 OK if plans are found
+            res.setMessage("Succession plans retrieved successfully");
+            res.setStatus(200);
+            res.setItem(plans);
+        }
+        return res;
+    }
+
+//check if Critical position has been mapped for succession
+@GetMapping("/critical/role/succession/status")
+public ApiResponse<List<CriticalRoleCheckForSuccessionDto>> getCriticalPositionStatus() {
+    List<CriticalRoleCheckForSuccessionDto> roles = successionPlanService.checkPositionStatus();
+    ApiResponse<List<CriticalRoleCheckForSuccessionDto>> res = new ApiResponse<>();
+
+    if (roles.isEmpty()) {
+        // Set the response to 404 Not Found if no plans are found
+        res.setMessage("No Critical Role has been mapped for succession");
+        res.setStatus(404);
+        res.setItem(null);  // Optionally set item to null or leave it out
+    } else {
+        // Set the response to 200 OK if plans are found
+        res.setMessage("Critical Roles Status on Succession Retrieved successfully");
+        res.setStatus(200);
+        res.setItem(roles);
+    }
+    return res;
+}
 
     @PutMapping("/{id}")
     public ApiResponse<SuccessionPlanDto> updateSuccessionPlan(@PathVariable int id, @RequestBody SuccessionPlanDto successionPlanDto) {

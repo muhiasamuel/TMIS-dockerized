@@ -8,10 +8,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepo extends JpaRepository<User, Integer> {
     User findByUsername(String username);
+
+    Optional<User> findByPf(String pf);
 
     User findFirstByEmail(String email);
 

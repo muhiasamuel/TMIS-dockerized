@@ -107,6 +107,7 @@ import { SuccessionDisplayComponent } from './pages/succession-plan/succession-d
 @NgModule({
   declarations: [
      AppComponent,
+     SuccessionDisplayComponent,
      FooterComponent,
      NavbarComponent,
      SidebarComponent,
@@ -173,7 +174,6 @@ import { SuccessionDisplayComponent } from './pages/succession-plan/succession-d
     AssessmentLineGraphComponent,
     AssessmentBarGraphComponent,
     ExternalSuccessorComponent,
-    SuccessionDisplayComponent,
     
    
   ],
@@ -183,7 +183,7 @@ import { SuccessionDisplayComponent } from './pages/succession-plan/succession-d
     MatDatepickerModule,
     AsyncPipe,
     AppRoutingModule,
-
+    AsyncPipe,
     BrowserAnimationsModule,
     MatStepperModule,
     MatTableModule,

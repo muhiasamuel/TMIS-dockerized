@@ -1,5 +1,6 @@
 package com.example.talent_man.service_imp;
 
+import com.example.talent_man.controllers.succession.CriticalRoleCheckForSuccessionDto;
 import com.example.talent_man.controllers.succession.SuccessionPlanResponseDto;
 import com.example.talent_man.dto.succession.ProposedInterventionDto;
 import com.example.talent_man.dto.succession.ReadyUserDto;
@@ -7,8 +8,10 @@ import com.example.talent_man.dto.succession.SuccessionPlanDto;
 import com.example.talent_man.dto.succession.SuccessorDevelopmentNeedDto;
 import com.example.talent_man.models.Department;
 import com.example.talent_man.models.Position;
+import com.example.talent_man.models.RolesAssessment;
 import com.example.talent_man.models.succession.*;
 import com.example.talent_man.models.user.User;
+import com.example.talent_man.repos.CriticalRolesAssessmentRepo;
 import com.example.talent_man.repos.DepartmentRepo;
 import com.example.talent_man.repos.PositionRepo;
 import com.example.talent_man.repos.SuccessionDriverRepo;
@@ -41,6 +44,8 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
     @Autowired
     private UserRepo userRepository;
 
+    @Autowired
+    private CriticalRolesAssessmentRepo criticalRolesAssessmentRepo;
     @Autowired
     private ProposedInterventionRepository proposedInterventionRepository;
 
@@ -221,10 +226,42 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
     }
 
     @Override
-    public SuccessionPlanDto getSuccessionPlanById(int id) {
-        SuccessionPlan successionPlan = successionPlanRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Succession Plan not found"));
-        return convertToDto(successionPlan);
+    public List<SuccessionPlanResponseDto> getSuccessionPlanById(int id) {
+            List<SuccessionPlanRepository.SuccessionPlanProjection> projections = successionPlanRepository.getSuccessionPlanById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Succession Plan not found"));
+        return projections.stream().map(this::mapToDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SuccessionPlanResponseDto> getSuccessionPlanByUserId(int userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        List<SuccessionPlanRepository.SuccessionPlanProjection> projections = successionPlanRepository.getSuccessionPlanByUserId(userId);
+        return projections.stream().map(this::mapToDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SuccessionPlanResponseDto> getSuccessionPlanByPosition(int positionId){
+        Position position = positionRepository.findById(positionId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        List<SuccessionPlanRepository.SuccessionPlanProjection> projections = successionPlanRepository.getSuccessionPlanByPosition(positionId);
+        return projections.stream().map(this::mapToDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CriticalRoleCheckForSuccessionDto> checkPositionStatus(){
+        List<RolesAssessment> roles = criticalRolesAssessmentRepo.findAll();
+        List<SuccessionPlanRepository.CriticalRolesMapping> mapping = successionPlanRepository.getRolesMapping();
+        return mapping.stream().map(
+                role ->{
+                    CriticalRoleCheckForSuccessionDto dto = new CriticalRoleCheckForSuccessionDto();
+                    dto.setRoleId(role.getRoleId());
+                    dto.setPlanId(role.getPlanId());
+                    dto.setRoleName(role.getRoleName());
+                    dto.setSuccessionStatus("mapped");
+                    dto.setCurrentState(role.getCurrentState());
+                    return dto;
+                }).toList();
     }
 
     @Override

@@ -84,7 +84,6 @@ export class SuccessionPlanComponent implements OnInit {
   }
   //filter selected department positions
   getPosition() {
-
     console.log("form", this.myForm.value.departmentId);
     const positions = this.departments.filter(item => item.depId === this.myForm.value.departmentId)
     this.positions = positions[0].departmentPositions
@@ -93,7 +92,6 @@ export class SuccessionPlanComponent implements OnInit {
 
   //filter employee who holds selected position
   getPositionHolder() {
-
     console.log("form", this.myForm.value.positionId);
     const holders = this.employees.filter(user => user.positionId === this.myForm.value.positionId)
     this.positioHolder = holders

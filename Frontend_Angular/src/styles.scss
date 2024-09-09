@@ -10,8 +10,8 @@
     font-weight: 700;
 }
 .primary-background{
-    background-color: rgb(125, 125, 125);
-    color: white;
+    background-color: rgb(217, 214, 214);
+    color: rgb(20, 20, 20);
 }
 .secondary-background{
     background-color: rgb(124, 28, 28);
@@ -72,4 +72,16 @@ th{
 p{
  font-size: 14px;
  font-weight: 200;
+}
+table th{
+    background: greenyellow;
+    color: rgb(27, 29, 29);
+    font-weight: 700;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+table td{
+    color: #4d4c4c;
+    font-weight: 500;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    
 }

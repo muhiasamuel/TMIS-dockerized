@@ -1,108 +1,193 @@
-
 <div class="container-fluid">
-        <ol class=" breadcrumb-arrow align-items-center">
-            <li><a>Critical</a></li>
-            <li><a>Roles</a></li>
-            <li><a>Assessment</a></li>
-            <div class="add-role">
-              <button (click)="addCriticalRoles()" class="btn btn-sm btn-primary text-white" style="float: right;">Add-Critical-Role</button>
-           </div>
+  <ol class=" breadcrumb-arrow align-items-center">
+    <li><a>Critical</a></li>
+    <li><a>Roles</a></li>
+    <li><a>Assessment</a></li>
+    <div class="add-role">
+      <button (click)="addCriticalRoles()" class="btn btn-sm btn-primary text-white"
+        style="float: right;">Add-Critical-Role</button>
+    </div>
 
-        </ol>
+  </ol>
 
-        <div class="search d-flex">
-            <mat-form-field>
-                <mat-label>Filter</mat-label>
-                <input matInput (keyup)="applyFilter($event)" style="width: 74%;" placeholder="filter critical roles" #input>
-              </mat-form-field>
+  <div class="search d-flex">
+    <mat-form-field>
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event)" style="width: 74%;" placeholder="filter critical roles" #input>
+    </mat-form-field>
+  </div>
+
+  <div class="row" id="printableArea">
+
+    <div class="table-container col-md-10 table-responsive">
+      <button class="btn btn-sm btn-success text-white" (click)="downloadPdf('pdf')">PDF</button>
+      <button class="btn btn-sm btn-success text-white" (click)="downloadPdf('excel')">EXCEL</button>
+      <div class="mat-elevation-z8">
+
+        <table mat-table [dataSource]="dataSource" matSort>
+
+          <!-- ID Column -->
+          <ng-container matColumnDef="index">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> # </th>
+            <td mat-cell *matCellDef="let row; let i = index"> {{i+1}} </td>
+          </ng-container>
+
+          <!-- Progress Column -->
+          <ng-container matColumnDef="roleName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="card-category"> Role Name </th>
+            <td mat-cell *matCellDef="let row"> {{row.roleName}}</td>
+          </ng-container>
+
+
+          <ng-container matColumnDef="averageRating">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="card-category"> Overall Rating
+            </th>
+            <td mat-cell *matCellDef="let row"> {{row.averageRating}} </td>
+          </ng-container>
+          <ng-container matColumnDef="levelClassification">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="card-category"> Classified As </th>
+            <td mat-cell *matCellDef="let row"> {{row.levelClassification}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="currentState">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="card-category"> Current State
+            </th>
+            <td mat-cell *matCellDef="let row" class="text"
+              [ngStyle]="row.currentState != 'Amber' || row.currentState != 'amber'? {'color':row.currentState}: {'color':'#FFBF00'}">
+              {{row.currentState}} </td>
+
+          </ng-container>
+          <ng-container matColumnDef="Actions">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="card-category"> Actions </th>
+            <td mat-cell *matCellDef="let row">
+              <button class="btn btn-sm text-white" (click)="onViewClick(row)">view</button>
+              <button class="btn btn-sm text-white" (click)="onEditClick(row)">Edit</button>
+              <button *ngIf="row.averageRating >=3.5" class="btn btn-sm text-white"
+                (click)="onAddStrategiesClick(row.criticalRoleId)"> + strategies</button>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="SuccessionStatus">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="card-category"> Succession Status</th>
+            <td mat-cell *matCellDef="let row">
+               <span class="d-flex align-items-center" *ngIf="row.successionStatus === 'mapped'"><mat-icon  color="primary">check_circle</mat-icon>Mapped</span>
+               <span class="d-flex align-items-center" *ngIf="row.successionStatus !== 'mapped'"><mat-icon color="warn">cancel</mat-icon>Not Mapped</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="ActionsOnSuccession">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="card-category">Actions On Succession</th>
+            <td mat-cell *matCellDef="let row">
+              <!-- If the successionStatus is 'mapped', show Edit and View icons -->
+              <button mat-icon-button *ngIf="row.successionStatus === 'mapped'" (click)="onEdit(row)" color="primary" aria-label="Edit">
+                <mat-icon class="material-icons-outlined">edit</mat-icon> <!-- Outlined edit icon -->
+              </button>
+              <button mat-icon-button *ngIf="row.successionStatus === 'mapped'" (click)="onView(row)" color="accent" aria-label="View">
+                <mat-icon>visibility</mat-icon>
+              </button>
+          
+              <!-- If the successionStatus is not 'mapped', show Add icon and disabled View icon -->
+              <button mat-icon-button *ngIf="row.successionStatus !== 'mapped'" (click)="onAdd(row)" color="accent" aria-label="Add">
+                <mat-icon>add_circle</mat-icon>
+              </button>
+              <button mat-icon-button *ngIf="row.successionStatus !== 'mapped'" color="accent" aria-label="View" disabled>
+                <mat-icon>visibility_off</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+          
+          
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data "{{input.value}}"</td>
+          </tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[ 5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+      </div>
+    </div>
+
+    <div class="col-md-2 bg-light">
+      <div class="m-2 p-4" style="background: rgb(255, 255, 255);">
+        <div class="card-header">
+          <h6 class="card-Category">Critical Roles Overview</h6>
         </div>
-        
-        <div class="row" id="printableArea">
-
-            <div class="table-container col-md-9 table-responsive">
-                 <button class="btn btn-sm btn-success text-white" (click)="downloadPdf('pdf')">PDF</button>   
-                 <button class="btn btn-sm btn-success text-white" (click)="downloadPdf('excel')">EXCEL</button>  
-                      <div class="mat-elevation-z8">
-
-                        <table mat-table [dataSource]="dataSource" matSort>
-                      
-                          <!-- ID Column -->
-                          <ng-container matColumnDef="index">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> # </th>
-                            <td mat-cell *matCellDef="let row; let i = index"> {{i+1}} </td>
-                          </ng-container>
-                      
-                          <!-- Progress Column -->
-                          <ng-container matColumnDef="roleName">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="card-category"> Role Name </th>
-                            <td mat-cell *matCellDef="let row"> {{row.roleName}}</td>
-                          </ng-container>
-                      
-        
-                          <ng-container matColumnDef="averageRating">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="card-category"> Overall Rating
-                            </th>
-                            <td mat-cell *matCellDef="let row" > {{row.averageRating}} </td>
-                          </ng-container>
-                          <ng-container matColumnDef="levelClassification">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="card-category"> Classified As </th>
-                            <td mat-cell *matCellDef="let row" > {{row.levelClassification}} </td>
-                          </ng-container>
-                          
-                          <ng-container matColumnDef="currentState">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="card-category"> Current State 
-                            </th>
-                            <td mat-cell *matCellDef="let row" class="text" [ngStyle]="row.currentState != 'Amber' || row.currentState != 'amber'? {'color':row.currentState}: {'color':'#FFBF00'}"> {{row.currentState}} </td>
-
-                          </ng-container>
-                          <ng-container matColumnDef="Actions">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="card-category"> Actions </th>
-                            <td mat-cell *matCellDef="let row"> 
-                              <button class="btn btn-sm text-white" (click)="onViewClick(row)">view</button>
-                              <button class="btn btn-sm text-white" (click)="onEditClick(row)">Edit</button>
-                              <button *ngIf="row.averageRating >=3.5" class="btn btn-sm text-white" (click)="onAddStrategiesClick(row.criticalRoleId)"> + strategies</button>
-                            </td>
-                          </ng-container>
-                          
-                          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-                          <!-- Row shown when there is no matching data. -->
-                          <tr class="mat-row" *matNoDataRow>
-                            <td class="mat-cell" colspan="4">No data "{{input.value}}"</td>
-                          </tr>
-                        </table>
-                      
-                        <mat-paginator [pageSizeOptions]="[ 5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
-                      </div>
-             </div>
-                 
-           <div class="col-md-3 bg-light"> 
-            <div class="m-2 p-4" style="background: rgb(255, 255, 255);">   
-                <div class="card-header">
-                    <h6 class="card-Category">Critical Roles Overview</h6>
-                </div>
-            </div>
-            <div class="card">               
-                <div class="card-body">
-                <div class="critical w-100 primary-background">
-                    <p class="title text-white"><span class="card-Category">Total Assessed Roles:</span>{{userData?.length}}</p>
-                </div>
-                <div class="critical w-100 primary-background">
-                    <p class="title text-white"><span class="card-Category">Critical Roles:</span>{{criticalLevel?.length}}</p>
-                </div>
-                <div class="critical w-100 primary-background">
-                    <p class="title text-white"><span class="card-Category">Medium Roles:</span>{{mediumCritical?.length}}</p>
-                </div>
-                <div class="critical w-100 primary-background">
-                    <p class="title text-white"><span class="card-Category">Low Roles:</span>{{LowCritical?.length}}</p>
-                </div>
-                </div>
-            </div>
-           </div>
-            
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div class="critical w-100 primary-background">
+            <p class="title"><span class="card-Category">Total Assessed Roles:</span>{{userData?.length}}</p>
+          </div>
+          <div class="critical w-100 primary-background">
+            <p class="title"><span class="card-Category">Critical Roles:</span>{{criticalLevel?.length}}</p>
+          </div>
+          <div class="critical w-100 primary-background">
+            <p class="title"><span class="card-Category">Medium Roles:</span>{{mediumCritical?.length}}</p>
+          </div>
+          <div class="critical w-100 primary-background">
+            <p class="title"><span class="card-Category">Low Roles:</span>{{LowCritical?.length}}</p>
+          </div>
         </div>
+      </div>
+    </div>
 
+  </div>
+
+  <div class="row mt-3">
+    <div class="score-guide col-md-5">
+      <h5 class="card-category mb-0 guide">Scoring Guide</h5>
+      <table class="table table-bordered">
+        <thead>
+
+          <tr>
+            <th>Score</th>
+            <th>Meaning</th>
+          </tr>
+
+        </thead>
+        <tbody>
+          <tr>
+            <td>0 - 2</td>
+            <td>The skill is less critical</td>
+          </tr>
+          <tr>
+            <td>3 - 4</td>
+            <td>Modarate</td>
+          </tr>
+          <tr>
+            <td>4 - 5</td>
+            <td>high</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+    <div class="container col-md-7">
+      <h6>Guide to Determining Current State</h6>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>State</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody class="table-body">
+          <tr>
+            <td style="background-color: red;">Red</td>
+            <td>No known successor, or known successor will be ready in longer than 2 years</td>
+          </tr>
+          <tr>
+            <td style="background-color: rgba(252, 204, 14, 0.756);">Amber</td>
+            <td>A known successor will be ready in 1 - 2 years</td>
+          </tr>
+          <tr>
+            <td style="background-color: green;">Green</td>
+            <td>We have a ready now successor for the role</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
-
-
