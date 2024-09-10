@@ -1,0 +1,94 @@
+<div class="container">
+    <h2>Add Individual Performance</h2>
+  
+    <!-- PF Number Input -->
+    <mat-form-field class="example-full-width">
+        <mat-label>State</mat-label>
+        <input matInput
+               aria-label="State"
+               [matAutocomplete]="auto"
+               [formControl]="stateCtrl">
+        <mat-autocomplete #auto="matAutocomplete">
+          @for (employee of filteredStates | async; track employee) {
+            <mat-option [value]="employee.pf">
+              <span>{{employee.userFullName}}</span> |
+              <small>pf number: {{employee.pf}}</small>
+            </mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+  
+    <!-- Add Performance Data Form -->
+    <form [formGroup]="performanceForm" (ngSubmit)="onSubmit()">
+      <div formArrayName="performances">
+        <div
+          *ngFor="let performance of performances().controls; let i = index"
+          [formGroupName]="i"
+          class="performance-entry"
+        >
+          <h5>Performance Entry {{ i + 1 }}</h5>
+  
+          <!-- Year Value -->
+          <mat-form-field appearance="fill" class="form-group">
+            <mat-label>Year Value</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="yearValue"
+              placeholder="Enter Year"
+            />
+          </mat-form-field>
+  
+    
+  
+          <!-- Quarter -->
+          <mat-form-field appearance="fill" class="form-group">
+            <mat-label>Quarter</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="quarter"
+              placeholder="Enter Quarter"
+            />
+          </mat-form-field>
+  
+          <!-- Performance Metric -->
+          <mat-form-field appearance="fill" class="form-group">
+            <mat-label>Performance Metric</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="performanceMetric"
+              placeholder="Enter Performance Metric"
+            />
+          </mat-form-field>
+  
+          <!-- Remove Performance Entry Button -->
+          <button
+            mat-button
+            color="warn"
+            type="button"
+            (click)="removePerformance(i)"
+          >
+            <mat-icon>delete</mat-icon> Remove Performance
+          </button>
+        </div>
+      </div>
+  
+      <!-- Add Performance Entry Button -->
+      <button mat-raised-button color="primary" type="button" (click)="addPerformance()">
+        <mat-icon>add</mat-icon> Add Performance
+      </button>
+  
+      <!-- Submit Form Button -->
+      <button
+        mat-raised-button
+        color="accent"
+        type="submit"
+        [disabled]="!performanceForm.valid"
+      >
+        <mat-icon>check_circle</mat-icon> Submit
+      </button>
+    </form>
+  </div>
+  

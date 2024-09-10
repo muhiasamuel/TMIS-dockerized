@@ -5,6 +5,7 @@ import { HttpServiceService } from '../../../services/http-service.service';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { CreateEmployeeComponent } from '../../../create-employee/create-employee.component';
+import { AddIndividualPerformanceComponent } from './add-individual-performance/add-individual-performance.component';
 
 @Component({
   selector: 'app-my-teams-profile',
@@ -13,6 +14,12 @@ import { CreateEmployeeComponent } from '../../../create-employee/create-employe
   
 })
 export class MyTeamsProfileComponent {
+selectExcel(arg0: string) {
+throw new Error('Method not implemented.');
+}
+selectsingle(arg0: string) {
+throw new Error('Method not implemented.');
+}
 
   managerEmployees:any
   randomNumber = Math.floor(10000 + Math.random() * 9000);
@@ -23,6 +30,9 @@ export class MyTeamsProfileComponent {
   noOfEmployees:number;
   selectedFile: File;
   uploading: boolean = false;
+  selectedMethod: string | null = null;
+  selectedPerformanceType: string | null = null;
+
   
   constructor(
     public http: HttpServiceService,
@@ -30,6 +40,14 @@ export class MyTeamsProfileComponent {
     private snack: MatSnackBar,
     private router:Router
   ){}
+
+  select(selected:string):void{
+    this.selectedMethod = selected
+  }
+  selectPerformance(select:string):void{
+    this.selectedPerformanceType = select
+  }
+
  
    ngOnInit(): void {
      //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -118,6 +136,13 @@ openCreateEmployeeDialogue():void{
     })
   )
   
+}
+openAddPerformanceDialogue(){
+ this.dialog.open(AddIndividualPerformanceComponent,{
+    width:"40%",
+    height:"80%",
+    data:{emp:this.employees}
+  });
 }
    
 }

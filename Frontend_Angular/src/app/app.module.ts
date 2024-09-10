@@ -7,6 +7,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -101,6 +102,7 @@ import { AssessmentLineGraphComponent } from './graphs/assessment-line-graph/ass
 import { AssessmentBarGraphComponent } from './graphs/assessment-bar-graph/assessment-bar-graph.component';
 import { ExternalSuccessorComponent } from './pages/succession-plan/external-successor/external-successor.component';
 import { SuccessionDisplayComponent } from './pages/succession-plan/succession-display/succession-display.component';
+import { AddIndividualPerformanceComponent } from './pages/profiles/my-teams-profile/add-individual-performance/add-individual-performance.component';
 
 
 
@@ -174,6 +176,7 @@ import { SuccessionDisplayComponent } from './pages/succession-plan/succession-d
     AssessmentBarGraphComponent,
     ExternalSuccessorComponent,
     SuccessionDisplayComponent,
+    AddIndividualPerformanceComponent,
     
    
   ],
@@ -182,6 +185,7 @@ import { SuccessionDisplayComponent } from './pages/succession-plan/succession-d
     MatStepperModule,
     MatDatepickerModule,
     AsyncPipe,
+    MatMenuModule,
     AppRoutingModule,
 
     BrowserAnimationsModule,

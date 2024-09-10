@@ -25,9 +25,9 @@ export class HttpServiceService {
  // serverUrl: string = 'http://192.168.89.11:8080';
 
   // serverUrl
-  serverUrl: string = 'http://localhost:8080/v1/api/';
+  //serverUrl: string = 'http://localhost:8080/v1/api/';
 
-  //serverUrl: string = 'http://192.168.90.38:8080/v1/api/';
+  serverUrl: string = 'http://192.168.91.51:8080/v1/api/';
 
   //serverUrl: string = environment.API_BASE_URL;
   //  serverUrl: string = 'http://192.168.2.21:8080';
@@ -331,6 +331,13 @@ postSuccessionDrive(data:any): Observable<any>{
 
 const url =`${this.serverUrl}successionDrivers`
 return this.http.post<any>(url,data)
+}
+
+addPerformance(data:any,pf:number): Observable<any>{
+  // http://192.168.91.51:8080/v1/api/performances/add-for-user/256
+
+  const url =`${this.serverUrl}performances/add-for-user/${pf}`
+  return this.http.post<any>(url,data)
 }
 
 

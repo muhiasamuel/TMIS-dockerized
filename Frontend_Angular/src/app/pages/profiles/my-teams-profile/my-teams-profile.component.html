@@ -2,30 +2,77 @@
     
     <div class="">
         <div class=" d-flex justify-content-between">
-            <div class="card col-md-5">
-                <h5 class="text-center py-1" >Add Employees as Excel</h5>
-                <div class="d-flex align-items-center">
+            <div class="assessment-type d-flex align-items-center justify-content-center">
+                <p class="card-category">Select type of assessment to send:</p>
+                <mat-form-field appearance="fill">
+                  <mat-label>Select Assessment Type</mat-label>
+                  <mat-select>
+                    <mat-option (click)="select('excel')" >Add Employees as Excel</mat-option>
+                    <mat-option (click)="select('single')"value="single">Add Single Employee</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <div class="card col-md-6 ms-3"*ngIf="selectedMethod === 'excel'">
+                    <h5 class="text-center py-1" >Add Employees as Excel</h5>
                     <div class="d-flex align-items-center">
-                        <input type="file" (change)="onFileSelected($event)" />
-                        <button class="btn btn-md btn-primary" (click)="onUpload()" *ngIf="!uploading">Upload</button>
-                    </div>
-                    <div class="d-flex align-items-center" *ngIf="uploading">
-                        <div class="spinner-border btn-primary" role="status">
+                        <div class="d-flex align-items-center">
+                            <input type="file" (change)="onFileSelected($event)" />
+                            <button class="btn btn-md btn-primary" (click)="onUpload()" *ngIf="!uploading">Upload</button>
                         </div>
-                        <span class="sr-only">Uploading...</span>
+                        <div class="d-flex align-items-center" *ngIf="uploading">
+                            <div class="spinner-border btn-primary" role="status">
+                            </div>
+                            <span class="sr-only">Uploading...</span>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="card col-md-5 ms-3" *ngIf="selectedMethod === 'single'">
+                    <div>
+                        <h5>Add Single Employee</h5>
+                        <button class="btn btn-md btn-primary" (click)="openCreateEmployeeDialogue()">
+                            Create Employee
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-3 d-flex align-items-center justify-content-center">
-                <div>
-                    <h5>Add Single Employee</h5>
-                    <button class="btn btn-md btn-primary" (click)="openCreateEmployeeDialogue()">
-                        Create Employee
-                    </button>
+            <div class="performance-type d-flex align-items-center justify-content-center">
+                <p class="card-category">Select type of Performance to add:</p>
+                <mat-form-field appearance="fill">
+                  <mat-label>Select Performance to add</mat-label>
+                  <mat-select>
+                    <mat-option (click)="selectPerformance('excel')" >Add Performance as Excel</mat-option>
+                    <mat-option (click)="selectPerformance('single')"value="single">Add performance of single Employee</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <div class="card col-md-6 ms-3"*ngIf="selectedPerformanceType === 'excel'">
+                    <h5 class="text-center py-1" >Add Performance as Excel</h5>
+                    <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center">
+                            <input type="file" (change)="onFileSelected($event)" />
+                            <button class="btn btn-md btn-primary" (click)="onUpload()" *ngIf="!uploading">Upload</button>
+                        </div>
+                        <div class="d-flex align-items-center" *ngIf="uploading">
+                            <div class="spinner-border btn-primary" role="status">
+                            </div>
+                            <span class="sr-only">Uploading...</span>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="card col-md-5 ms-3" *ngIf="selectedPerformanceType === 'single'">
+                    <div>
+                        <h5>Add performance of Single Employee</h5>
+                        <button class="btn btn-md btn-primary" (click)="openAddPerformanceDialogue()">
+                            Add performance
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
+         
 
     </div>
 
