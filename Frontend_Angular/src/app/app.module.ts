@@ -51,6 +51,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 import { BaseChartDirective  } from 'ng2-charts';
 
+
 import { MatOptionModule } from '@angular/material/core';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
