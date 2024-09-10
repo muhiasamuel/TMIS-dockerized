@@ -38,7 +38,7 @@
           </div>
     
           <div class="table-responsive">
-            <table class="table table-bordered table-hover excel-table" id="sp">
+            <table class="table table-bordered excel-table" id="sp">
               <thead>
                 <tr>
                   <th scope="col">Department</th>
@@ -78,8 +78,8 @@
                   <td>
                     <mat-form-field appearance="fill">
                       <mat-label>Select Department</mat-label>
-                      <mat-select formControlName="departmentId">
-                        <mat-option *ngFor="let department of departments" [value]="department.depId">
+                      <mat-select formControlName="departmentId" >
+                        <mat-option *ngFor="let department of departments" [value]="department.depId" (click)="getPosition()">
                           {{department.depName}}
                         </mat-option>
                       </mat-select>
@@ -98,17 +98,17 @@
                   <td>
                     <mat-form-field appearance="fill">
                       <mat-label>Select Key Role</mat-label>
-                        <mat-select formControlName="positionId" (click)="getPosition()" >
-                          @for (position of positions; track positions) {
-                            <mat-option [value]="position.pid">{{position.positionName}}</mat-option>
-                          }
+                        <mat-select formControlName="positionId">
+                            <mat-option *ngFor="let position of positions" [value]="position.pid">
+                              {{position.positionName}}
+                            </mat-option>                         
                       </mat-select>
                     </mat-form-field>
                   </td>
                   <td>
                     <mat-form-field appearance="fill">
                       <mat-label>Select Current Role Holder</mat-label>
-                      <mat-select formControlName="currentRoleHolderId" (click) ="getPositionHolder()">
+                      <mat-select formControlName="currentRoleHolderId"  (click) ="getPositionHolder()">
                         <mat-option *ngFor="let employee of positioHolder" [value]="employee.id">
                           {{employee.firstName}}
                         </mat-option>
@@ -127,19 +127,19 @@
                   </td>
                   <td *ngIf="showReadyNow">
                     <span>{{ getFormArray('readyNow').length }} record(s) added </span>
-                    <button type="button" (click)="openReadyNowDialog()">Add New Record</button>
+                    <button class="btn btn-sm btn-success" type="button" (click)="openReadyNowDialog()">Add New Record</button>
                   </td>
                   <td *ngIf="showReadyAfterTwoYears">
                     <span>{{ getFormArray('readyAfterTwoYears').length }} record(s) added</span>
-                    <button type="button" (click)="openReadyTwoDialog()">Add New Record</button>
+                    <button class="btn btn-sm btn-success" type="button" (click)="openReadyTwoDialog()">Add New Record</button>
                   </td>
                   <td *ngIf="showReadyMoreThanTwoYears">
                     <span>{{ getFormArray('readyMoreThanTwoYears').length }} record(s) added</span>
-                    <button type="button" (click)="openReadyMoreDialog()">Add New Record</button>
+                    <button class="btn btn-sm btn-success" type="button" (click)="openReadyMoreDialog()">Add New Record</button>
                   </td>
                   <td *ngIf="showExternalSuccessor">
                     <span>{{ getFormArray('externalSuccessor').length }} record(s) added</span>
-                    <button type="button" (click)="openExternalSuccessorDialog()">Add New Record</button>
+                    <button class="btn btn-sm btn-success text-white" type="button" (click)="openExternalSuccessorDialog()">Add New Record</button>
                   </td>
                   <td>
                     <button type="submit" mat-raised-button color="primary">Submit</button>

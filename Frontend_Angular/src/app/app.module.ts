@@ -109,6 +109,7 @@ import { AddIndividualPerformanceComponent } from './pages/profiles/my-teams-pro
 @NgModule({
   declarations: [
      AppComponent,
+     SuccessionDisplayComponent,
      FooterComponent,
      NavbarComponent,
      SidebarComponent,
@@ -187,7 +188,7 @@ import { AddIndividualPerformanceComponent } from './pages/profiles/my-teams-pro
     AsyncPipe,
     MatMenuModule,
     AppRoutingModule,
-
+    AsyncPipe,
     BrowserAnimationsModule,
     MatStepperModule,
     MatTableModule,

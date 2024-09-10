@@ -1,0 +1,117 @@
+/* Ensure the styles are specific enough */
+.mat-elevation-z8 {
+    font-family: Arial, sans-serif;
+    background-color: #e8e5e5;
+    padding: 20px;
+}
+
+.mat-form-field {
+    margin-bottom: 20px;
+}
+
+.mat-form-field .mat-form-field-label {
+    font-family: Arial, sans-serif;
+}
+
+/* Table Styles */
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 1em;
+    text-align: left;
+}
+
+.custom-table th {
+    background-color: #40901b;
+    color: white;
+    font-weight: bold;
+}
+
+.custom-table td, .custom-table th {
+    border: 1px solid #4a4949;
+    padding: 10px;
+    vertical-align: top;
+}
+
+.custom-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.custom-table tbody tr:nth-child(odd) {
+    background-color: #e0e0e0;
+}
+
+/* Apply classes for risk rating and heat map */
+.custom-table td.medium {
+    background-color: yellow;
+    text-align: center;
+}
+
+.custom-table td.low {
+    background-color: lightgreen;
+    text-align: center;
+}
+
+.custom-table td.red {
+    background-color: red;
+    text-align: center;
+    color: white;
+}
+
+.custom-table td.amber {
+    background-color: orange;
+    text-align: center;
+    color: white;
+}
+
+.custom-table td.green {
+    background-color: green;
+    text-align: center;
+    color: white;
+}
+
+/* Key Section */
+.key-section {
+    margin-top: 20px;
+  }
+  
+  .key-section h4 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+  }
+  
+  .key-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+  .key-table th{
+    background-color: #4d9203;
+    color: #fffefe;
+    font-weight: 700;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    padding: 10px ;
+  }
+  
+  .key-table th, .key-table td {
+    padding: 5px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .key-table td.red {
+    background-color: red;
+    color: white;
+  }
+  
+  .key-table td.amber {
+    background-color: orange;
+    color: white;
+  }
+  
+  .key-table td.green {
+    background-color: green;
+    color: white;
+  }
+  
