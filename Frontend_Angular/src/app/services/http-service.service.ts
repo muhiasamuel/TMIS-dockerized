@@ -25,9 +25,12 @@ export class HttpServiceService {
   // serverUrl: string = 'http://192.168.89.11:8080';
 
   // serverUrl
-  serverUrl: string = 'http://localhost:8080/v1/api/';
+  //serverUrl: string = 'http://localhost:8080/v1/api/';
 
-  //serverUrl: string = 'http://192.168.90.38:8080/v1/api/';
+   serverUrl: string = 'http://192.168.88.241:8080/v1/api/';
+  //serverUrl: string = 'http://192.168.89.134:8080/v1/api/';
+
+  //serverUrl: string = 'http://192.168.90.145:8080/v1/api/';
 
   //serverUrl: string = environment.API_BASE_URL;
   //  serverUrl: string = 'http://192.168.2.21:8080';
@@ -338,6 +341,13 @@ export class HttpServiceService {
     const url = `${this.serverUrl}succession-plans/critical/role/succession/status`
     return this.http.get(url)
   }
+postSuccessionDrive(data:any): Observable<any>{
+// http://localhost:8080/v1/api/successionDrivers
+
+const url =`${this.serverUrl}successionDrivers`
+return this.http.post<any>(url,data)
+}
+
 
 }
 

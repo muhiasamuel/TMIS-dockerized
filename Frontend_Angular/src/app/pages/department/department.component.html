@@ -13,11 +13,6 @@
           <td mat-cell *matCellDef="let element; let i = index"> {{i + 1 + (paginator.pageIndex * paginator.pageSize)}} </td>
         </ng-container>
   
-        <ng-container matColumnDef="depId">
-          <th mat-header-cell *matHeaderCellDef>Department Id</th>
-          <td mat-cell *matCellDef="let element"> {{element.depId}} </td>
-        </ng-container>
-  
         <ng-container matColumnDef="depName">
           <th mat-header-cell *matHeaderCellDef>Department Name</th>
           <td mat-cell *matCellDef="let element"> {{element.depName}} </td>
@@ -26,11 +21,20 @@
         <ng-container matColumnDef="positionName">
           <th mat-header-cell *matHeaderCellDef>Position Name</th>
           <td mat-cell *matCellDef="let element">
-            <ng-container *ngFor="let position of element.departmentPositions">
-              {{position.positionName}}<br>
+            <!-- Display positions up to the 'displayLimit' value -->
+            <ng-container *ngFor="let position of element.departmentPositions | slice: 0: displayLimit">
+              {{ position['positionName'] }}<br>
             </ng-container>
+        
+            <!-- Conditional button to toggle more positions -->
+            <button class="btn btn-secondary" *ngIf="element.departmentPositions.length > displayLimit && !showAll" 
+                    (click)="toggleView(element)">View More</button>
+        
+            <!-- View fewer button to collapse back if needed -->
+            <button *ngIf="showAll" (click)="toggleView(element)">View Less</button>
           </td>
         </ng-container>
+        
   
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
@@ -38,7 +42,7 @@
   
       <mat-paginator [length]="departments.length"
                      [pageSize]="10"
-                     [pageSizeOptions]="[5, 10, 20]"
+                     [pageSizeOptions]="[4, 10, 20]"
                      showFirstLastButtons>
       </mat-paginator>
     </div>

@@ -92,7 +92,7 @@ th td {
   
 
   
-//   /* Icon style for remove button */
+//   /* Icon style for remove button */    
 //   .remove-button mat-icon {
 //     font-size: 16px; /* Adjust icon size */
 //     color: #ff0000; /* Red color for remove icon */
@@ -169,3 +169,23 @@ th td {
 //   .mat-header{
 //     font-weight: 800;
 //   }
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+  }
+  
+  .mat-form-field {
+    width: 100%;
+  }
+  .success-snackbar {
+    background-color: #4caf50;
+    color: white;
+  }
+  .mat-header{
+    font-weight: 800;
+  }
+  .drivers{
+    display: flex;
+    align-items: flex-start;
+    margin-left: 2rem;
+  }
