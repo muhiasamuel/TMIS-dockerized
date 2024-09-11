@@ -1,0 +1,220 @@
+<div class="page-container">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/succession-plans">Succession Plans</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Plan Details</li>
+      </ol>
+    </nav>
+  
+    <!-- Header Section -->
+    <div class="header-section">
+      <h1>Succession Plan Details</h1>
+      <div class="header-actions">
+        <button mat-raised-button color="primary" class="create-plan-button" (click)="createNewPlan()">Create New Plan</button>
+        <button mat-stroked-button color="accent" class="filter-plans-button">Filter Plans</button>
+      </div>
+    </div>
+  
+    <!-- Flexbox Layout for Plan Details -->
+    <div class="plans-container" *ngIf="distinctPlans.length > 0">
+      <div class="plan-row" *ngFor="let plan of distinctPlans; let i = index">
+        <!-- Plan Info Column -->
+        <div class="plan-column">
+          <mat-card class="plan-card">
+            <mat-card-header>
+              <mat-card-title>Plan Information</mat-card-title>
+              <button mat-button color="accent" (click)="toggleEdit(plan.planId, 'planInfo')">
+                {{ isEditing(plan.planId, 'planInfo') ? 'Save' : 'Edit' }}
+              </button>
+            </mat-card-header>
+            <mat-card-content>
+              <div *ngIf="!isEditing(plan.planId, 'planInfo')">
+                <p><strong>Position:</strong> {{ plan.positionName }}</p>
+                <p><strong>Current Role Holder:</strong> {{ plan.currentRoleHolderName }}</p>
+                <p><strong>Department:</strong> {{ plan.departmentName }}</p>
+                <p><strong>Risk Rating:</strong> {{ plan.riskRating }}</p>
+                <p><strong>Driver:</strong> {{ plan.driverName }}</p>
+              </div>
+              <div *ngIf="isEditing(plan.planId, 'planInfo')">
+                <p><strong>Position:</strong>
+                  <input [(ngModel)]="plan.positionName" placeholder="Position Name" />
+                </p>
+                <p><strong>Current Role Holder:</strong>
+                  <input [(ngModel)]="plan.currentRoleHolderName" placeholder="Role Holder Name" />
+                </p>
+                <p><strong>Department:</strong>
+                  <input [(ngModel)]="plan.departmentName" placeholder="Department Name" />
+                </p>
+                <p><strong>Risk Rating:</strong>
+                  <select [(ngModel)]="plan.riskRating">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                  </select>
+                </p>
+                <p><strong>Driver:</strong>
+                  <input [(ngModel)]="plan.driverName" placeholder="Driver Name" />
+                </p>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+  
+        <!-- Readiness Levels Column -->
+<!-- Ready Users Column -->
+<div class="plan-column">
+    <mat-card class="plan-card">
+      <mat-card-header>
+        <mat-card-title>Readiness Levels</mat-card-title>
+        <button mat-button color="accent" (click)="toggleEdit(plan.planId, 'readiness')">
+          {{ isEditing(plan.planId, 'readiness') ? 'Save' : 'Edit' }}
+        </button>
+        <button mat-button color="primary" (click)="addNewEntry(plan.planId, 'readyUsers')">
+          Add New Ready User
+        </button>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngIf="!isEditing(plan.planId, 'readiness')">
+          <div *ngFor="let user of plan.readyUsers">
+            <p><strong>Name:</strong> {{ user.readyUserName }}</p>
+            <p><strong>Readiness Level:</strong> {{ user.readinessLevel }}</p>
+            <p><strong>Development Needs:</strong></p>
+            <ul>
+              <li *ngFor="let need of user.developmentNeeds">
+                {{ need.developmentNeedType }}: {{ need.developmentNeedDescription }}
+              </li>
+            </ul>
+            <p><strong>Interventions:</strong></p>
+            <ul>
+              <li *ngFor="let intervention of user.interventions">
+                {{ intervention.interventionDescription }} ({{ intervention.interventionType }})
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div *ngIf="isEditing(plan.planId, 'readiness')">
+          <div *ngFor="let user of plan.readyUsers; let j = index">
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Name</mat-label>
+              <input matInput [(ngModel)]="user.readyUserName" placeholder="User Name" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Readiness Level</mat-label>
+              <mat-select [(ngModel)]="user.readinessLevel">
+                <mat-option value="inProgress">In Progress</mat-option>
+                <mat-option value="completed">Completed</mat-option>
+                <mat-option value="notStarted">Not Started</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <h2 class="section-title">Proposed Interventions</h2>
+            <div *ngFor="let intervention of user.interventions; let l = index">
+              <mat-form-field appearance="fill" class="half-width">
+                <mat-label>Type</mat-label>
+                <input matInput [(ngModel)]="intervention.interventionType" placeholder="Intervention Type" />
+              </mat-form-field>
+              <mat-form-field appearance="fill" class="half-width">
+                <mat-label>Description</mat-label>
+                <textarea matInput [(ngModel)]="intervention.interventionDescription" placeholder="Intervention Description"></textarea>
+              </mat-form-field>
+              <mat-form-field appearance="fill" class="half-width">
+                <mat-label>Status</mat-label>
+                <input matInput [(ngModel)]="intervention.status" placeholder="Status" />
+              </mat-form-field>
+              <mat-form-field appearance="fill" class="half-width">
+                <mat-label>Start Date</mat-label>
+                <input matInput [(ngModel)]="intervention.startDate" type="date" />
+              </mat-form-field>
+              <mat-form-field appearance="fill" class="half-width">
+                <mat-label>End Date</mat-label>
+                <input matInput [(ngModel)]="intervention.endDate" type="date" />
+              </mat-form-field>
+              <button mat-icon-button color="warn" (click)="removeIntervention(user, l)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+            <button mat-raised-button color="primary" (click)="addIntervention(user)">Add Intervention</button>
+
+            <h2 class="section-title">Development Needs</h2>
+            <div *ngFor="let need of user.developmentNeeds; let k = index">
+              <mat-form-field appearance="fill" class="half-width">
+                <mat-label>Need Type</mat-label>
+                <input matInput [(ngModel)]="need.developmentNeedType" placeholder="Need Type" />
+              </mat-form-field>
+              <mat-form-field appearance="fill" class="half-width">
+                <mat-label>Description</mat-label>
+                <textarea matInput [(ngModel)]="need.developmentNeedDescription" placeholder="Need Description"></textarea>
+              </mat-form-field>
+              <button mat-icon-button color="warn" (click)="removeDevelopmentNeed(user, k)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+            <button mat-raised-button color="primary" (click)="addDevelopmentNeed(user)">Add Development Need</button>
+            <button mat-icon-button color="warn" (click)="removeUser(plan, j)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  
+  
+        <!-- External Successors Column -->
+        <div class="plan-column">
+          <mat-card class="plan-card">
+            <mat-card-header>
+              <mat-card-title>External Successors</mat-card-title>
+              <button mat-button color="accent" (click)="toggleEdit(plan.planId, 'externalSuccessors')">
+                {{ isEditing(plan.planId, 'externalSuccessors') ? 'Save' : 'Edit' }}
+              </button>
+              <button mat-button color="primary" (click)="addNewEntry(plan.planId, 'externalSuccessors')">
+                Add New External Successor
+              </button>
+            </mat-card-header>
+            <mat-card-content>
+              <div *ngIf="!isEditing(plan.planId, 'externalSuccessors')">
+                <div *ngFor="let successor of plan.externalSuccessors">
+                  <p><strong>Name:</strong> {{ successor.externalSuccessorName }}</p>
+                  <p><strong>Contact:</strong> {{ successor.externalSuccessorContact }}</p>
+                  <p><strong>Current Company:</strong> {{ successor.externalSuccessorCurrentComp }}</p>
+                  <p><strong>Position:</strong> {{ successor.externalSuccessorPosition }}</p>
+                  <p><strong>Selection Reason:</strong> {{ successor.externalSuccessorSelectionReason }}</p>
+                </div>
+              </div>
+              <div *ngIf="isEditing(plan.planId, 'externalSuccessors')">
+                <div *ngFor="let successor of plan.externalSuccessors; let m = index">
+                  <p><strong>Name:</strong>
+                    <input [(ngModel)]="successor.externalSuccessorName" placeholder="Successor Name" />
+                  </p>
+                  <p><strong>Contact:</strong>
+                    <input [(ngModel)]="successor.externalSuccessorContact" placeholder="Contact" />
+                  </p>
+                  <p><strong>Current Company:</strong>
+                    <input [(ngModel)]="successor.externalSuccessorCurrentComp" placeholder="Current Company" />
+                  </p>
+                  <p><strong>Position:</strong>
+                    <input [(ngModel)]="successor.externalSuccessorPosition" placeholder="Position" />
+                  </p>
+                  <p><strong>Selection Reason:</strong>
+                    <input [(ngModel)]="successor.externalSuccessorSelectionReason" placeholder="Selection Reason" />
+                  </p>
+                  <button mat-button (click)="plan.externalSuccessors.splice(m, 1)">Remove</button>
+                </div>
+                <button mat-button (click)="plan.externalSuccessors.push({
+                  externalSuccessorContact: '',
+                  externalSuccessorCurrentComp: '',
+                  externalSuccessorPosition: '',
+                  externalSuccessorName: '',
+                  externalSuccessorSelectionReason: ''
+                })">Add External Successor</button>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -38,6 +38,7 @@ import { MyTeamsProfileComponent } from './pages/profiles/my-teams-profile/my-te
 import { DepartmentComponent } from './pages/department/department.component';
 import { TalentComponent } from './pages/talent-mapping/talent/talent.component';
 import { canActivateChild } from './authGuard';
+import { ViewSinglePlanComponent } from './pages/succession-plan/view-single-plan/view-single-plan.component';
 
 
 const routes: Routes = [
@@ -81,7 +82,8 @@ const routes: Routes = [
       { path: 'user-assessment', component:UserAssessmentComponent},
       { path: 'add-attributes',      component: AddAssessmentQuestionsComponent },
       {path: 'departments', component:DepartmentComponent},
-      { path: 'talent/:rating', component: TalentComponent}
+      { path: 'talent/:rating', component: TalentComponent},
+      { path: 'view/plan', component: ViewSinglePlanComponent}
      
   ]},
   {

@@ -12,6 +12,7 @@ import { ViewCriticalRoleComponent } from './view-critical-role/view-critical-ro
 import { ViewDialogComponent } from '../asess-my-team/components/view-dialog/view-dialog.component';
 import { EditCriticalRoleComponent } from './edit-critical-role/edit-critical-role.component';
 import { AddStrategiesComponent } from './add-strategies/add-strategies.component';
+import { Router } from '@angular/router';
 
 export interface UserData {
   roleName:string
@@ -49,7 +50,9 @@ dataSource: MatTableDataSource<UserData>;
 
 @ViewChild(MatPaginator) paginator: MatPaginator;
 @ViewChild(MatSort) sort: MatSort;
-  constructor(private dialog : MatDialog, private http: HttpServiceService, private snack: MatSnackBar){}
+  constructor(private dialog : MatDialog,
+    private router: Router,
+     private http: HttpServiceService, private snack: MatSnackBar){}
   addCriticalRoles(){
    const dialogRef:MatDialogRef<CriticalRolesAssessmentComponent> = this.dialog.open(CriticalRolesAssessmentComponent,{
       width:"90%",
@@ -148,6 +151,8 @@ getRolesSuccessionStatus(){
   this.http.checkRolesSuccessionStatus().subscribe(
     ((res) => {
       this.succeededRoles = res.item
+      console.log("dsfdagfahg", res.item);
+      
     })
   )
 }
@@ -285,7 +290,7 @@ getRolesSuccessionStatus(){
   
   onView(row: any): void {
     // Logic to handle viewing the details of a succession plan
-    console.log('View Succession Plan for:', row);
+    this.router.navigate(['/view/plan'], { queryParams: { planId: row } });
   }
   
   onAdd(row: any): void {

@@ -81,7 +81,7 @@
               <button mat-icon-button *ngIf="row.successionStatus === 'mapped'" (click)="onEdit(row)" color="primary" aria-label="Edit">
                 <mat-icon class="material-icons-outlined">edit</mat-icon> <!-- Outlined edit icon -->
               </button>
-              <button mat-icon-button *ngIf="row.successionStatus === 'mapped'" (click)="onView(row)" color="accent" aria-label="View">
+              <button mat-icon-button *ngIf="row.successionStatus === 'mapped'" (click)="onView(row.planId)" color="accent" aria-label="View">
                 <mat-icon>visibility</mat-icon>
               </button>
           

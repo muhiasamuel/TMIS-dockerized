@@ -104,6 +104,7 @@ import { AssessmentBarGraphComponent } from './graphs/assessment-bar-graph/asses
 import { ExternalSuccessorComponent } from './pages/succession-plan/external-successor/external-successor.component';
 import { SuccessionDisplayComponent } from './pages/succession-plan/succession-display/succession-display.component';
 import { AddIndividualPerformanceComponent } from './pages/profiles/my-teams-profile/add-individual-performance/add-individual-performance.component';
+import { ViewSinglePlanComponent } from './pages/succession-plan/view-single-plan/view-single-plan.component';
 
 
 
@@ -179,6 +180,7 @@ import { AddIndividualPerformanceComponent } from './pages/profiles/my-teams-pro
     ExternalSuccessorComponent,
     SuccessionDisplayComponent,
     AddIndividualPerformanceComponent,
+    ViewSinglePlanComponent,
     
    
   ],
