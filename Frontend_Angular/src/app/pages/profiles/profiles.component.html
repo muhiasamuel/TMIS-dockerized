@@ -2,7 +2,8 @@
     <h1>EMPLOYEE TALENT PROFILE</h1>
     <div class="row">
       <!-- Personal & Organisation Information -->
-      <div class="col-md-4">
+     <div class="col-md-4">
+    <img src="../../../assets/img/owner_photo.PNG" alt="Profile Photo" class="profile-photo img-fluid">
         <h3>Personal & Organisation Information</h3>
         <div class="profile-info">
           <p><strong>Name:</strong> {{ employeeInfo?.userFullName }}</p>
@@ -11,7 +12,7 @@
           <p><strong>Department:</strong> {{ employeeInfo?.departmentName }}</p>
           <p><strong>Line Manager Name:</strong> {{ employeeInfo?.employeeDetails?.lineManagerName || "TopManager" }}</p>
           <p><strong>Position Title of Line Manager:</strong> {{ employeeInfo?.employeeDetails?.lineManagerPositionTitle || employeeInfo?.positionName }}</p>
-          <img src="../../../assets/img/owner_photo.PNG" alt="Profile Photo" class="profile-photo">
+          
         </div>
         
         <!-- Previous Roles Held -->
@@ -31,8 +32,8 @@
         <h3>Employee Education</h3>
         <table>
           <tr *ngFor="let education of profile.education">
-            <td>{{ education.qualification }}</td>
-            <td>{{ education.university }}</td>
+            <td>{{ education.qualification || 'N/A' }}</td>
+            <td>{{ education.university || 'N/A' }}</td>
           </tr>
         </table>
   
@@ -80,23 +81,32 @@
           <h3>Talent Designations</h3>
           <table>
             <tr>
-              <td>Potential Ratings</td>
-              <td>{{ employee.potentialRating || 'Z' }}</td>
+              <td>Potential Rating (2023):</td>
+              <td>{{ profile.talentDesignations.potentialrating2023 || 'N/A' }}</td>
             </tr>
             <tr>
-              <td>Talent Mapping</td>
-              <td>{{ employee.talentRating || 0 }}</td>
+              <td>Potential Rating (2022):</td>
+              <td>{{ profile.talentDesignations.potentialrating2022 || 'N/A' }}</td>
+            </tr>
+            <tr>
+              <td>Talent Mapping (2023):</td>
+              <td>{{ profile.talentDesignations.mapping2023 || 'N/A' }}</td>
+            </tr>
+            <tr>
+              <td>Talent Mapping (2022):</td>
+              <td>{{ profile.talentDesignations.mapping2022 || 'N/A' }}</td>
             </tr>
           </table>
-          <p>Is Role Critical: {{ profile.isRoleCritical }}</p>
-          <p>Is Employee an MVP: {{ profile.isMVP }}</p>
+          
+          <p>Is Role Critical: {{ profile.isRoleCritical || 'N/A' }}</p>
+          <p>Is Employee an MVP: {{ profile.isMVP || 'N/A' }}</p>
         </div>
       </div>
   
       <!-- Succession and Development Plans -->
       <div class="col-md-4 profile-section">
         <h3>Succession</h3>
-        <p>Is employee a designated successor: {{ profile.succession.isDesignatedSuccessor }}</p>
+        <p>Is employee a designated successor: {{ profile.succession.isDesignatedSuccessor || 'N/A' }}</p>
         <table>
           <tr *ngFor="let successor of profile.succession.potentialSuccessors">
             <td>{{ successor.role }}</td>
