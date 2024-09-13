@@ -1,9 +1,13 @@
+<div mat-dialog-actions class="dialog-action">
+  <button mat-button (click)="closeDialog()">Close
+  </button>
+</div>
 <div class="container">
     <h2>Add Individual Performance</h2>
   
     <!-- PF Number Input -->
     <mat-form-field class="example-full-width">
-        <mat-label>State</mat-label>
+        <mat-label>Pf no./Name</mat-label>
         <input matInput
                aria-label="State"
                [matAutocomplete]="auto"
