@@ -335,6 +335,14 @@ export class HttpServiceService {
 
     return this.http.get<any>(apiUrl);
   }
+
+  //get plan by id
+  getSuccessionPlanById(id:number): Observable<any> {
+    const apiUrl = `${this.serverUrl}succession-plans/get-by-id/${id}`;
+
+    return this.http.get<any>(apiUrl);
+  }
+  //http://localhost:8080/v1/api/succession-plans/get-by-id/9
   //check Critical Role for succession
   checkRolesSuccessionStatus(): Observable<any> {
     //http://localhost:8080/v1/api/succession-plans/critical/role/succession/status

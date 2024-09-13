@@ -1,0 +1,77 @@
+.page-container {
+    padding: 20px;
+  }
+  
+  .breadcrumb {
+    background: none;
+    padding: 0;
+    margin-bottom: 20px;
+  }
+  
+  .header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .header-actions button {
+    margin-left: 10px;
+  }
+  
+  .create-plan-button {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .filter-plans-button {
+    border-color: #007bff;
+    color: #007bff;
+  }
+  
+  .plans-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .plan-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .plan-column {
+    flex: 1;
+    min-width: 280px;
+  }
+  
+  .plan-card {
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  
+  mat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  mat-card-content {
+    padding: 16px;
+  }
+  
+  mat-card-content input, mat-card-content select {
+    margin: 5px 0;
+  }
+  
+  mat-card-content button {
+    margin-top: 10px;
+  }
+  
+  mat-card-content ul {
+    padding-left: 20px;
+  }
+  
