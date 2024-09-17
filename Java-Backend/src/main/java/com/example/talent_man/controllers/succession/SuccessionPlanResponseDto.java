@@ -2,6 +2,7 @@ package com.example.talent_man.controllers.succession;
 
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -46,5 +47,8 @@ public class SuccessionPlanResponseDto {
     public static class InterventionDto {
         private String interventionDescription;
         private String interventionType;
+        private String status;
+        private Date startDate;
+        private Date endDate;
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +37,9 @@ SuccessionPlanRepository extends JpaRepository<SuccessionPlan, Integer> {
             "    es.reason_for_selection AS externalSuccessorSelectionReason, " +
             "    pri.description AS interventionDescription, " +
             "    pri.intervention_type AS interventionType, " +
+            "    pri.start_date AS interventionStartDate, " +
+            "    pri.end_date AS interventionEndDate, " +
+            "    pri.status AS interventionStatus, " +
             "    COUNT(pri.ready_user_id) AS interventionCount " +
             "FROM " +
             "    succession_plan sp " +
@@ -84,6 +88,9 @@ SuccessionPlanRepository extends JpaRepository<SuccessionPlan, Integer> {
             "    es.reason_for_selection AS externalSuccessorSelectionReason, " +
             "    pri.description AS interventionDescription, " +
             "    pri.intervention_type AS interventionType, " +
+            "    pri.start_date AS interventionStartDate, " +
+            "    pri.end_date AS interventionEndDate, " +
+            "    pri.status AS interventionStatus, " +
             "    COUNT(pri.ready_user_id) AS interventionCount " +
             "FROM " +
             "    succession_plan sp " +
@@ -135,6 +142,9 @@ SuccessionPlanRepository extends JpaRepository<SuccessionPlan, Integer> {
             "    es.reason_for_selection AS externalSuccessorSelectionReason, " +
             "    pri.description AS interventionDescription, " +
             "    pri.intervention_type AS interventionType, " +
+            "    pri.start_date AS interventionStartDate, " +
+            "    pri.end_date AS interventionEndDate, " +
+            "    pri.status AS interventionStatus, " +
             "    COUNT(pri.ready_user_id) AS interventionCount " +
             "FROM " +
             "    succession_plan sp " +
@@ -186,6 +196,9 @@ SuccessionPlanRepository extends JpaRepository<SuccessionPlan, Integer> {
             "    es.reason_for_selection AS externalSuccessorSelectionReason, " +
             "    pri.description AS interventionDescription, " +
             "    pri.intervention_type AS interventionType, " +
+            "    pri.start_date AS interventionStartDate, " +
+            "    pri.end_date AS interventionEndDate, " +
+            "    pri.status AS interventionStatus, " +
             "    COUNT(pri.ready_user_id) AS interventionCount " +
             "FROM " +
             "    succession_plan sp " +
@@ -257,6 +270,9 @@ SuccessionPlanRepository extends JpaRepository<SuccessionPlan, Integer> {
         String getExternalSuccessorSelectionReason();
         String getInterventionDescription();
         String getInterventionType();
+        String getInterventionStatus();
+        Date getInterventionStartDate();
+        Date getInterventionEndDate();
         Integer getInterventionCount();
     }
 }

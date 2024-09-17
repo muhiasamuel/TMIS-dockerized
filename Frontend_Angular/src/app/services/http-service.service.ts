@@ -27,7 +27,7 @@ export class HttpServiceService {
   // serverUrl
   ////serverUrl: string = 'http://localhost:8080/v1/api/';
 
-   serverUrl: string = 'http://192.168.88.241:8080/v1/api/';
+   serverUrl: string = 'http://localhost:8080/v1/api/';
   //serverUrl: string = 'http://192.168.89.134:8080/v1/api/';
 
   //serverUrl: string = 'http://192.168.90.38:8080/v1/api/';

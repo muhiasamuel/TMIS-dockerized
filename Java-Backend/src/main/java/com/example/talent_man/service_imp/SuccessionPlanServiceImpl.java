@@ -206,6 +206,9 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
         SuccessionPlanResponseDto.InterventionDto interventionDto = new SuccessionPlanResponseDto.InterventionDto();
         interventionDto.setInterventionDescription(projection.getInterventionDescription());
         interventionDto.setInterventionType(projection.getInterventionType());
+        interventionDto.setStatus(projection.getInterventionStatus());
+        interventionDto.setStartDate(projection.getInterventionStartDate());
+        interventionDto.setEndDate(projection.getInterventionEndDate());
         //interventionDto.setInterventionCount(projection.getInterventionCount());
         readyUserDto.setInterventions(Collections.singletonList(interventionDto));  // Assuming one intervention
 

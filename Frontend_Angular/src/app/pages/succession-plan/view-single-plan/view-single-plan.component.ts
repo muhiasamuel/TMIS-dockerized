@@ -18,12 +18,7 @@ export class ViewSinglePlanComponent implements OnInit {
   distinctPlans: any[] = []; // Holds the restructured plan data.
   editingStates: { [key: number]: { [section: string]: boolean } } = {}; // Tracks editing state.
   newEntryStates: { [key: number]: { [section: string]: boolean } } = {}; // Tracks new entry state.
-  employees: any;
-  drivers: any;
-  departments: any;
-  positions: any;
-  positioHolder: any;
-  
+
   constructor(
     private service: HttpServiceService,
     private route: ActivatedRoute,
@@ -34,8 +29,6 @@ export class ViewSinglePlanComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.planId = params['planId'];
       this.getSinglePlan();
-      this.getDepartments();
-      this.getEmployees();
     });
   }
 
@@ -115,9 +108,9 @@ export class ViewSinglePlanComponent implements OnInit {
       if (!plan.readyUsers.some(user => user.readyUserName === '')) {
         plan.readyUsers.push({
           readyUserName: '',
-          readinessLevel: 'inProgress',
+          readinessLevel: '',
           developmentNeeds: [{ developmentNeedType: '', developmentNeedDescription: '' }],
-          interventions: [{ interventionDescription: '', interventionType: '', status: '', startDate: '', endDate: '' }]
+          interventions: [{ interventionDescription: '', interventionType: '' }]
         });
       } else {
         this.snack.open('User already exists. Please enter unique user details.', 'Close', { duration: 3000 });
@@ -200,41 +193,12 @@ export class ViewSinglePlanComponent implements OnInit {
   addIntervention(user: any): void {
     user.interventions.push({
       interventionDescription: '',
-      interventionType: '',
-      status: '',
-      startDate: '',
-      endDate: ''
+      interventionType: ''
     });
   }
 
   // Remove a ready user from a plan
   removeUser(plan: any, index: number): void {
     plan.readyUsers.splice(index, 1);
-  }
-
-  // Get departments
-  getDepartments() {
-    this.service.getDepartments().subscribe(
-      (response) => {
-        console.log("Departments:", response.item);
-        this.departments = response.item;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
-
-  // Get employees
-  getEmployees() {
-    this.service.getAllUsers().subscribe(
-      (response) => {
-        console.log("Employees:", response.item);
-        this.employees = response.item;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
   }
 }
