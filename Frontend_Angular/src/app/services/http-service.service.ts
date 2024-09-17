@@ -25,9 +25,9 @@ export class HttpServiceService {
   // serverUrl: string = 'http://192.168.89.11:8080';
 
   // serverUrl
-  ////serverUrl: string = 'http://localhost:8080/v1/api/';
+  serverUrl: string = 'http://localhost:8080/v1/api/';
 
-   serverUrl: string = 'http://localhost:8080/v1/api/';
+  //  serverUrl: string = 'http://192.168.88.241:8080/v1/api/';
   //serverUrl: string = 'http://192.168.89.134:8080/v1/api/';
 
   //serverUrl: string = 'http://192.168.90.38:8080/v1/api/';
@@ -362,7 +362,17 @@ addPerformance(data:any,pf:number): Observable<any>{
   const url =`${this.serverUrl}performances/add-for-user/${pf}`
   return this.http.post<any>(url,data)
 }
+uploadPerformance(formData:any):Observable<any>{
+  // http://192.168.88.241:8080/v1/api/performances/import
 
+  const url=`${this.serverUrl}performances/import`
+  return this.http.post<any>(url,formData)
+}
 
+getPerformance(managerId):Observable<any>{
+  // http://192.168.88.241:8080/v1/api/performances/employees/1
+  const url = `${this.serverUrl}performances/employees/${managerId}`
+  return this.http.get<any>(url)
+}
 }
 

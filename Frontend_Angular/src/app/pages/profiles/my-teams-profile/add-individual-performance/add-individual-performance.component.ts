@@ -2,9 +2,10 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators, FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { HttpServiceService } from '../../../../services/http-service.service';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { State } from '@popperjs/core';
 import { map, Observable, startWith } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-add-individual-performance',
@@ -12,14 +13,18 @@ import { map, Observable, startWith } from 'rxjs';
   styleUrls: ['./add-individual-performance.component.scss']
 })
 export class AddIndividualPerformanceComponent {
+
   performanceForm: FormGroup;
   pfNumber: string = ''; // To store the PF number input by the user
   employees: any;
   stateCtrl = new FormControl('');
   filteredStates: Observable<any[]>;
+  
   constructor(
+    private snackbar:MatSnackBar,
     private fb: FormBuilder, 
     private http: HttpClient, 
+    private dialogRef: MatDialogRef<AddIndividualPerformanceComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
     private server:HttpServiceService) {
       this.filteredStates = this.stateCtrl.valueChanges.pipe(
@@ -106,16 +111,26 @@ export class AddIndividualPerformanceComponent {
 
     // Make the POST request
     this.http.post(endpoint, performanceData).subscribe(
-      (response) => {
-        alert('Performance data submitted successfully.');
+      ((response:any) => {
+        if(response == 200){
+        // alert('Performance data submitted successfully.');
         this.performanceForm.reset();
         this.performances().clear();
         this.addPerformance(); // Add an empty entry after submission
-      },
+        this.dialogRef.close()}
+        else{
+          this.snackbar.open(response.message,'close',{duration:2000})
+        }
+      }
+      
+    ),
       (error) => {
         console.error('Error submitting performance data:', error);
         alert('An error occurred while submitting performance data.');
       }
     );
   }
+  closeDialog() {
+    this.dialogRef.close()
+    }
 }
