@@ -1,19 +1,19 @@
-import { Component, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Component, HostListener } from '@angular/core';
 import { Chart, ChartConfiguration } from 'chart.js';
 import { HttpServiceService } from '../../services/http-service.service';
 
 @Component({
-  selector: 'app-assessment-line-graph',
-  templateUrl: './assessment-line-graph.component.html',
-  styleUrls: ['./assessment-line-graph.component.scss']
+  selector: 'app-performance-line-graph',
+  templateUrl: './performance-line-graph.component.html',
+  styleUrl: './performance-line-graph.component.scss'
 })
-export class AssessmentLineGraphComponent implements AfterViewInit, OnDestroy {
+export class PerformanceLineGraphComponent {
   chart: Chart<'line'>;
-  assessments: any[] = [];
+  performanceData: any = {};  // Store the performance data
   lineChartData: ChartConfiguration<'line'>['data'] = {
-    labels: [],
-    datasets: []
+    labels: [],  // To store x-axis labels
+    datasets: [] // To store performance metrics as y-axis data
   };
   lineChartOptions: ChartConfiguration<'line'>['options'] = {
     responsive: true,
@@ -22,7 +22,7 @@ export class AssessmentLineGraphComponent implements AfterViewInit, OnDestroy {
       x: {
         title: {
           display: true,
-          text: 'Assessment Date'
+          text: 'Year - Quarter'
         },
         ticks: {
           autoSkip: true,
@@ -32,11 +32,11 @@ export class AssessmentLineGraphComponent implements AfterViewInit, OnDestroy {
       y: {
         title: {
           display: true,
-          text: 'Score'
+          text: 'Performance Metric'
         },
-        beginAtZero: false,
+        beginAtZero: true,
         ticks: {
-          stepSize: 0.5
+          stepSize: 1
         }
       }
     },
@@ -60,8 +60,6 @@ export class AssessmentLineGraphComponent implements AfterViewInit, OnDestroy {
     }
   };
 
-
-
   private hasRendered = false;
   private resizeTimeout: any;
   systemUser: any;
@@ -69,67 +67,65 @@ export class AssessmentLineGraphComponent implements AfterViewInit, OnDestroy {
   constructor(private http: HttpClient, private server: HttpServiceService) {}
 
   ngAfterViewInit(): void {
-    this.systemUser= JSON.parse(localStorage.getItem("user"))
-    this.loadAssessments(2); // Assume user ID 2 for this example
+    this.systemUser = JSON.parse(localStorage.getItem("user"))
+    console.log('system user',this.systemUser);
+    
+    this.loadPerformanceData(this.systemUser.user.pf); // Load performance data on init
   }
 
   ngOnDestroy(): void {
     if (this.chart) {
       this.chart.destroy();
     }
-  
   }
 
-  loadAssessments(id: number): void {
-    const url = `${this.server.serverUrl}user/${id}/scoring-history`;
-    this.http.get<{ item: any[] }>(url).subscribe(response => {
-      this.assessments = response.item;
-      this.prepareChartData();
+  loadPerformanceData(pf:number): void {
+    console.log('performanceeeee',this.performanceData);
+    
+    const url = `${this.server.serverUrl}performances/get-by-user/${pf}`;
+    this.http.get<{ item: any[]}>(url).subscribe(response => {
       
+      this.performanceData = response.item;
+      this.prepareChartData();
     });
   }
 
   prepareChartData(): void {
-    const attributeData = new Map<string, { dates: string[], scores: number[] }>();
+    // Prepare chart labels (x-axis) and data (y-axis)
+    const labels: string[] = [];
+    const performanceMetrics: number[] = [];
 
-    this.assessments.forEach(assessment => {
-      const assessmentDate = `${assessment.assessmentDate[0]}-${assessment.assessmentDate[1]}-${assessment.assessmentDate[2]}`;
-      
-      assessment.assessmentStatuses.forEach(status => {
-        if (!attributeData.has(status.potentialAttributeName)) {
-          attributeData.set(status.potentialAttributeName, { dates: [], scores: [] });
-        }
+    this.performanceData.forEach(performance => {
+      const year = performance.year.value;
+      const quarter = performance.quarter;
+      const metric = performance.performanceMetric;
 
-        const data = attributeData.get(status.potentialAttributeName);
-        data.dates.push(assessmentDate);
-        data.scores.push(status.userScore);
-      });
+      labels.push(`${year} - Q${quarter}`);
+      performanceMetrics.push(metric);
     });
 
-    this.lineChartData.labels = Array.from(attributeData.values())[0]?.dates || [];
-
-    this.lineChartData.datasets = Array.from(attributeData.entries()).map(([attributeName, data], index) => {
-      return {
-        data: data.scores,
-        label: attributeName,
+    // Update line chart data
+    this.lineChartData.labels = labels;
+    this.lineChartData.datasets = [
+      {
+        data: performanceMetrics,
+        label: 'Performance Metric',
         fill: false,
-        borderColor: `hsl(${index * 70}, 70%, 50%)`,
-        backgroundColor: `hsl(${index * 70}, 70%, 50%)`,
+        borderColor: 'blue',
+        backgroundColor: 'blue',
         tension: 0.5
-      };
-    });
+      }
+    ];
 
     this.createLineChart();
   }
-
- 
 
   createLineChart(): void {
     if (this.chart) {
       this.chart.destroy();
     }
 
-    this.chart = new Chart("AssessmentLineChart", {
+    this.chart = new Chart("PerformanceLineChart", {
       type: 'line',
       data: this.lineChartData,
       options: this.lineChartOptions
@@ -144,7 +140,6 @@ export class AssessmentLineGraphComponent implements AfterViewInit, OnDestroy {
     }, 100);
   }
 
-
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     clearTimeout(this.resizeTimeout);
@@ -153,7 +148,7 @@ export class AssessmentLineGraphComponent implements AfterViewInit, OnDestroy {
         this.chart.resize();
         this.chart.update(); // Ensure the chart size is updated correctly
       }
-   
     }, 200); // Debounce resize by 200ms
   }
 }
+

@@ -22,7 +22,7 @@ export class HttpServiceService {
 
 
   // serverUrl: string = 'http://192.168.89.11:8080';
-  // serverUrl: string = 'http://192.168.89.11:8080';
+  // serverUrl: string = 'http://192.168.89.93:8080/v1/api/';
 
   // serverUrl
   serverUrl: string = 'http://localhost:8080/v1/api/';
@@ -372,6 +372,13 @@ uploadPerformance(formData:any):Observable<any>{
 getPerformance(managerId):Observable<any>{
   // http://192.168.88.241:8080/v1/api/performances/employees/1
   const url = `${this.serverUrl}performances/employees/${managerId}`
+  return this.http.get<any>(url)
+}
+
+getPerformances(pf):Observable<any>{
+  // http://localhost:8080/v1/api/performances/get-by-user/7
+
+  const url =`${this.serverUrl}performances/get-by-user/${pf}`
   return this.http.get<any>(url)
 }
 }
