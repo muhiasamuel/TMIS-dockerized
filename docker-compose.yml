@@ -1,4 +1,4 @@
-version: '3.8'
+#version: '3.8'
 
 services:
   tmisapp:
@@ -10,7 +10,7 @@ services:
     ports:
       - "80:80"
     networks:
-      - host  # Changed network mode to host
+      - internalnet  # Changed network mode to host
     deploy:
       resources:
         limits:
@@ -49,7 +49,7 @@ services:
     depends_on:
       - mysql
     networks:
-      - host  # Changed network mode to host
+      - internalnet  # Changed network mode to host
     deploy:
       resources:
         limits:
@@ -80,7 +80,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - host  # Changed network mode to host
+      - internalnet  # Changed network mode to host
     deploy:
       resources:
         limits:
