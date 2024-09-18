@@ -13,6 +13,7 @@ import { ViewDialogComponent } from '../asess-my-team/components/view-dialog/vie
 import { EditCriticalRoleComponent } from './edit-critical-role/edit-critical-role.component';
 import { AddStrategiesComponent } from './add-strategies/add-strategies.component';
 import { Router } from '@angular/router';
+import { Observable, tap, forkJoin } from 'rxjs';
 
 export interface UserData {
   roleName:string
@@ -147,116 +148,112 @@ dataSource: MatTableDataSource<UserData>;
     )
     }
 //check roles for succession
-getRolesSuccessionStatus(){
-  this.http.checkRolesSuccessionStatus().subscribe(
-    ((res) => {
-      this.succeededRoles = res.item
-      console.log("dsfdagfahg", res.item);
-      
+getRolesSuccessionStatus(): Observable<any> {
+  return this.http.checkRolesSuccessionStatus().pipe(
+    tap((res) => {
+      this.succeededRoles = res.item;
+      console.log("Roles fetched:", res.item);
     })
-  )
+  );
 }
 
-  //get manager added critical roles
-  getManagerCriticalRoles() {
-    // Call the first method to get roles succession status
-    this.getRolesSuccessionStatus();
-  
-    // Get manager's critical roles
-    this.http.getCriticalRoles(this.authUser.user.userId).subscribe(
-      (response) => {
-        console.log(response);
-  
-        // Ensure response.item is defined and an array before proceeding
-        if (!response || !response.item || !Array.isArray(response.item)) {
-          console.error('Response item is not valid:', response);
-          this.snack.open('No roles found', 'Close', { duration: 3600 });
-          return;
-        }
-  
-        // Sort the response items by criticalRoleId
-        const sortedRoles = response.item.sort((a, b) => b.criticalRoleId - a.criticalRoleId);
-  
-        let critical: any[] = [];
-        let medium: any[] = [];
-        let low: any[] = [];
-        let items: any[] = [];
-  
-        // Create a map of roleId and its data (successionStatus and planId)
-        const roleSuccessionMap = new Map<number, {successionStatus: string, planId: number}>();
-        if (this.succeededRoles) {
-          this.succeededRoles.forEach((role: any) => {
-            roleSuccessionMap.set(role.roleId, {successionStatus: role.successionStatus, planId: role.planId});
-          });
-        } else {
-          console.error('succeededRoles is not defined or empty');
-        }
-  
-        // Iterate through sorted critical roles and match with the roleSuccessionMap
-        sortedRoles.forEach((element) => {
-          let roleData = roleSuccessionMap.get(element.criticalRoleId);
-          let successionStatus = roleData ? roleData.successionStatus : 'not mapped';
-          let planId = roleData ? roleData.planId : null;
-  
-          if (element.averageRating >= 3.5) {
-            element = {
-              ...element,
-              levelClassification: 'critical',
-              successionStatus: successionStatus,
-              planId: planId
-            };
-            critical.push(element);
-          } else if (element.averageRating >= 2.5 && element.averageRating < 3.5) {
-            element = {
-              ...element,
-              levelClassification: 'medium',
-              successionStatus: successionStatus,
-              planId: planId
-            };
-            medium.push(element);
-          } else {
-            element = {
-              ...element,
-              levelClassification: 'low',
-              successionStatus: successionStatus,
-              planId: planId
-            };
-            low.push(element);
-          }
-  
-          items.push(element);
-        });
-  
-        // Update class properties with the new data
-        this.criticalLevel = critical;
-        this.mediumCritical = medium;
-        this.LowCritical = low;
-        this.userData = items;
-  
-        // Check if critical is non-empty before setting dataSource
-        if (critical.length > 0) {
-          this.dataSource = new MatTableDataSource(critical);
-        } else {
-          this.dataSource = new MatTableDataSource([]);
-          console.warn('No critical roles found');
-        }
-  
-        console.log('Processed Items:', items);
-      },
-      (error) => {
-        this.snack.open('An error occurred while getting critical skills', 'Close', { duration: 3600 });
-      },
-      () => {
-        // Ensure dataSource is not undefined before setting paginator and sort
-        if (this.dataSource) {
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-        } else {
-          console.error('DataSource is undefined, unable to set paginator and sort');
-        }
+// Get manager added critical roles
+getManagerCriticalRoles() {
+  // Use forkJoin to wait until both observables complete
+  forkJoin([
+    this.getRolesSuccessionStatus(),
+    this.http.getCriticalRoles(this.authUser.user.userId)
+  ]).subscribe(
+    ([rolesStatusResponse, criticalRolesResponse]) => {
+      // Ensure criticalRolesResponse.item is defined and an array before proceeding
+      if (!criticalRolesResponse || !criticalRolesResponse.item || !Array.isArray(criticalRolesResponse.item)) {
+        console.error('Critical roles response is not valid:', criticalRolesResponse);
+        this.snack.open('No roles found', 'Close', { duration: 3600 });
+        return;
       }
-    );
-  }
+
+      const sortedRoles = criticalRolesResponse.item.sort((a, b) => b.criticalRoleId - a.criticalRoleId);
+
+      let critical: any[] = [];
+      let medium: any[] = [];
+      let low: any[] = [];
+      let items: any[] = [];
+
+      // Create a map of roleId and its data (successionStatus and planId)
+      const roleSuccessionMap = new Map<number, { successionStatus: string, planId: number }>();
+      if (this.succeededRoles) {
+        this.succeededRoles.forEach((role: any) => {
+          roleSuccessionMap.set(role.roleId, { successionStatus: role.successionStatus, planId: role.planId });
+        });
+      } else {
+        console.error('succeededRoles is not defined or empty');
+      }
+
+      // Iterate through sorted critical roles and match with the roleSuccessionMap
+      sortedRoles.forEach((element) => {
+        let roleData = roleSuccessionMap.get(element.criticalRoleId);
+        let successionStatus = roleData ? roleData.successionStatus : 'not mapped';
+        let planId = roleData ? roleData.planId : null;
+
+        if (element.averageRating >= 3.5) {
+          element = {
+            ...element,
+            levelClassification: 'critical',
+            successionStatus: successionStatus,
+            planId: planId
+          };
+          critical.push(element);
+        } else if (element.averageRating >= 2.5 && element.averageRating < 3.5) {
+          element = {
+            ...element,
+            levelClassification: 'medium',
+            successionStatus: successionStatus,
+            planId: planId
+          };
+          medium.push(element);
+        } else {
+          element = {
+            ...element,
+            levelClassification: 'low',
+            successionStatus: successionStatus,
+            planId: planId
+          };
+          low.push(element);
+        }
+
+        items.push(element);
+      });
+
+      // Update class properties with the new data
+      this.criticalLevel = critical;
+      this.mediumCritical = medium;
+      this.LowCritical = low;
+      this.userData = items;
+
+      // Check if critical is non-empty before setting dataSource
+      if (critical.length > 0) {
+        this.dataSource = new MatTableDataSource(critical);
+      } else {
+        this.dataSource = new MatTableDataSource([]);
+        console.warn('No critical roles found');
+      }
+
+      console.log('Processed Items:', items);
+    },
+    (error) => {
+      this.snack.open('An error occurred while getting critical skills', 'Close', { duration: 3600 });
+    },
+    () => {
+      // Ensure dataSource is not undefined before setting paginator and sort
+      if (this.dataSource) {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      } else {
+        console.error('DataSource is undefined, unable to set paginator and sort');
+      }
+    }
+  );
+}
   
   
   
