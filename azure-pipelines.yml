@@ -1,5 +1,5 @@
 trigger:
-- main
+- sam
 
 resources:
   repositories:
@@ -15,7 +15,7 @@ variables:
   springbootappImageRepository: 'springbootapp'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'talentsysddef-auth'
-  vmImageName: Default
+  vmImageName: Talent
   k8sNamespaceForPR: 'review-app-$(System.PullRequest.PullRequestId)'
 
 stages:
