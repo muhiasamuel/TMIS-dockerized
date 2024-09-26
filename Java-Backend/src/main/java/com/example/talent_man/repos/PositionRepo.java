@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PositionRepo extends JpaRepository<Position, Integer> {
+
+    Position findByPositionName(String positionName);
+
 }

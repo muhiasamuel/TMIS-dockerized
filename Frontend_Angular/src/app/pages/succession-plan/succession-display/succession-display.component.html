@@ -1,329 +1,110 @@
 <div class="mat-elevation-z8">
   <!-- Filter Input -->
-  <mat-form-field appearance="outline">
+  <mat-form-field appearance="outline" class="filter-input">
     <mat-label>Filter</mat-label>
     <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Department, Role Holder">
   </mat-form-field>
+  
 
   <!-- Table -->
-  <!-- Table -->
-<!-- Table -->
-<table mat-table [dataSource]="dataSource" matSort class="custom-table">
+  <table mat-table [dataSource]="dataSource" matSort class="custom-table">
 
-  <!-- Department Column -->
-  <ng-container matColumnDef="departmentName">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Department </th>
-    <td mat-cell *matCellDef="let plan">
-      <ng-container *ngIf="!plan.editing">
+    <!-- Department Column -->
+    <ng-container matColumnDef="departmentName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Department </th>
+      <td mat-cell *matCellDef="let plan">
         {{ plan.departmentName }}
-      </ng-container>
-      <ng-container *ngIf="plan.editing">
-        <input [(ngModel)]="plan.departmentName" />
-      </ng-container>
-    </td>
-  </ng-container>
+      </td>
+    </ng-container>
 
-  <!-- Succession Driver Column -->
-  <ng-container matColumnDef="driverName">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Succession Driver </th>
-    <td mat-cell *matCellDef="let plan">
-      <ng-container *ngIf="!plan.editing">
+    <!-- Succession Driver Column -->
+    <ng-container matColumnDef="driverName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Succession Driver </th>
+      <td mat-cell *matCellDef="let plan">
         {{ plan.driverName }}
-      </ng-container>
-      <ng-container *ngIf="plan.editing">
-        <input [(ngModel)]="plan.driverName" />
-      </ng-container>
-    </td>
-  </ng-container>
+      </td>
+    </ng-container>
 
-  <!-- Key Role Column -->
-  <ng-container matColumnDef="positionName">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Key Role </th>
-    <td mat-cell *matCellDef="let plan">
-      <ng-container *ngIf="!plan.editing">
+    <!-- Key Role Column -->
+    <ng-container matColumnDef="positionName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Key Role </th>
+      <td mat-cell *matCellDef="let plan">
         {{ plan.positionName }}
-      </ng-container>
-      <ng-container *ngIf="plan.editing">
-        <input [(ngModel)]="plan.positionName" />
-      </ng-container>
-    </td>
-  </ng-container>
+      </td>
+    </ng-container>
 
-  <!-- Current Role Holder Column -->
-  <ng-container matColumnDef="currentRoleHolderName">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Current Role Holder </th>
-    <td mat-cell *matCellDef="let plan">
-      <ng-container *ngIf="!plan.editing">
+    <!-- Current Role Holder Column -->
+    <ng-container matColumnDef="currentRoleHolderName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Current Role Holder </th>
+      <td mat-cell *matCellDef="let plan">
         {{ plan.currentRoleHolderName }}
-      </ng-container>
-      <ng-container *ngIf="plan.editing">
-        <input [(ngModel)]="plan.currentRoleHolderName" />
-      </ng-container>
-    </td>
-  </ng-container>
+      </td>
+    </ng-container>
 
-  <!-- Retention Risk Rating Column -->
-  <ng-container matColumnDef="riskRating">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Retention Risk Rating </th>
-    <td mat-cell *matCellDef="let plan" [ngClass]="getRiskRatingClass(plan.riskRating)">
-      <ng-container *ngIf="!plan.editing">
+    <!-- Retention Risk Rating Column -->
+    <ng-container matColumnDef="riskRating">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Retention Risk Rating </th>
+      <td mat-cell *matCellDef="let plan" [ngClass]="getRiskRatingClass(plan.riskRating)">
         {{ plan.riskRating }}
-      </ng-container>
-      <ng-container *ngIf="plan.editing">
-        <input [(ngModel)]="plan.riskRating" />
-      </ng-container>
-    </td>
-  </ng-container>
-
-  <!-- Ready Now Column -->
-  <ng-container matColumnDef="readyNow">
-    <th mat-header-cell *matHeaderCellDef> Ready Now </th>
-    <td mat-cell *matCellDef="let plan">
-      <ng-container *ngIf="!plan.editing">
-        <ng-container *ngFor="let user of plan.readyUsers">
-          <div *ngIf="user.readinessLevel === 'Now'">
-            {{ user.readyUserName }} - {{ user.readinessLevel }}
-          </div>
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf="plan.editing">
-        <ng-container *ngFor="let user of plan.readyUsers">
-          <ng-container *ngIf="user.readinessLevel === 'Now'">
-            <input [(ngModel)]="user.readyUserName" />
-          </ng-container>
-        </ng-container>
-      </ng-container>
-    </td>
-  </ng-container>
-
-  <!-- Ready in 1-2 Years Column -->
-  <ng-container matColumnDef="readyIn1To2Years">
-    <th mat-header-cell *matHeaderCellDef> Ready in 1-2 Years </th>
-    <td mat-cell *matCellDef="let plan">
-      <ng-container *ngIf="!plan.editing">
-        <ng-container *ngFor="let user of plan.readyUsers">
-          <div *ngIf="user.readinessLevel === '1-2 Years'">
-            {{ user.readyUserName }} - {{ user.readinessLevel }}
-          </div>
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf="plan.editing">
-        <ng-container *ngFor="let user of plan.readyUsers">
-          <ng-container *ngIf="user.readinessLevel === '1-2 Years'">
-            <input [(ngModel)]="user.readyUserName" />
-          </ng-container>
-        </ng-container>
-      </ng-container>
-    </td>
-  </ng-container>
-
-  <!-- Ready in More than 2 Years Column -->
-  <ng-container matColumnDef="readyInMoreThan2Years">
-    <th mat-header-cell *matHeaderCellDef> Ready in More than 2 Years </th>
-    <td mat-cell *matCellDef="let plan">
-      <ng-container *ngIf="!plan.editing">
-        <ng-container *ngFor="let user of plan.readyUsers">
-          <div *ngIf="user.readinessLevel === 'More than 2 Years'">
-            {{ user.readyUserName }} - {{ user.readinessLevel }}
-          </div>
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf="plan.editing">
-        <ng-container *ngFor="let user of plan.readyUsers">
-          <ng-container *ngIf="user.readinessLevel === 'More than 2 Years'">
-            <input [(ngModel)]="user.readyUserName" />
-          </ng-container>
-        </ng-container>
-      </ng-container>
-    </td>
-  </ng-container>
-
-  <!-- External Successor Column -->
-  <ng-container matColumnDef="externalSuccessor">
-    <th mat-header-cell *matHeaderCellDef> External Successor </th>
-    <td mat-cell *matCellDef="let plan">
-      <ng-container *ngIf="!plan.editing">
-        <ng-container *ngFor="let successor of plan.externalSuccessors">
-          <div>
-            {{ successor.externalSuccessorName }} - {{ successor.externalSuccessorPosition }} - {{ successor.externalSuccessorCurrentComp }}
-          </div>
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf="plan.editing">
-        <ng-container *ngFor="let successor of plan.externalSuccessors">
-          <div>
-            <input [(ngModel)]="successor.externalSuccessorName" />
-            <input [(ngModel)]="successor.externalSuccessorPosition" />
-            <input [(ngModel)]="successor.externalSuccessorCurrentComp" />
-          </div>
-        </ng-container>
-      </ng-container>
-    </td>
-  </ng-container>
-
-  <!-- Succession Heat Map Column -->
-<!-- Succession Heat Map Column -->
-<ng-container matColumnDef="successionHeatMap">
-  <th mat-header-cell *matHeaderCellDef> Succession Heat Map </th>
-  <td mat-cell *matCellDef="let plan" [ngClass]="getHeatMapClass(plan.heatMap)">
-    <ng-container *ngIf="!plan.editing">
-      {{ plan.heatMap }}
+      </td>
     </ng-container>
-    <ng-container *ngIf="plan.editing">
-      <input [(ngModel)]="plan.heatMap" />
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let plan">
+        <button mat-button class="action-button" (click)="viewRow(plan)">View</button>
+        <button mat-button class="action-button" (click)="editRow(plan)">Edit</button>
+      </td>
     </ng-container>
-  </td>
-</ng-container>
 
-
-  <!-- Key Successor Development Need Column -->
-  <ng-container matColumnDef="keySuccessorDevelopmentNeed">
-    <th mat-header-cell *matHeaderCellDef> Key Successor Development Need </th>
-    <td mat-cell *matCellDef="let plan">
-      <ng-container *ngIf="!plan.editing">
-        <ng-container *ngFor="let user of plan.readyUsers">
-          <div *ngFor="let need of user.developmentNeeds">
-            {{ need.developmentNeedType }} - {{ need.developmentNeedDescription }}
-          </div>
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf="plan.editing">
-        <ng-container *ngFor="let user of plan.readyUsers">
-          <ng-container *ngFor="let need of user.developmentNeeds">
-            <input [(ngModel)]="need.developmentNeedType" />
-            <input [(ngModel)]="need.developmentNeedDescription" />
-          </ng-container>
-        </ng-container>
-      </ng-container>
-    </td>
-  </ng-container>
-
-  <!-- Intervention Type Column -->
-  <ng-container matColumnDef="interventionType">
-    <th mat-header-cell *matHeaderCellDef> Intervention Type </th>
-    <td mat-cell *matCellDef="let plan">
-      <ng-container *ngIf="!plan.editing">
-        <ng-container *ngFor="let user of plan.readyUsers">
-          <div *ngFor="let intervention of user.interventions">
-            {{ intervention.interventionType }} - {{ intervention.interventionDescription }}
-          </div>
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf="plan.editing">
-        <ng-container *ngFor="let user of plan.readyUsers">
-          <ng-container *ngFor="let intervention of user.interventions">
-            <input [(ngModel)]="intervention.interventionType" />
-            <input [(ngModel)]="intervention.interventionDescription" />
-          </ng-container>
-        </ng-container>
-      </ng-container>
-    </td>
-  </ng-container>
-
-  <!-- Actions Column -->
-  <ng-container matColumnDef="actions">
-    <th mat-header-cell *matHeaderCellDef> Actions </th>
-    <td mat-cell *matCellDef="let plan">
-      <ng-container *ngIf="!plan.editing">
-        <button mat-button (click)="editRow(plan)">Edit</button>
-      </ng-container>
-      <ng-container *ngIf="plan.editing">
-        <button mat-button (click)="saveRow(plan)">Save</button>
-        <button mat-button (click)="cancelEdit(plan)">Cancel</button>
-      </ng-container>
-    </td>
-  </ng-container>
-
-  <!-- Header and Row Definitions -->
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
-
+    <!-- Header and Row Definitions -->
+    <tr mat-header-row *matHeaderRowDef="['departmentName', 'driverName', 'positionName', 'currentRoleHolderName', 'riskRating', 'actions']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['departmentName', 'driverName', 'positionName', 'currentRoleHolderName', 'riskRating', 'actions'];"></tr>
+  </table>
 
   <!-- Paginator -->
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 
   <!-- Key Section -->
-<div class="key-section">
-  <h4>Key Table</h4>
-  <table class="key-table">
-    <thead>
-      <tr>
-        <th>Key</th>
-        <th>Succession RAG Status</th>
-        <th>Talent Ratings</th>
-        <th>Current State Assessment - August 2023</th>
-        <th>Target State - August 2024</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Example rows -->
-      <tr>
-        <td class="red">Red - No RN; No R1-2</td>
-        <td>H1</td>
-        <td>Ready Now (RN)</td>
-        <td>20%</td>
-        <td>Ready Now</td>
-        <td>80%</td>
-      </tr>
-      <tr>
-        <td class="amber">Amber - No RN, R1-2 Known</td>
-        <td>H2</td>
-        <td>Ready in 1 - 2 Years</td>
-        <td>80%</td>
-        <td>Ready in 1 - 2 Years</td>
-        <td>100%</td>
-      </tr>
-      <tr>
-        <td class="green">Green - RN Known</td>
-        <td>H3</td>
-        <td>Ready in >2 Years</td>
-        <td>40%</td>
-        <td>Ready in >2 Years</td>
-        <td>100%</td>
-      </tr>
-      <tr>
-        <td>Retention Risk Rating</td>
-        <td>C1</td>
-        <td>Ready External</td>
-        <td>Ready External</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>High - H</td>
-        <td>C2</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>Medium - M</td>
-        <td>C3</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>Low - L</td>
-        <td>T1</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td>T2</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+  <div class="key-section">
+    <h4>Key Table</h4>
+    <table class="key-table">
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Succession RAG Status</th>
+          <th>Talent Ratings</th>
+          <th>Current State Assessment - August 2023</th>
+          <th>Target State - August 2024</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="red">Red - No RN; No R1-2</td>
+          <td>H1</td>
+          <td>Ready Now (RN)</td>
+          <td>20%</td>
+          <td>Ready Now</td>
+          <td>80%</td>
+        </tr>
+        <tr>
+          <td class="amber">Amber - No RN, R1-2 Known</td>
+          <td>H2</td>
+          <td>Ready in 1 - 2 Years</td>
+          <td>80%</td>
+          <td>Ready in 1 - 2 Years</td>
+          <td>100%</td>
+        </tr>
+        <tr>
+          <td class="green">Green - RN Known</td>
+          <td>H3</td>
+          <td>Ready in More than 2 Years</td>
+          <td>50%</td>
+          <td>Ready in More than 2 Years</td>
+          <td>100%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

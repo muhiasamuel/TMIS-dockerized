@@ -2,3 +2,12 @@
   display: block !important;
 }
 
+.navbar {
+  background-color: rgb(238, 239, 239) !important;
+  color: white !important;
+  position: absolute;
+  top: 0; /* Position it at the top of the viewport */
+   /* Align the left edge to the viewport */
+  right: 0; /* Align the right edge to the viewport */
+  z-index: 60;
+}

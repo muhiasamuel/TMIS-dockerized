@@ -10,21 +10,12 @@ import { HttpServiceService } from '../../../services/http-service.service';
   styleUrls: ['./succession-display.component.scss']
 })
 export class SuccessionDisplayComponent implements OnInit {
-  displayedColumns: string[] = [
-    'departmentName',
-    'driverName',
-    'positionName',
-    'currentRoleHolderName',
-    'riskRating',
-    'readyNow',
-    'readyIn1To2Years',
-    'readyInMoreThan2Years',
-    'externalSuccessor',
-    'successionHeatMap',
-    'keySuccessorDevelopmentNeed',
-    'interventionType',
-    'actions'
-  ];
+viewRow(_t74: any) {
+throw new Error('Method not implemented.');
+}
+
+displayedColumns: string[] = ['departmentName', 'driverName', 'positionName', 'currentRoleHolderName', 'riskRating', 'actions'];
+
 
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;

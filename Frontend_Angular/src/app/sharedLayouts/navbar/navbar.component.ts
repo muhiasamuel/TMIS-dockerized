@@ -99,6 +99,6 @@ export class NavbarComponent implements OnInit {
 
   onLogout() {
     this.router.navigate(['/'])
-    localStorage.removeItem('user')
+    localStorage.clear()
   }
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 export interface RouteInfo {
     path: string;
@@ -33,7 +34,7 @@ export const ROUTES_EMPLOYEE: RouteInfo[] = [
     { path: '/potential-attributes',     title: 'Assesements',         icon:'nc-paper',       class: 'text-dark' , userType: true},
 
     { path: '/assess-my-potential',         title: 'assess my Potential',             icon:'nc-diamond',    class: 'text-dark' , userType: true},
-    { path: '/user',          title: 'Profiles',      icon:'nc-single-02',  class: ''  , userType: true},
+    { path: '/profiles',          title: 'My Profile',      icon:'nc-single-02',  class: ''  , userType: true}, 
     // { path: '/mvps',          title:`MVP'S`,      icon:'nc-money-coins',  class: '' , userType: true },   
 ];
 
@@ -47,7 +48,7 @@ export class SidebarComponent implements OnInit {
     systemUser: any;
     public menuItems: RouteInfo[] = [];
     public isSidebarVisible: boolean = true; // Flag to toggle visibility of hidden sidebar content
-
+    constructor(private router:Router){}
     ngOnInit() {
         this.systemUser = JSON.parse(localStorage.getItem("user"));
 
@@ -56,6 +57,12 @@ export class SidebarComponent implements OnInit {
         } else {
             this.menuItems = ROUTES_EMPLOYEE.filter(menuItem => menuItem);
         }
+    }
+
+    logout(){
+        localStorage.clear()
+        this.router.navigate(['/'])
+
     }
 
     toggleSidebarVisibility() {

@@ -34,11 +34,13 @@ export class PerformanceLineGraphComponent {
           display: true,
           text: 'Performance Metric'
         },
-        beginAtZero: true,
+        min:2,
+        beginAtZero: false, // Not needed if you're explicitly setting the min value
         ticks: {
-          stepSize: 1
+          stepSize: 0.5,
         }
       }
+      
     },
     plugins: {
       tooltip: {

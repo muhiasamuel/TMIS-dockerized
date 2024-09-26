@@ -37,8 +37,10 @@ import { OtpVerificationComponent } from './authentication/otp-verification/otp-
 import { MyTeamsProfileComponent } from './pages/profiles/my-teams-profile/my-teams-profile.component';
 import { DepartmentComponent } from './pages/department/department.component';
 import { TalentComponent } from './pages/talent-mapping/talent/talent.component';
-import { canActivateChild } from './authGuard';
+
 import { ViewSinglePlanComponent } from './pages/succession-plan/view-single-plan/view-single-plan.component';
+import { AuthGuard } from './Guards/authGuard';
+import { PermissionGuard } from './Guards/permissionsGuard';
 
 
 const routes: Routes = [
@@ -51,8 +53,15 @@ const routes: Routes = [
    {
     path: '',
     component: AdminDashboardComponent,
+    canActivateChild: [AuthGuard], // Protect all child routes
     children: [
-      { path: 'dashboard',      component: DashboardComponent},
+      { path: 'dashboard', 
+        component: DashboardComponent,
+        canActivate: [PermissionGuard],
+        data: {
+          permissions: ['VIEW_OWN_PROFILE'] // Example permissions
+        }
+       },
       { path: 'assess-my-potential',      component:UserAssessmentComponent },
       { path: 'potential-attributes',      component: PotentialAttributesComponent },
 

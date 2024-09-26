@@ -237,7 +237,7 @@ SuccessionPlanRepository extends JpaRepository<SuccessionPlan, Integer> {
             "FROM " +
             "\t roles_assessment ra\n" +
             "JOIN " +
-            "\t succession_plan spl ON ra.critical_role_id = spl.position_id\n" +
+            "\t succession_plan spl ON ra.role_id = spl.position_id\n" +
             "GROUP BY " +
             "\t ra.critical_role_id", nativeQuery = true)
     List<CriticalRolesMapping> getRolesMapping();

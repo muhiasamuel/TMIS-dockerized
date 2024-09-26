@@ -18,6 +18,9 @@ public class RolesAssessment {
     @Column(name="critical_role_id", columnDefinition = "INTEGER")
     private Long criticalRoleId;
 
+    @Column(name="role_id", columnDefinition = "INTEGER")
+    private int RoleId;
+
     @Column(name="role_name", columnDefinition = "VARCHAR(255)")
     private String roleName;
 
