@@ -1,10 +1,9 @@
 package com.example.talent_man.service_imp;
+import com.example.talent_man.dto.user.*;
 import com.example.talent_man.models.Department;
 import com.example.talent_man.models.user.UserDTO;
 import com.example.talent_man.repos.DepartmentRepo;
 import org.apache.poi.ss.usermodel.*;
-import com.example.talent_man.dto.user.AuthRequest;
-import com.example.talent_man.dto.user.UserRequestDto;
 import com.example.talent_man.models.Position;
 import com.example.talent_man.models.Role;
 import com.example.talent_man.models.user.Employee;
@@ -17,8 +16,6 @@ import com.example.talent_man.repos.user.ManagerRepo;
 import com.example.talent_man.repos.user.UserRepo;
 import com.example.talent_man.services.*;
 import com.example.talent_man.utils.ApiResponse;
-import com.example.talent_man.dto.user.AuthResponse;
-import com.example.talent_man.dto.user.OtpRequest;
 import com.example.talent_man.services.UserService;
 import com.example.talent_man.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -465,6 +462,35 @@ public class UserServiceImp implements UserService {
         }
 
         return password.toString();
+    }
+
+    @Override
+    public List<UserDetailsDto> getAllUserDetails() {
+        // Fetch the UserDetailsProjection list from the repository
+        List<UserRepo.UserDetailsProjection> projections = repo.getUserDetails();
+
+        // Map each projection to the UserDetailsDto
+        return projections.stream().map(this::mapToDto).collect(Collectors.toList());
+    }
+
+    // Method to map UserDetailsProjection to UserDetailsDto
+    private UserDetailsDto mapToDto(UserRepo.UserDetailsProjection projection) {
+        UserDetailsDto dto = new UserDetailsDto();
+        dto.setUserId(projection.getUserId());
+        dto.setPf(projection.getPf());
+        dto.setUserFullName(projection.getUserFullName());
+        dto.setUserEmail(projection.getUserEmail());
+        dto.setRoleName(projection.getRoleName());
+        dto.setIsEnabled(projection.getIsEnabled());
+        dto.setIsLocked(projection.getIsLocked());
+        dto.setUserType(projection.getUserType());
+        dto.setManagerName(projection.getManagerName());
+        dto.setDepartmentName(projection.getDepartmentName());
+        dto.setDepartmentId(projection.getDepartmentId());
+        dto.setPositionName(projection.getPositionName());
+        dto.setPositionId(projection.getPositionId());
+
+        return dto;
     }
 
 }

@@ -134,9 +134,14 @@
                 </div>
             </mat-tab>
             <mat-tab label="MVPs Assessment Report">
-                <button (click)="downloadPdf()"
-                    class="btn btn-md btn-primary text-white d-flex align-items-center justify-content-center ">PDF
-                    <mat-icon>download</mat-icon></button>
+                <div class="downloads d-flex align-items-center">
+                    <button  mat-raised-button (click)="downloadPdf()"
+                    class="btn btn-primary">PDF
+                </button>
+                <button mat-raised-button (click)="downloadExcel()" class="btn btn-primary"> Excel</button>
+                </div>
+
+
 
                 <div class="example-large-box mat-elevation-z4" #pdf>
                     <div class="table">

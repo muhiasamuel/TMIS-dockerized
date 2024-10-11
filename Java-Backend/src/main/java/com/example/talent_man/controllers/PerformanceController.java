@@ -235,8 +235,11 @@ public class PerformanceController {
             if (item.getUserId() == null) {
                 item.setUserId(String.valueOf(userId));
                 // Set other properties as needed
+                item.setPf_No(dto.getPf_No());
                 item.setUsername(dto.getUsername());
                 item.setManagerId(dto.getManagerId());
+                item.setDepartmentName(dto.getDepartmentName());
+                item.setPositionName(dto.getPositionName());
                 // Set other properties based on the DTO
                 item.setUserFullName(dto.getUserFullName());
                 item.setAveragePerformance(dto.getAveragePerformance());
@@ -296,6 +299,9 @@ public class PerformanceController {
             // Set properties from UserPerformanceDTO to Item
             item.setUserId(String.valueOf(dto.getUserId()));
             item.setUsername(dto.getUsername());
+            item.setPf_No(dto.getPf_No());
+            item.setDepartmentName(dto.getDepartmentName());
+            item.setPositionName(dto.getPositionName());
             item.setManagerId(dto.getManagerId());
             item.setAveragePerformance(dto.getAveragePerformance());
             item.setAveragePotential(dto.getAveragePotential());

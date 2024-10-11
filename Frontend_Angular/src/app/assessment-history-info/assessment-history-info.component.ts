@@ -30,7 +30,7 @@ export class AssessmentHistoryInfoComponent implements OnInit {
   isDisabled = true;
   alldata:Assessment[] = [];
   currentPage: number = 1;
-  itemsPerPage: number = 2;
+  itemsPerPage: number = 4;
   totalPages: number = 1;
   assessments: Assessment[] = [];
   systemUser:any;

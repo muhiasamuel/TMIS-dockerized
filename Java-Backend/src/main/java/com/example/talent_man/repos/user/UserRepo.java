@@ -45,6 +45,47 @@ public interface UserRepo extends JpaRepository<User, Integer> {
     )
     UserWithManagerDetails getUserWithManagerDetails(@Param("employeeId") int employeeId);
 
+
+    @Query(value = "SELECT " +
+            "u.user_id AS userId, " +
+            "u.pf_no AS Pf, " +
+            "u.user_full_name AS userFullName, " +
+            "u.email AS userEmail, " +
+            "r.role_name AS roleName, " +
+            "u.enabled AS isEnabled, " +
+            "u.locked AS isLocked, " +
+            "u.user_type AS userType, " +
+            "um.user_full_name AS managerName, " +
+            "cd.department_name AS departmentName, " +
+            "cd.department_id AS departmentId, " +
+            "dp.position_name AS positionName, " +
+            "dp.position_id AS positionId " +
+            "FROM users u " +
+            "LEFT JOIN users um ON um.user_id = u.manager_id " +
+            "LEFT JOIN company_departments cd ON u.department_id = cd.department_id " +
+            "LEFT JOIN department_positions dp ON u.position_id = dp.position_id " +
+            "LEFT JOIN roles r ON u.role_id = r.id " +
+            "GROUP BY u.user_id",
+            nativeQuery = true)
+    List<UserDetailsProjection> getUserDetails();
+
+
+    public interface UserDetailsProjection {
+        Long getUserId();
+        String getPf();
+        String getUserFullName();
+        String getUserEmail();
+        String getRoleName();
+        Boolean getIsEnabled();
+        Boolean getIsLocked();
+        String getUserType();
+        String getManagerName();
+        String getDepartmentName();
+        Long getDepartmentId();
+        String getPositionName();
+        Long getPositionId();
+    }
+
     @Query(value = "select * from users where position_id = :positionId", nativeQuery = true)
     List<User> getUserByPosition(@Param("positionId") int positionId);
     public interface UserWithManagerDetails {

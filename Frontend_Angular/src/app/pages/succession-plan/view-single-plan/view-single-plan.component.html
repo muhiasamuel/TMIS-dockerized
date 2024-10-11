@@ -2,8 +2,8 @@
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item"><a href="/succession-plans">Succession Plans</a></li>
+        <li class="breadcrumb-item"><a routerLink="/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a routerLink="/succession-plan">Succession Plans</a></li>
         <li class="breadcrumb-item active" aria-current="page">Plan Details</li>
       </ol>
     </nav>
@@ -217,4 +217,104 @@
       </div>
     </div>
   </div>
+  <div class="container-fluid">
+    <div class="stages">
+      <!-- Stage 1 -->
+      <div class="stage" [ngClass]="{'completed': currentStage > 1, 'active': currentStage === 1}">
+        <div class="stage-icon">1</div>
+        <div class="card">
+          <div class="card-content">
+            <div class="stage-title">Initial Assessment</div>
+            <div class="stage-actions">
+              <!-- If stage is complete, show checkmark, otherwise show "Update" button -->
+              <ng-container *ngIf="currentStage > 1; else showUpdate1">
+                <mat-icon class="completed-icon">check_circle</mat-icon>
+              </ng-container>
+              <ng-template #showUpdate1>
+                <button class="stage-btn" (click)="onUpdateStage(1)">Update</button>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="arrow" *ngIf="currentStage !== 5">→</div>
+  
+      <!-- Stage 2 -->
+      <div class="stage" [ngClass]="{'completed': currentStage > 2, 'active': currentStage === 2}">
+        <div class="stage-icon">2</div>
+        <div class="card">
+          <div class="card-content">
+            <div class="stage-title">Development Plan</div>
+            <div class="stage-actions">
+              <ng-container *ngIf="currentStage > 2; else showUpdate2">
+                <mat-icon class="completed-icon">check_circle</mat-icon>
+              </ng-container>
+              <ng-template #showUpdate2>
+                <button class="stage-btn" (click)="onUpdateStage(2)">Update</button>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="arrow" *ngIf="currentStage !== 5">→</div>
+  
+      <!-- Stage 3 -->
+      <div class="stage" [ngClass]="{'completed': currentStage > 3, 'active': currentStage === 3}">
+        <div class="stage-icon">3</div>
+        <div class="card">
+          <div class="card-content">
+            <div class="stage-title">Mentorship</div>
+            <div class="stage-actions">
+              <ng-container *ngIf="currentStage > 3; else showUpdate3">
+                <mat-icon class="completed-icon">check_circle</mat-icon>
+              </ng-container>
+              <ng-template #showUpdate3>
+                <button class="stage-btn" (click)="onUpdateStage(3)">Update</button>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="arrow" *ngIf="currentStage !== 5">→</div>
+  
+      <!-- Stage 4 -->
+      <div class="stage" [ngClass]="{'completed': currentStage > 4, 'active': currentStage === 4}">
+        <div class="stage-icon">4</div>
+        <div class="card">
+          <div class="card-content">
+            <div class="stage-title">Feedback & Review</div>
+            <div class="stage-actions">
+              <ng-container *ngIf="currentStage > 4; else showUpdate4">
+                <mat-icon class="completed-icon">check_circle</mat-icon>
+              </ng-container>
+              <ng-template #showUpdate4>
+                <button class="stage-btn" (click)="onUpdateStage(4)">Update</button>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="arrow" *ngIf="currentStage !== 5">→</div>
+  
+      <!-- Stage 5 -->
+      <div class="stage" [ngClass]="{'completed': currentStage > 5, 'active': currentStage === 5}">
+        <div class="stage-icon">5</div>
+        <div class="card">
+          <div class="card-content">
+            <div class="stage-title">Final Decision</div>
+            <div class="stage-actions">
+              <ng-container *ngIf="currentStage > 5; else showUpdate5">
+                <mat-icon class="completed-icon">check_circle</mat-icon>
+              </ng-container>
+              <ng-template #showUpdate5>
+                <button class="stage-btn" (click)="onUpdateStage(5)">Update</button>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
   

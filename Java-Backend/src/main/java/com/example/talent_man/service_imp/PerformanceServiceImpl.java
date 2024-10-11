@@ -336,6 +336,9 @@ public class PerformanceServiceImpl implements PerformanceService {
     private UserPerformanceDTO mapToDTO(PerformanceRepository.UserPerformanceData talentInterface) {
         UserPerformanceDTO dto = new UserPerformanceDTO();
         dto.setUserId(talentInterface.getUserId());
+        dto.setPf_No(talentInterface.getPf());
+        dto.setDepartmentName(talentInterface.getDepartmentName());
+        dto.setPositionName(talentInterface.getPositionName());
         dto.setUsername(talentInterface.getUsername());
         dto.setAveragePerformance(talentInterface.getAveragePerformance());
         dto.setUserAssessmentAvg(talentInterface.getUserAssessmentAvg());

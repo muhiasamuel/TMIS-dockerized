@@ -59,7 +59,7 @@ const routes: Routes = [
         component: DashboardComponent,
         canActivate: [PermissionGuard],
         data: {
-          permissions: ['VIEW_OWN_PROFILE'] // Example permissions
+          permissions: ['VIEW_ASSESSMENTS'] // Example permissions
         }
        },
       { path: 'assess-my-potential',      component:UserAssessmentComponent },

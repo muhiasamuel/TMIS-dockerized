@@ -5,6 +5,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { UserData } from '../skills-view/skills-view.component';
+import * as XLSX from 'xlsx';
+
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -17,6 +19,9 @@ import { catchError, forkJoin } from 'rxjs';
 
 
 interface Employee {
+  department: any;
+  position: any;
+  pfNo: any;
   empId: string;
   empName: string;
   attScores: AttScore[];
@@ -146,6 +151,9 @@ export class HIPOsComponent implements OnInit {
       const interventions = this.interventions.find(i => i.userId == user.userId)
       return {
         userId:user?.userId,
+        pfNo: user?.pf_No,
+        department: user?.departmentName,
+        position: user?.positionName,
         name: user?.userFullName,
         aspiration: user?.aspirationScore,
         judgement: user?.judgmentScore,
@@ -217,6 +225,43 @@ export class HIPOsComponent implements OnInit {
       pdf.save('HIPOs Assessment.pdf');
     });
   }
+
+  // downloading excel 
+  downloadExcel() {
+    if (!this.allHIPOsData || this.allHIPOsData.length === 0) {
+        console.error('No data available to export.');
+        return; // Exit the function if no data is available
+    }
+
+    const dataToExport = this.filteredHIPOsData.map((hipo: Employee) => ({
+        Name: hipo.name,
+        pfNo:hipo.pfNo,
+        Department:hipo.department,
+        position:hipo.position,
+        Aspiration: hipo.aspiration,
+        Judgement: hipo.judgement,
+        Drive: hipo.drive,
+        ChangeAgility: hipo.changeAgility,
+        PotentialAverage: hipo.potentialAverage,
+        PotentialRating: hipo.potentialRating,
+        TalentRating: hipo.talentRating,
+        NextPotentialRole: hipo.nextPotentialRole,
+        PerformanceRatings: hipo.performanceRating.map(pr => `${pr.performanceYear}: ${pr.performanceRating}`).join(', '),
+       Interventions: hipo?.interventions?.map(interv => `${interv.developmentInterventions} (${interv.howToAchieve})`).join('; ')
+    }));
+
+    // Create a new workbook
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'HIPOs Data');
+
+    // Generate file name
+    const fileName = 'HIPOs_Data.xlsx';
+
+    // Write workbook and save
+    XLSX.writeFile(workbook, fileName);
+}
+
   openDialog(id:number){
     const data = {
       "potentialNextRole": this.mappedSuccession?.get("potentialNextRole")?.value
@@ -288,4 +333,28 @@ export class HIPOsComponent implements OnInit {
     }
   }
 
+}
+interface Employee {
+  userId: string;
+  name: string;
+  aspiration: number;
+  judgement: number;
+  drive: number;
+  changeAgility: number;
+  potentialAverage: number;
+  potentialRating: string;
+  performanceRating: PerformanceRating[];
+  talentRating: string;
+  nextPotentialRole: string;
+  interventions: Intervention[];
+}
+
+interface PerformanceRating {
+  performanceRating: number;
+  performanceYear: number;
+}
+
+interface Intervention {
+  developmentInterventions: string;
+  howToAchieve: string;
 }

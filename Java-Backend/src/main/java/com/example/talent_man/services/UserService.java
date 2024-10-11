@@ -1,13 +1,10 @@
 package com.example.talent_man.services;
 
-import com.example.talent_man.dto.user.AuthRequest;
-import com.example.talent_man.dto.user.UserRequestDto;
+import com.example.talent_man.dto.user.*;
 import com.example.talent_man.models.user.Employee;
 import com.example.talent_man.models.user.Manager;
 import com.example.talent_man.models.user.User;
 
-import com.example.talent_man.dto.user.AuthResponse;
-import com.example.talent_man.dto.user.OtpRequest;
 import com.example.talent_man.models.user.UserDTO;
 import com.example.talent_man.repos.PerformanceRepository;
 import com.example.talent_man.repos.user.UserRepo;
@@ -38,6 +35,8 @@ public interface UserService {
     List<Integer> getManEmployees(int manId);
 
     User createEmployee(UserRequestDto userDto, int managerId);
+
+    List<UserDetailsDto> getAllUserDetails();
 
     User createTopManager(UserRequestDto userDto);
 

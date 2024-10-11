@@ -74,4 +74,106 @@
   mat-card-content ul {
     padding-left: 20px;
   }
+  .container {
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 1200px;
+  }
   
+  .stages {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .stage {
+    position: relative;
+    text-align: center;
+    flex-grow: 1;
+  }
+  
+  .stage .card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    position: relative;
+    min-width: 150px;
+    min-height: 120px;
+    z-index: 0;
+  }
+  
+  .stage .card:hover .stage-actions {
+    display: block;
+  }
+  
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .stage-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .stage-actions {
+    margin-top: 10px;
+  }
+  
+  .completed-icon {
+    color: #4caf50; /* Green color for completed stages */
+    font-size: 24px;
+  }
+  
+  .stage-btn {
+    background-color: #0078d4;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .stage-btn:hover {
+    background-color: #005fa3;
+  }
+  
+  
+  .stage-icon {
+    background-color: #e0e0e0;
+    color: #666;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: bold;
+    position: absolute;
+    top: -25px; /* Adjusted so that the icon is placed above the card */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10; /* Ensures the icon is above the card */
+  }
+  
+  .active .stage-icon {
+    background-color: #0078d4; /* Primary color */
+    color: white;
+  }
+  
+  .completed .stage-icon {
+    background-color: #4caf50; /* Completed stage color */
+    color: white;
+  }
+  
+  .arrow {
+    font-size: 24px;
+    margin: 0 10px;
+    color: #aaa;
+  }
+  mat-icon {
+    zoom: 1.5;
+  }

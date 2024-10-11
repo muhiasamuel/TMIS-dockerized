@@ -9,7 +9,8 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
   canActivate(): boolean {
     const systemUser = localStorage.getItem('user');
-    if (systemUser) {
+    const authUser = JSON.parse(systemUser)
+    if (authUser.authToken) {
       return true;
     } else {
       this.router.navigate(['/']);  // Redirect to login if not authenticated
