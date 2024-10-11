@@ -30,9 +30,9 @@ export class HttpServiceService {
   //  serverUrl: string = 'http://192.168.88.241:8080/v1/api/';
   //serverUrl: string = 'http://192.168.89.134:8080/v1/api/';
 
-  //serverUrl: string = 'http://192.168.90.38:8080/v1/api/';
+  serverUrl: string = 'http://172.16.10.233:8080/v1/api/';
 
-  serverUrl: string = environment.API_BASE_URL;
+  //serverUrl: string = environment.API_BASE_URL;
   //  serverUrl: string = 'http://192.168.2.21:8080';
 
 
@@ -375,7 +375,7 @@ getPerformance(managerId):Observable<any>{
   return this.http.get<any>(url)
 }
 
-getPerformances(pf):Observable<any>{
+getPerformances(pf: number):Observable<any>{
   // http://localhost:8080/v1/api/performances/get-by-user/7
 
   const url =`${this.serverUrl}performances/get-by-user/${pf}`
