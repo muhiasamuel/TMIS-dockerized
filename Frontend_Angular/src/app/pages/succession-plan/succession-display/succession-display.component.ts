@@ -3,6 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { HttpServiceService } from '../../../services/http-service.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-succession-display',
@@ -10,40 +11,41 @@ import { HttpServiceService } from '../../../services/http-service.service';
   styleUrls: ['./succession-display.component.scss']
 })
 export class SuccessionDisplayComponent implements OnInit {
-  displayedColumns: string[] = [
-    'departmentName',
-    'driverName',
-    'positionName',
-    'currentRoleHolderName',
-    'riskRating',
-    'readyNow',
-    'readyIn1To2Years',
-    'readyInMoreThan2Years',
-    'externalSuccessor',
-    'successionHeatMap',
-    'keySuccessorDevelopmentNeed',
-    'interventionType',
-    'actions'
-  ];
+
+
+displayedColumns: string[] = ['departmentName', 'driverName', 'positionName', 'currentRoleHolderName', 'riskRating', 'actions'];
+
 
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private service: HttpServiceService) { }
+  constructor(private service: HttpServiceService, private router:Router) { }
 
   ngOnInit(): void {
     this.loadSuccessionPlans();
   }
-
   loadSuccessionPlans(): void {
     this.service.getAllSuccessionPlans().subscribe(
       (data) => {
-        this.dataSource = new MatTableDataSource(data.item);
+        // Remove duplicate plans based on planId
+        const uniquePlans = data.item.reduce((accumulator, current) => {
+          if (!accumulator.some(plan => plan.planId === current.planId)) {
+            accumulator.push(current);
+          }
+          return accumulator;
+        }, []);
+  
+        // Log the unique plans for verification
+        console.log(uniquePlans);
+  
+        // Set the filtered unique plans to the data source
+        this.dataSource = new MatTableDataSource(uniquePlans);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
   }
+  
 
   // Apply filter to the table
   applyFilter(event: Event): void {
@@ -87,10 +89,14 @@ getHeatMapClass(heatMap: string | undefined): string {
 
   
 
-  editRow(row: any): void {
-    row.editing = true;
+  editRow(row: any) {
+   // row.editing = true;
+    this.router.navigate(['/view/plan'], { queryParams: { planId: row } });
   }
 
+  viewRow(row: any) {
+    this.router.navigate(['/view/plan'], { queryParams: { planId: row } });
+  }
   saveRow(row: any): void {
     row.editing = false;
     console.log(row);

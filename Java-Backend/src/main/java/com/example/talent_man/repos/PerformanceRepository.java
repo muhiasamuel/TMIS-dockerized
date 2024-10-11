@@ -23,9 +23,14 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
 
     @Query(value = "SELECT " +
             "    u.user_id AS userId, " +
+            "    u.pf_no AS Pf, " +
             "    u.username AS userName, " +
             "    u.user_full_name AS userFullName, " +
             "    u.manager_id AS managerId, " +
+
+            "    cd.department_name AS departmentName, " +
+            "    dp.position_name AS PositionName, " +
+
             "    u.role_id AS roleId, " +
             "    AVG(p.performance_metric) AS averagePerformance, " +
             "    c.choice_value AS choiceValue, " +
@@ -41,6 +46,10 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
             "    performance p ON u.user_id = p.user_id " +
             "LEFT JOIN " +
             "    user_question_answers uqa ON u.user_id = uqa.employee_id " +
+            "LEFT JOIN " +
+            "    company_departments cd ON u.department_id = cd.department_id " +
+            "LEFT JOIN " +
+            "    department_positions dp ON u.position_id = dp.position_id " +
             "LEFT JOIN " +
             "    choices c ON uqa.user_selected_choice_id = c.choice_id " +
             "LEFT JOIN " +
@@ -58,7 +67,10 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
 
     @Query( value = "SELECT " +
             "    p.user_id AS userId, " +
+            "    u.pf_no AS Pf, " +
             "    u.user_full_name AS userFullName, " +
+            "    cd.department_name AS departmentName, " +
+            "    dp.position_name AS PositionName, " +
             "    p.year AS performanceYear, " +
             "    AVG(p.performance_metric) AS performanceRating, " +
             "    lp.averagePerformanceLastThreeYears AS averagePerformanceLastThreeYears, " +
@@ -67,6 +79,10 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
             "    performance p " +
             "LEFT JOIN " +
             "    users u ON u.user_id = p.user_id " +
+            "LEFT JOIN " +
+            "    company_departments cd ON u.department_id = cd.department_id " +
+            "LEFT JOIN " +
+            "    department_positions dp ON u.position_id = dp.position_id " +
             "LEFT JOIN ( " +
             "    SELECT " +
             "        user_id, " +
@@ -90,6 +106,9 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
 
     @Query(value = "SELECT " +
             "    u.user_id AS userId, " +
+            "    u.pf_no AS Pf, " +
+            "    cd.department_name AS departmentName, " +
+            "    dp.position_name AS PositionName, " +
             "    u.username AS userName, " +
             "    u.user_full_name AS userFullName, " +
             "    u.manager_id AS managerId, " +
@@ -100,12 +119,15 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
             "    cm.choice_value AS manChoiceValue, " +
             "    AVG(cm.choice_value) AS manAssessmentAvg, " +
             "    a.assessment_name AS assessmentName, " +
-            "    pa.potential_attribute_name AS potentialAttributeName, " +
             "    p.year AS performanceYear " +
             "FROM " +
             "    users u " +
             "LEFT JOIN " +
             "    performance p ON u.user_id = p.user_id " +
+            "LEFT JOIN " +
+            "    company_departments cd ON u.department_id = cd.department_id " +
+            "LEFT JOIN " +
+            "    department_positions dp ON u.position_id = dp.position_id " +
             "LEFT JOIN " +
             "    user_question_answers uqa ON u.user_id = uqa.employee_id " +
             "LEFT JOIN " +
@@ -113,16 +135,16 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
             "LEFT JOIN " +
             "    choices cm ON uqa.manager_selected_choice_id = cm.choice_id " +
             "LEFT JOIN " +
-            "    assessments a ON uqa.assessment_id = a.assessment_id " +
-            "LEFT JOIN " +
-            "    potential_attributes pa ON a.potential_attribute_id = pa.potential_attribute_id " +
+            "    assessments a ON uqa.assessment_id = a.assessment_id "
 
-            "GROUP BY " +
-            "    pa.potential_attribute_id, pa.potential_attribute_name",nativeQuery = true)
+            ,nativeQuery = true)
     List<TalentInterface> getAllUserPerformances();
 
     @Query(value = "WITH AggregatedScores AS ( " +
             "SELECT u.user_id AS userId, u.username AS userName, u.user_full_name AS userFullName, " +
+            "    u.pf_no AS Pf, " +
+            "    cd.department_name AS departmentName, " +
+            "    dp.position_name AS PositionName, " +
             "pa.potential_attribute_name AS potentialAttribute, " +
             "AVG(p.performance_metric) AS averagePerformance, " +
             "AVG(CASE WHEN asr.assessment_type = 'USER_ASSESSMENT' THEN asr.average_score ELSE NULL END) AS userAssessmentAvg, " +
@@ -143,6 +165,10 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
             "AVG(CASE WHEN asr.assessment_type = 'MANAGER_ASSESSMENT' THEN asr.average_score ELSE NULL END) AS averageManAssessmentAvg " +
             "FROM users u " +
             "JOIN average_scores asr ON u.user_id = asr.user_id " +
+            "LEFT JOIN " +
+            "    company_departments cd ON u.department_id = cd.department_id " +
+            "LEFT JOIN " +
+            "    department_positions dp ON u.position_id = dp.position_id " +
             "JOIN assessments a ON asr.assessment_id = a.assessment_id " +
             "JOIN potential_attributes pa ON asr.potential_attribute_id = pa.potential_attribute_id " +
             "LEFT JOIN performance p ON u.user_id = p.user_id " +
@@ -162,6 +188,9 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
     @Query(nativeQuery = true, value = """
         WITH AggregatedScores AS (
             SELECT 
+                u.pf_no AS Pf,
+                cd.department_name AS departmentName,
+                dp.position_name AS PositionName,
                 u.user_id AS userId,
                 u.username AS userName,
                 u.user_full_name AS userFullName,
@@ -193,6 +222,10 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
                 JOIN assessments a ON asr.assessment_id = a.assessment_id
                 JOIN potential_attributes pa ON asr.potential_attribute_id = pa.potential_attribute_id
                 LEFT JOIN performance p ON u.user_id = p.user_id
+                LEFT JOIN 
+                company_departments cd ON u.department_id = cd.department_id 
+                LEFT JOIN 
+                department_positions dp ON u.position_id = dp.position_id 
             WHERE 
                 asr.assessment_type IN ('USER_ASSESSMENT', 'MANAGER_ASSESSMENT')
                 AND p.year = :year
@@ -215,6 +248,9 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
 
     @Query( value = "SELECT " +
             "    p.user_id AS userId, " +
+            "    u.pf_no AS Pf, " +
+            "    cd.department_name AS departmentName, " +
+            "    dp.position_name AS PositionName, " +
             "    u.user_full_name AS userFullName, " +
             "    p.year AS performanceYear, " +
             "    AVG(p.performance_metric) AS performanceRating, " +
@@ -224,6 +260,10 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
             "    performance p " +
             "LEFT JOIN " +
             "    users u ON u.user_id = p.user_id " +
+            "LEFT JOIN " +
+            "    company_departments cd ON u.department_id = cd.department_id " +
+            "LEFT JOIN " +
+            "    department_positions dp ON u.position_id = dp.position_id " +
             "LEFT JOIN ( " +
             "    SELECT " +
             "        user_id, " +
@@ -248,7 +288,9 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
     interface performanceInterface{
         int getUserId();
         String getUserFullName();
-
+        String getDepartmentName();
+        String getPositionName();
+        String getPf();
         int getYearsCount();
         @Nullable
         Double getPerformanceRating();
@@ -262,6 +304,10 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
         
             int getUserId();
             String getUserName();
+
+            String getDepartmentName();
+            String getPositionName();
+            String getPf();
             String getUserFullName();
             @Nullable
             Integer getManagerId();
@@ -289,7 +335,10 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
         int getUserId();
         String getUsername();
 
+        String getPf();
         String getUserFullName();
+        String getDepartmentName();
+        String getPositionName();
         @Nullable
 
         String getPotentialAttribute();
@@ -320,9 +369,12 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
         int getUserId();
         String getUsername();
 
+        String getDepartmentName();
+        String getPositionName();
         String getUserFullName();
         @Nullable
 
+        String getPf();
         String getPotentialAttribute();
         @Nullable
         Double getAveragePerformance();

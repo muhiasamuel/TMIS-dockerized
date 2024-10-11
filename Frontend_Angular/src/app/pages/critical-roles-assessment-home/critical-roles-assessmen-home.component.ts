@@ -283,6 +283,7 @@ getManagerCriticalRoles() {
   onEdit(row: any): void {
     // Logic to handle editing a succession plan
     console.log('Edit Succession Plan for:', row);
+    this.router.navigate(['/view/plan'], { queryParams: { planId: row } });
   }
   
   onView(row: any): void {

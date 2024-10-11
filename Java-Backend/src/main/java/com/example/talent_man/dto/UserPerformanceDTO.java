@@ -10,8 +10,11 @@ import lombok.NoArgsConstructor;
 public class UserPerformanceDTO {
 
     private int userId;
+    private String pf_No;
     private String username;
     private String userFullName;
+    private String departmentName;
+    private String positionName;
     private int managerId;
     private Double averagePerformance;
     private Double averagePotential;

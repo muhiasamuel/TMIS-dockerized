@@ -102,8 +102,14 @@ export class MyTeamsProfileComponent implements OnInit {
 
     this.http.uploadPerformance(formData).subscribe(
       response => {
-        this.snack.open('Performance uploaded successfully', 'Close', { duration: 2000 });
-        this.uploading = false;
+        if (response.status === 200) {
+          this.snack.open('Performance uploaded successfully', 'Close', { duration: 2000 });
+          this.uploading = false;
+        } else {
+          this.snack.open(response.message, 'Close', { duration: 20000 });
+          this.uploading = false;
+        }
+       
         // Any additional logic for updating UI after performance upload
       },
       error => {

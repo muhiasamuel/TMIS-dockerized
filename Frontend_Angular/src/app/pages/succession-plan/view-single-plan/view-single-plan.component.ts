@@ -18,7 +18,7 @@ export class ViewSinglePlanComponent implements OnInit {
   distinctPlans: any[] = []; // Holds the restructured plan data.
   editingStates: { [key: number]: { [section: string]: boolean } } = {}; // Tracks editing state.
   newEntryStates: { [key: number]: { [section: string]: boolean } } = {}; // Tracks new entry state.
-
+  currentStage: number = 1;
   constructor(
     private service: HttpServiceService,
     private route: ActivatedRoute,
@@ -32,6 +32,11 @@ export class ViewSinglePlanComponent implements OnInit {
     });
   }
 
+  onUpdateStage(stage: number): void {
+    // Logic to handle stage updates, e.g., advancing the stage or displaying a modal
+    console.log('Updating stage:', stage);
+    this.currentStage = stage; // For demo purposes
+  }
   getSinglePlan() {
     this.service.getSuccessionPlanById(this.planId).subscribe(
       (res) => {

@@ -34,6 +34,7 @@ export class AssessmentLineGraphComponent implements AfterViewInit, OnDestroy {
           display: true,
           text: 'Score'
         },
+        min:2,
         beginAtZero: false,
         ticks: {
           stepSize: 0.5
@@ -69,8 +70,9 @@ export class AssessmentLineGraphComponent implements AfterViewInit, OnDestroy {
   constructor(private http: HttpClient, private server: HttpServiceService) {}
 
   ngAfterViewInit(): void {
-    this.systemUser= JSON.parse(localStorage.getItem("user"))
-    this.loadAssessments(2); // Assume user ID 2 for this example
+    this.systemUser = JSON.parse(localStorage.getItem("user"));
+    const userId = this.systemUser.user.userId
+    this.loadAssessments(userId); // Assume user ID 2 for this example
   }
 
   ngOnDestroy(): void {

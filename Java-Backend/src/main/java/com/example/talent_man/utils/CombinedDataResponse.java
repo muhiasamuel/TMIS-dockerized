@@ -20,6 +20,9 @@ public class CombinedDataResponse {
         private Double judgmentScore;
         private Double AspirationScore;
         private String userId;
+        private String pf_No;
+        private String departmentName;
+        private String positionName;
         private String username;
         private String userFullName;
         private int managerId;

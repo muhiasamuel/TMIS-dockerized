@@ -1,5 +1,6 @@
 package com.example.talent_man.controllers.user;
 
+import com.example.talent_man.dto.user.UserDetailsDto;
 import com.example.talent_man.dto.user.UserRequestDto;
 import com.example.talent_man.models.user.User;
 import com.example.talent_man.models.user.UserDTO;
@@ -7,6 +8,7 @@ import com.example.talent_man.services.UserService;
 import com.example.talent_man.utils.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -100,4 +102,39 @@ public class EmployeeController {
         return res;
     }
 
+    @GetMapping("/details")
+    public ApiResponse<List<UserDetailsDto>> getAllUserDetails() {
+        // Call the service to get user details
+        List<UserDetailsDto> userDetails = userService.getAllUserDetails();
+        ApiResponse<List<UserDetailsDto>> res = new ApiResponse<>();
+
+        if (userDetails.isEmpty()) {
+            res.setMessage("No employees found");
+            res.setStatus(HttpStatus.NOT_FOUND.value()); // 404 if no employees are found
+        } else {
+            res.setMessage("Employees retrieved successfully");
+            res.setStatus(HttpStatus.OK.value()); // 200 if employees are found
+        }
+        res.setItem(userDetails);
+        return res;
+    }
+
+//    @GetMapping("/get/all_employees//details")
+//    public ApiResponse<List<UserDetailsDto>> getAllUserDetails() {
+//        // Fetching users from the service
+//        List<UserDetailsDto> users = userService.getAllUserDetails();
+//        ApiResponse<List<UserDetailsDto>> res = new ApiResponse<>();
+//
+//        // Checking if the list is empty
+//        if (users.isEmpty()) {
+//            res.setMessage("No employees found");
+//            res.setStatus(HttpStatus.NOT_FOUND.value()); // 404 if no employees are found
+//        } else {
+//            res.setMessage("Employees retrieved successfully");
+//            res.setStatus(HttpStatus.OK.value()); // 200 if employees are found
+//        }
+//
+//        res.setItem(users);
+//        return res;
+//    }
 }

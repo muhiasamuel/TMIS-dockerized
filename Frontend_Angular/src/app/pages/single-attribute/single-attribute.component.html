@@ -2,22 +2,30 @@
 
     <div class="row card">
         <div class="col-sm-12 topHeader radii d-flex align-items-center justify-content-between">
-            <button class="btn btn-md btn-info "routerLink="/potential-attributes">back</button>
-                <p class="ms-3">{{title}}</p>
-                <button class="btn btn-primary m-3" (click)="openDialog()" *ngIf="systemUser.user.role.id == 1;">Add Assessment</button>
-            
+            <button class="btn btn-md btn-primary text-white" style="border-radius: 20px;" routerLink="/potential-attributes">back</button>
+            <p class="ms-3">{{title}}</p>
+            <div class="item">
+                
+            </div>
+            <button class="btn btn-primary m-3 text-white" style="border-radius: 20px;" (click)="openDialog()"
+                *ngIf="systemUser.user.role.id == 1;">Add
+                Descriptors</button>
+
         </div>
     </div>
-    
-    <div class="row">
-         
-            <div class="col-sm-5 mx-2 card d-flex justify-content-between"*ngFor="let question of attrQuestions; let i = index">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 card d-flex justify-content-between"
+                *ngFor="let question of attrQuestions; let i = index">
                 <div class="p-3">
-                    <p ><span>{{i+1}}: </span><strong class="card-category" >{{question.assessmentQuestionDescription}}</strong></p>
-                </div> 
+                    <p><span>{{i+1}}: </span><strong style="font-size: medium; font-weight: 700;"
+                            class="">{{question.assessmentQuestionDescription}}</strong></p>
+                </div>
             </div>
-     
+
+        </div>
     </div>
+
 </div>
 
 <ng-template #noAssess>
@@ -25,16 +33,16 @@
         <div class="row card">
             <div class="col-sm-12 topHeader radii d-flex align-items-center justify-content-between">
                 <button class="btn">back</button>
-                    <p class="ms-3">{{title}}</p>
-                    <button class="btn btn-primary m-3" (click)="openDialog()">Add Assessment</button>
+                <p class="ms-3">{{title}}</p>
+                <button class="btn btn-primary m-3" (click)="openDialog()">Add Assessment</button>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-8">
                 <h3 class="text-center">Ooops</h3>
                 <p>Dear {{systemUser.userFullName}} <br> You currently don't have any assessments.
-                    Potential attributes assessments will help you achieve the follwoing 
-                    </p>
+                    Potential attributes assessments will help you achieve the follwoing
+                </p>
                 <ul>
                     <li></li>
                     <li></li>
@@ -50,12 +58,12 @@
                 <p>Pleas click the button below to add some.</p>
                 <button class="btn btn-success">Add assessment</button>
             </div>
-            
+
             <div class="col-sm-4 card">
                 <div class="bestAttribute radii p-2">
                     <p class="text-center">Assessment statistics</p>
                     <p>Total Assessments: nil</p>
-                    <p>Attempted by all:  nil</p>
+                    <p>Attempted by all: nil</p>
                     <p>Attempted by none: nil</p>
                 </div>
                 <div class="bestAttribute radii p-2 mt-2">
@@ -64,14 +72,14 @@
                     <p>Done by all employees: nil</p>
                     <p>Employee Average score: nill</p>
                 </div>
-            
+
                 <div class="bestAttribute radii p-2 mt-2">
                     <p class="text-center">Poorly performed Potential Attribute </p>
                     <p>Assessment name: nill </p>
                     <p>Done by all employees: nill</p>
                     <p>Employee Average score: nill</p>
                 </div>
-            
+
             </div>
         </div>
     </div>

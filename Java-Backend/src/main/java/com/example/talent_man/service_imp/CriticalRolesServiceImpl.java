@@ -4,9 +4,11 @@ import com.example.talent_man.dto.CriticalRolesAssessmentDto;
 import com.example.talent_man.dto.RoleDetailsWithStrategiesDTO;
 import com.example.talent_man.dto.RolesStrategiesDto;
 import com.example.talent_man.models.CriticalRolesStrategies;
+import com.example.talent_man.models.Position;
 import com.example.talent_man.models.RolesAssessment;
 import com.example.talent_man.models.user.Manager;
 import com.example.talent_man.repos.CriticalRolesAssessmentRepo;
+import com.example.talent_man.repos.PositionRepo;
 import com.example.talent_man.repos.RolesStrategiesRepo;
 import com.example.talent_man.repos.user.ManagerRepo;
 import com.example.talent_man.services.CriticalRolesAssessmentService;
@@ -27,11 +29,14 @@ public class CriticalRolesServiceImpl implements CriticalRolesAssessmentService 
     private ManagerRepo managerRepo;
 
     @Autowired
+    private PositionRepo positionRepo;
+    @Autowired
     private RolesStrategiesRepo repo;
     public RolesAssessment createRolesAssessment(CriticalRolesAssessmentDto requestDto, int ManagerId) {
         RolesAssessment assessment = new RolesAssessment();
+        Position position = positionRepo.findByPositionName(requestDto.getRoleName());
         try {
-
+            assessment.setRoleId(position.getPId());
             assessment.setRoleName(requestDto.getRoleName());
             assessment.setCurrentState(requestDto.getCurrentState());
             assessment.setAverageRating(requestDto.getAverageRating());
@@ -125,7 +130,9 @@ public class CriticalRolesServiceImpl implements CriticalRolesAssessmentService 
     public RolesAssessment editRolesAssessment(CriticalRolesAssessmentDto requestDto, int userId, Long criticalRoleId) {
         RolesAssessment assessment = rolesAssessmentRepository.findById(criticalRoleId)
                 .orElseThrow(() -> new IllegalArgumentException("Role not found with ID: " + criticalRoleId));
+        Position position = positionRepo.findByPositionName(requestDto.getRoleName());
         try {
+            assessment.setRoleId(position.getPId());
 
             assessment.setRoleName(requestDto.getRoleName());
             assessment.setCurrentState(requestDto.getCurrentState());

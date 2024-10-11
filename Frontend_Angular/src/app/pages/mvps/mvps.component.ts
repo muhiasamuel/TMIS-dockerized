@@ -7,6 +7,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MvpsAssessmentComponent } from './mvps-assessment/mvps-assessment.component';
 import { jsPDF } from 'jspdf';
+import * as XLSX from 'xlsx';
+
 import html2canvas from 'html2canvas';
 
 @Component({
@@ -208,6 +210,9 @@ export class MvpsComponent implements OnInit {
       return {
         userId: user?.userId,
         name: user?.userFullName,
+        department: user?.departmentName,
+        position: user?.positionName,
+        pf:user?.pf_No,
         talentRating: user?.talentRating,
         potentialRating: user?.potentialRating,
         Year: user?.performanceYear,
@@ -287,6 +292,41 @@ export class MvpsComponent implements OnInit {
       });
     }
 
+    //download excel
+    downloadExcel(): void {
+      // Create a new workbook
+      const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+      
+      // Prepare data for the Excel file
+      const excelData = this.filteredData.map(mvp => ({
+        'Name': mvp.name,
+        'PF Number': mvp.pf,
+        'Department': mvp.department,
+        'position': mvp.position,
+        'Talent Rating': mvp.talentRating,
+        'Potential Rating': mvp.potentialRating,
+        'Year': mvp.Year,
+        'Impact of Attrition': mvp.impactOfAttrition,
+        'Market Exposure': mvp.marketExposure,
+        'Retention State': mvp.retentionState,
+        'Strategies': Array.isArray(mvp.strategies) 
+        ? mvp.strategies.map(strategy => strategy.retentionStrategies).join(', ') 
+        : '', // Properly joining strategies        'Career Priority': mvp.careerPriority,
+        '3 Years Performance Rating': mvp.threeYearsPerformanceRating,
+        'Years Rated Count': mvp.yearsRatedCount,
+      }));
+      
+      // Convert data to a worksheet
+      const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(excelData);
+      
+      // Add the worksheet to the workbook
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'MVPs');
+    
+      // Export the Excel file
+      XLSX.writeFile(workbook, 'MVPsAssessment.xlsx');
+    }
+    
+
     filterSearchData(): void {
       this.filteredMVPs = this.allData.filter(item => 
         item.name.toLowerCase().includes(this.filterText.toLowerCase())
@@ -320,4 +360,6 @@ export class MvpsComponent implements OnInit {
         this.paginate();
       }
     }
+
+    //d
 }

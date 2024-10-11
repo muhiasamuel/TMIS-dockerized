@@ -18,6 +18,14 @@
           <i class="nc-icon {{menuItem.icon}}" style="color: white;"></i>
           <p style="color: white; font-weight: 500; font-size: 12px;">{{menuItem.title}}</p>
         </a>
+
+      </li>
+      <li class="text-dark">
+        <a (click)="logout()" style="display: flex; align-items: center;">
+          <mat-icon style="color: white; zoom: 1.2; margin-left: 5px;">logout</mat-icon>
+          <p style="color: white; font-weight: 500; font-size: 12px; margin-left: 10px;">logout</p>
+
+        </a>
       </li>
     </ng-container>
   </ul>

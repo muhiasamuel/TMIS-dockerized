@@ -124,7 +124,7 @@
             </div>
             <div class="row">
               <div class="col-sm-4 mb-3" *ngFor="let att of potentialAttribute">
-                <div [routerLink]="'/singleAtt/' + att.potentialAttributeId">
+                <div [routerLink]="'/singleAtt/' + att.potentialAttributeId ">
                   <div class="card attribute-card d-flex flex-column align-items-center justify-content-between p-3">
                     <p class="attribute-name">{{ att.potentialAttributeName }}</p>
                     <p class="attribute-description">{{att.potentialAttributeDescription}}</p>
