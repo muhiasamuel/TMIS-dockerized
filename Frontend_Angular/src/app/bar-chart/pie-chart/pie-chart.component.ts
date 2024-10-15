@@ -45,7 +45,7 @@ export class PieChartComponent implements OnInit {
   constructor(private http: HttpClient, private server: HttpServiceService) {}
 
   ngOnInit(): void {
-    this.systemUser = JSON.parse(localStorage.getItem("user"));
+    this.systemUser = JSON.parse(sessionStorage.getItem("user"));
 
     const userId = this.systemUser.user.userId
     this.loadAssessments(userId); // Assume user ID 2 for this example

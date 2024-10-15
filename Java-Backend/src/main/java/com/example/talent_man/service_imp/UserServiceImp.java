@@ -19,6 +19,8 @@ import com.example.talent_man.utils.ApiResponse;
 import com.example.talent_man.services.UserService;
 import com.example.talent_man.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,12 +28,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -50,10 +54,10 @@ public class UserServiceImp implements UserService {
 
     @Autowired
     PasswordEncoder passwordEncoder;
-     @Autowired
-     EmailService emailService;
+    @Autowired
+    EmailService emailService;
 
-     @Autowired
+    @Autowired
     PositionRepo positionRepo;
 
     @Autowired
@@ -79,6 +83,7 @@ public class UserServiceImp implements UserService {
     public Manager save(Manager manager) {
         return repo.save(manager);
     }
+
     @Override
     public User getByUsername(String username) {
         return repo.findByUsername(username);
@@ -123,13 +128,13 @@ public class UserServiceImp implements UserService {
 
             dto.setEmail(users.getEmail());
 
-            return  dto;
+            return dto;
         }).collect(Collectors.toList());
     }
 
 
     @Override
-    public List<UserDTO> getUsersByPosition(int positionId){
+    public List<UserDTO> getUsersByPosition(int positionId) {
         return repo.getUserByPosition(positionId).stream().map(users -> {
             UserDTO dto = new UserDTO();
             dto.setId(users.getUserId());
@@ -139,7 +144,7 @@ public class UserServiceImp implements UserService {
             dto.setPositionId(users.getPosition().getPId());
             dto.setEmail(users.getEmail());
 
-            return  dto;
+            return dto;
         }).collect(Collectors.toList());
 
     }
@@ -161,8 +166,8 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public  UserRepo.UserWithManagerDetails getUserPerformancesByManagerId(int employeeId){
-        return  repo.getUserWithManagerDetails(employeeId);
+    public UserRepo.UserWithManagerDetails getUserPerformancesByManagerId(int employeeId) {
+        return repo.getUserWithManagerDetails(employeeId);
     }
 
 
@@ -188,12 +193,11 @@ public class UserServiceImp implements UserService {
             return new AuthResponse("OTP sent to registered email", 200);
         } else {
             // User not found, return an error response
-            return new AuthResponse( "User not found", 404);
+            return new AuthResponse("User not found", 404);
         }
     }
 
 
-    @Override
     public AuthResponse validateOtp(OtpRequest otpRequest) {
         String user = otpRequest.getUsername();
         User userToMail = repo.findByUsername(user);
@@ -207,15 +211,16 @@ public class UserServiceImp implements UserService {
                 authResponse.setUser(userToMail);
                 authResponse.setAuthToken(jwtToken);
                 authResponse.setPermissions(userToMail.getRole().getPermissions());
+                authResponse.setStatus(200); // Set status for success
                 return authResponse;
             } else {
-                return new AuthResponse( "Invalid OTP", 401);
+                // Return an AuthResponse with status and message for invalid OTP
+                return new AuthResponse("Invalid OTP", 401);
             }
-        }else {
-            return new AuthResponse( "User not found", 404);
+        } else {
+            // Return an AuthResponse with status and message for user not found
+            return new AuthResponse("User not found", 404);
         }
-
-
     }
 
     //create Employee
@@ -252,7 +257,6 @@ public class UserServiceImp implements UserService {
         manager.setRole(role);
         manager.setLocked(userDto.getLocked() != null ? userDto.getLocked() : false);
         manager.setEnabled(userDto.getEnabled() != null ? userDto.getEnabled() : false);
-
 
 
         // Save the employee
@@ -318,6 +322,57 @@ public class UserServiceImp implements UserService {
 
         return savedManager;
     }
+// updating managers info
+@Override
+public User updateManager(int managerId, UserRequestDto userDto) {
+    // Find the existing manager by ID
+    Manager manager = (Manager) repo.findById(managerId)
+            .orElseThrow(() -> new RuntimeException("Manager not found with id: " + managerId));
+
+    // Update all fields in one go using null-checks in a compact way
+    manager.setUserFullName(userDto.getUserFullName() != null ? userDto.getUserFullName() : manager.getUserFullName());
+    manager.setEmail(userDto.getEmail() != null ? userDto.getEmail() : manager.getEmail());
+    manager.setUsername(userDto.getUsername() != null ? userDto.getUsername() : manager.getUsername());
+    manager.setPf(userDto.getPf() != null ? userDto.getPf() : manager.getPf());
+
+    // Update role if provided
+    if (userDto.getRoleId() != null) {
+        Role role = roleRepo.findById(userDto.getRoleId())
+                .orElseThrow(() -> new RuntimeException("Role Not Found: " + userDto.getRoleId()));
+        manager.setRole(role);
+    }
+
+    // Update department and position if provided
+    if (userDto.getDepartmentId() != null) {
+        Department department = departmentRepo.findById(userDto.getDepartmentId())
+                .orElseThrow(() -> new RuntimeException("Department Not Found: " + userDto.getDepartmentId()));
+        manager.setDepartment(department);
+
+        if (userDto.getPositionId() != null) {
+            Position position = positionRepo.findById(userDto.getPositionId())
+                    .orElseThrow(() -> new RuntimeException("Position Not Found: " + userDto.getPositionId()));
+
+            if (!position.getDepartment().equals(department)) {
+                throw new RuntimeException("Position does not belong to the specified Department.");
+            }
+            manager.setPosition(position);
+        }
+    }
+
+    // Update locked and enabled fields if provided
+    manager.setLocked(userDto.getLocked() != null ? userDto.getLocked() : manager.getLocked());
+    manager.setEnabled(userDto.getEnabled() != null ? userDto.getEnabled() : manager.getEnabled());
+
+    // Update parent manager if provided
+    if (managerId > 0) {
+        Manager parentManager = managerRepo.findById(managerId)
+                .orElseThrow(() -> new RuntimeException("Parent manager not found with id: " + managerId));
+        manager.setManager(parentManager);
+    }
+
+    // Save the updated manager
+    return repo.save(manager);
+}
 
     @Override
     public User createEmployee(UserRequestDto userDto, int managerId) {
@@ -331,8 +386,8 @@ public class UserServiceImp implements UserService {
         employee.setUserFullName(userDto.getUserFullName());
         employee.setEmail(userDto.getEmail());
         User user = repo.findFirstByEmail(userDto.getEmail());
-        if(user != null){
-            
+        if (user != null) {
+
         }
         employee.setUsername(userDto.getUsername());
         employee.setPassword(encodedPassword);
@@ -365,6 +420,59 @@ public class UserServiceImp implements UserService {
 
         return savedEmployee;
     }
+    // updating employee data
+    @Override
+    public User updateEmployee(int employeeId, int managerId, UserRequestDto userDto) {
+        // Find the existing employee by ID
+        Employee employee = (Employee) repo.findById(employeeId)
+                .orElseThrow(() -> new RuntimeException("Employee not found with id: " + employeeId));
+
+        // Update all fields in one go using null-checks in a compact way
+        employee.setUserFullName(userDto.getUserFullName() != null ? userDto.getUserFullName() : employee.getUserFullName());
+        employee.setEmail(userDto.getEmail() != null ? userDto.getEmail() : employee.getEmail());
+        employee.setUsername(userDto.getUsername() != null ? userDto.getUsername() : employee.getUsername());
+        employee.setPf(userDto.getPf() != null ? userDto.getPf() : employee.getPf());
+
+        // Update role if provided
+        if (userDto.getRoleId() != null) {
+            Role role = roleRepo.findById(userDto.getRoleId())
+                    .orElseThrow(() -> new RuntimeException("Role Not Found: " + userDto.getRoleId()));
+            employee.setRole(role);
+        }
+
+        // Update department and position if provided
+        if (userDto.getDepartmentId() != null) {
+            Department department = departmentRepo.findById(userDto.getDepartmentId())
+                    .orElseThrow(() -> new RuntimeException("Department Not Found: " + userDto.getDepartmentId()));
+            employee.setDepartment(department);
+
+            if (userDto.getPositionId() != null) {
+                Position position = positionRepo.findById(userDto.getPositionId())
+                        .orElseThrow(() -> new RuntimeException("Position Not Found: " + userDto.getPositionId()));
+
+                if (!position.getDepartment().equals(department)) {
+                    throw new RuntimeException("Position does not belong to the specified Department.");
+                }
+                employee.setPosition(position);
+            }
+        }
+
+        // Update locked and enabled fields if provided
+        employee.setLocked(userDto.getLocked() != null ? userDto.getLocked() : employee.getLocked());
+        employee.setEnabled(userDto.getEnabled() != null ? userDto.getEnabled() : employee.getEnabled());
+
+        // Update manager if provided
+        if (managerId != 0) {
+            Manager manager = managerRepo.findById(managerId)
+                    .orElseThrow(() -> new RuntimeException("Manager not found with id: " + managerId));
+            employee.setManager(manager);
+        }
+
+        // Save the updated employee
+        return repo.save(employee);
+    }
+
+
     @Override
     public List<User> createEmployees(List<UserRequestDto> userDtos, int managerId) {
         List<User> createdEmployees = new ArrayList<>();
@@ -432,7 +540,7 @@ public class UserServiceImp implements UserService {
 
                 userDtos.add(userDto);
             }
-        } catch (IOException  e) {
+        } catch (IOException e) {
             throw new RuntimeException("Failed to parse Excel file", e);
         }
         return userDtos;
@@ -493,6 +601,73 @@ public class UserServiceImp implements UserService {
         return dto;
     }
 
+    // transferring user to new manager, locking and unlocking, enabling and disabling user accounts
+    @Override
+    public Optional<User> findUserById(int userId) {
+        return repo.findById(userId);
+    }
+
+
+    @Override
+    @Transactional
+    public void transferUserToManager(int userId, int managerId) {
+        User user = repo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Manager newManager = managerRepo.findById(managerId)
+                .orElseThrow(() -> new RuntimeException("Manager not found"));
+
+        ((Employee) user).setManager(newManager);
+        repo.save(user);  // Persist the updated manager for the user
+    }
+
+    //transfer manager to anoher manager
+    @Override
+    @Transactional
+    public void transferManagerToManager(int userId, int managerId) {
+        Manager manager = managerRepo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Manager not found"));
+        Manager newManager = managerRepo.findById(managerId)
+                .orElseThrow(() -> new RuntimeException("Manager not found"));
+
+        manager.setManager(newManager);
+        repo.save(manager);  // Persist the updated manager for the user
+    }
+
+    @Override
+    @Transactional
+    public void lockUserAccount(int userId) {
+        User user = repo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setLocked(true);
+        repo.save(user);  // Persist the locked state
+    }
+
+    @Override
+    @Transactional
+    public void unlockUserAccount(int userId) {
+        User user = repo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setLocked(false);
+        repo.save(user);  // Persist the unlocked state
+    }
+
+    @Override
+    @Transactional
+    public void disableUserAccount(int userId) {
+        User user = repo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setEnabled(false);
+        repo.save(user);  // Persist the disabled state
+    }
+
+    @Override
+    @Transactional
+    public void enableUserAccount(int userId) {
+        User user = repo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setEnabled(true);
+        repo.save(user);  // Persist the enabled state
+    }
 }
 
 

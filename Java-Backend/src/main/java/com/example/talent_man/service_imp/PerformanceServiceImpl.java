@@ -349,10 +349,10 @@ public class PerformanceServiceImpl implements PerformanceService {
         // Calculate and set talentRating and potentialRating if needed
         //dto.setTalentRating(talentInterface.getPotentialRating());
         dto.setPotentialRating(calculatePotentialRating(talentInterface));
-        dto.setManAssessmentAvg(talentInterface.getManAssessmentAvg());
+        dto.setManAssessmentAvg(talentInterface.getManAssessmentAvgWithDefault());
         dto.setTalentRating( calculateTalentRating(talentInterface));
         dto.setPerformanceRating(calculatePerformanceRating(talentInterface));
-        System.out.println("H   ELOO" + talentInterface.getPerformanceYear() + talentInterface.getAveragePerformance());
+        System.out.println("HELOO" + talentInterface.getPerformanceYear() + talentInterface.getAveragePerformance());
 
         return dto;
     }
@@ -372,7 +372,7 @@ public class PerformanceServiceImpl implements PerformanceService {
 
     private String calculatePotentialRating(PerformanceRepository.UserPerformanceData talentInterface) {
 
-        Double potential = talentInterface.getPotentialRating();
+        double potential = talentInterface.getPotentialRating() != null ? talentInterface.getPotentialRating() : 0.0;
         // Determine potential rating based on average manAssessmentAvg
         if (potential >= 1 && potential <= 1.9) {
             return "C";
@@ -389,8 +389,8 @@ public class PerformanceServiceImpl implements PerformanceService {
     private String calculateTalentRating(PerformanceRepository.UserPerformanceData talentInterface) {
         // Your logic to calculate potential rating based on assessment metrics
         // Example:
-        Double potential = talentInterface.getPotentialRating();
-        Double perfomance = talentInterface.getAveragePerformance();
+        double potential = talentInterface.getPotentialRating() != null ? talentInterface.getPotentialRating() : 0.0;
+        double perfomance = talentInterface.getAveragePerformance();
 
         if ((perfomance >= 4.1 && perfomance <= 5) && (potential >= 4 && potential <= 6)) {
 

@@ -80,14 +80,20 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
             Position position = positionRepository.findById(successionPlanDto.getPositionId())
                     .orElseThrow(() -> new ResourceNotFoundException("Position not found"));
 
-            // Fetch the Succession Driver
-            SuccessionDrivers drivers = successionDriverRepo.findById(successionPlanDto.getDriverId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Succession Driver not found"));
-
             // Check if the Position belongs to the Department
             if (!department.getDepartmentPositions().contains(position)) {
                 throw new ResourceNotFoundException("Position does not belong to the Department");
             }
+
+            // Check if a succession plan already exists for this position in the department
+            boolean exists = successionPlanRepository.existsByDepartmentAndPosition(department, position);
+            if (exists) {
+                throw new IllegalArgumentException("A succession plan for this position already exists in the specified department.");
+            }
+
+            // Fetch the Succession Driver
+            SuccessionDrivers drivers = successionDriverRepo.findById(successionPlanDto.getDriverId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Succession Driver not found"));
 
             // Fetch the Current Role Holder
             User currentRoleHolder = userRepository.findById(successionPlanDto.getCurrentRoleHolderId())
@@ -130,7 +136,6 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
                 successionPlan.setExternalSuccessors(externalSuccessors);
             }
 
-
             // Save and link ReadyUsers
             List<ReadyUsers> readyNow = saveReadyUsers(successionPlanDto.getReadyNow(), successionPlan, "Now");
             List<ReadyUsers> readyAfterTwoYears = saveReadyUsers(successionPlanDto.getReadyAfterTwoYears(), successionPlan, "1-2 Years");
@@ -161,6 +166,7 @@ public class SuccessionPlanServiceImpl implements SuccessionPlanService {
             throw new IllegalArgumentException("There was an error adding the succession plan: " + e.getMessage(), e);
         }
     }
+
 
     // Helper method to check if the ExternalSuccessorDto is empty
     private boolean isExternalSuccessorEmpty(ExternalSuccessorDto dto) {

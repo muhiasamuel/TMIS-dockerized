@@ -45,7 +45,7 @@ export class PotentialAttributesComponent {
     private snackBar: MatSnackBar, 
     private dialog: MatDialog){}
   ngOnInit(){
-    this.systemUser = JSON.parse(localStorage.getItem("user"))
+    this.systemUser = JSON.parse(sessionStorage.getItem("user"))
     console.log(this.systemUser)
     if(this.systemUser != null){
       this.userRoleId = this.systemUser.user.role.id

@@ -10,7 +10,7 @@ export class AuthInterceptorsService implements HttpInterceptor {
   httpService:HttpServiceService = inject(HttpServiceService)
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const systemUser = localStorage.getItem('user');
+    const systemUser = sessionStorage.getItem('user');
     if (systemUser) {
       const userData = JSON.parse(systemUser);
       const authToken = userData.authToken;

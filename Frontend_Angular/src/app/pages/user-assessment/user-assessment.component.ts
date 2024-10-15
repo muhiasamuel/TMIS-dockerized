@@ -25,7 +25,7 @@ export class UserAssessmentComponent implements OnInit {
 
   ngOnInit() {
     this.setGreeting(); // Set the greeting message
-    this.systemUser = JSON.parse(localStorage.getItem('user')); // Get user data from local storage
+    this.systemUser = JSON.parse(sessionStorage.getItem('user')); // Get user data from local storage
     this.getNotDone(); // Fetch not done assessments
   }
 

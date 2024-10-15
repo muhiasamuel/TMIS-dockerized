@@ -3,7 +3,9 @@ package com.example.talent_man.controllers.auth;
 import com.example.talent_man.dto.user.AuthRequest;
 import com.example.talent_man.dto.user.AuthResponse;
 import com.example.talent_man.dto.user.OtpRequest;
+import com.example.talent_man.repos.user.UserRepo;
 import com.example.talent_man.services.UserService;
+import com.example.talent_man.utils.custom_exceptions.InvalidOtpException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -19,6 +21,7 @@ import com.example.talent_man.service_imp.UserServiceImp;
 import com.example.talent_man.utils.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
@@ -31,6 +34,8 @@ public class authController {
     private UserServiceImp service;
 
 
+    @Autowired
+    UserRepo userRepo;
     @Value("${spring.security.user.name}")
     private String securityUserName;
 
@@ -39,15 +44,51 @@ public class authController {
         return ResponseEntity.ok("Security User Name: " + securityUserName);
     }
 
+//    @PostMapping("/authenticate")
+//    public AuthResponse createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
+//        return service.authenticate(authRequest);
+//    }
+
     @PostMapping("/authenticate")
     public AuthResponse createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
+        User user = userRepo.findByUsername(authRequest.getUsername());
+
+        // Check if user exists
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        // Check if the user is enabled and not locked
+        if (!user.isEnabled()) {
+            throw new RuntimeException("User account is disabled");
+        }
+
+        if (!user.isAccountNonLocked()) {
+            throw new RuntimeException("User account is locked");
+        }
+
         return service.authenticate(authRequest);
     }
 
+//    @PostMapping("/validateOtp")
+//    public AuthResponse validateOtp(@RequestBody OtpRequest otpRequest) {
+//        return service.validateOtp(otpRequest);
+//    }
+
     @PostMapping("/validateOtp")
-    public AuthResponse validateOtp(@RequestBody OtpRequest otpRequest) {
-        return service.validateOtp(otpRequest);
+    public ResponseEntity<AuthResponse> validateOtp(@RequestBody OtpRequest otpRequest) {
+        AuthResponse response = service.validateOtp(otpRequest);
+
+        // Check if the response indicates an error
+        if (response.getStatus() != 200) {
+            // If status is not OK (200), throw a custom exception
+            throw new InvalidOtpException(response.getMessage()); // Throw custom exception
+        }
+
+        return ResponseEntity.ok(response); // Return valid response with HTTP 200 OK
     }
+
+
     @PostMapping("/login")
     public ApiResponse<User> login(@RequestBody LoginRequest req){
         try{

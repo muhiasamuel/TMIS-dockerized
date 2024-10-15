@@ -3,6 +3,7 @@ package com.example.talent_man.repos.user;
 import com.example.talent_man.models.user.User;
 import com.example.talent_man.models.user.UserDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -17,6 +18,20 @@ public interface UserRepo extends JpaRepository<User, Integer> {
     Optional<User> findByPf(String pf);
 
     User findFirstByEmail(String email);
+
+    Optional<User> findById(int userId);
+
+    @Modifying
+    @Query(value = "UPDATE User u SET u.manager = :manager WHERE u.user_id = :userId", nativeQuery = true)
+    void updateManager(@Param("userId") int userId, @Param("manager") User manager);
+
+    @Modifying
+    @Query(value = "UPDATE User u SET u.locked = :locked WHERE u.user_id = :userId", nativeQuery = true)
+    void updateLockedStatus(@Param("userId") int userId, @Param("locked") Boolean locked);
+
+    @Modifying
+    @Query(value = "UPDATE User u SET u.enabled = :enabled WHERE u.user_id = :userId", nativeQuery = true)
+    void updateEnabledStatus(@Param("userId") int userId, @Param("enabled") Boolean enabled);
 
     @Query(value = "SELECT * FROM users u WHERE u.manager_id = :managerId", nativeQuery = true)
     List<User> findUsersByManagerId(@Param("managerId") int managerId);

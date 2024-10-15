@@ -20,7 +20,7 @@ export class DialogViewComponent {
   constructor(private router: Router, private http: HttpClient, private server: HttpServiceService, private route: ActivatedRoute){}
 
   ngOnInit(){
-    this.systemUser = JSON.parse(localStorage.getItem('user'))
+    this.systemUser = JSON.parse(sessionStorage.getItem('user'))
     this.route.params.subscribe(params => {
       this.assId = params['id']; // Access the 'id' parameter from the URL
       console.log('Test ID:', this.assId);

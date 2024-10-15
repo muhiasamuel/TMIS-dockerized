@@ -8,7 +8,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   constructor(private router: Router) {}
 
   canActivate(): boolean {
-    const systemUser = localStorage.getItem('user');
+    const systemUser = sessionStorage.getItem('user');
     const authUser = JSON.parse(systemUser)
     if (authUser.authToken) {
       return true;

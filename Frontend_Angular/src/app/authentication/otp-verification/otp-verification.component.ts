@@ -97,12 +97,15 @@ export class OtpVerificationComponent {
       
     //http://192.168.88.36:8080/v1/api/auth/validateOtp
     const url = `${this.serve.serverUrl}auth/validateOtp`
-    const response = this.http.post(url,otpData ).subscribe({
+     this.serve.postData(url,otpData ).subscribe({
       next: (res) =>{
-        if(!res["message"]) {
+        console.log("samiii",res);
+        if(res.status === 200) {
           this.isLoading = false;
           this.systemUser = res;
-          localStorage.setItem("user", JSON.stringify(this.systemUser))
+         
+          
+          sessionStorage.setItem("user", JSON.stringify(this.systemUser))
           console.log(res);
           this.route.navigate(['/dashboard'])
         }
@@ -111,7 +114,7 @@ export class OtpVerificationComponent {
       error: (error) => {
         this.isLoading = false;
         console.log(error);
-        this.snackBar.open("Something went wrong try again later" , "Close" , {duration: 2000})
+        this.snackBar.open(error.error.message , "Close" , {duration: 2000})
       },
       complete: () =>{
         this.isLoading = false;
