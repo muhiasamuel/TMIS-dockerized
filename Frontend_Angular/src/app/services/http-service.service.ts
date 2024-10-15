@@ -394,26 +394,26 @@ return this.http.get<any>(url)
 lockUserAcc(userId:number):Observable<any>{
   //const url = `http://172.16.10.233:8080/v1/api/users/management/lock/34`
   const url = `${this.serverUrl}users/management/lock/${userId}`
-  return this.http.patch(url,null)
+  return this.http.patch(url,{})
 }
 
 unlockUseracc(userId:number):Observable<any>{
   const url = `${this.serverUrl}users/management/unlock/${userId}`
-  return this.http.patch<any>(url, null)
+  return this.http.patch<any>(url, {})
 }
 
 enableUserAcc(userId:number){
   // http://172.16.10.233:8080/v1/api/users/management/enable/2
 
   const url =`${this.serverUrl}users/management/enable/${userId}`
-  return this.http.patch<any>(url,null)
+  return this.http.patch<any>(url,{})
 }
 
 disableUserAcc(userId:number){
   // http://172.16.10.233:8080/v1/api/users/management/disable/2
 
   const url =`${this.serverUrl}users/management/disable/${userId}`
-  return this.http.patch<any>(url,null)
+  return this.http.patch<any>(url,{})
 }
 
 }
