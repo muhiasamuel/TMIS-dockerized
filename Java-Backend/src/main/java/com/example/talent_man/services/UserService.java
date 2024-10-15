@@ -11,6 +11,7 @@ import com.example.talent_man.repos.user.UserRepo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
     //Create
@@ -44,10 +45,27 @@ public interface UserService {
     List<User> createEmployees(List<UserRequestDto> userDtos, int managerId);
     List<User> uploadEmployees(MultipartFile file, int managerId);
     User createManager(UserRequestDto userDto, int managerId);
+    // Method to update an employee
+    User updateEmployee(int employeeId, int managerId, UserRequestDto userDto);
+
+    // Method to update a manager
+    User updateManager(int managerId, UserRequestDto userDto);
     AuthResponse authenticate(AuthRequest authRequest) throws Exception;
     AuthResponse validateOtp(OtpRequest otpRequest);
     //User addManagerSkill(User manager);
    // User addManagerSkills(int managerId, List<SkillsAsssessment> skills);
 
     List<UserDTO> getUsersByPosition(int positionId);
+
+    Optional<User> findUserById(int userId);
+
+    void transferUserToManager(int userId, int managerId);
+    void transferManagerToManager(int userId, int managerId);
+    void lockUserAccount(int userId);
+
+    void unlockUserAccount(int userId);
+
+    void disableUserAccount(int userId);
+
+    void enableUserAccount(int userId);
 }

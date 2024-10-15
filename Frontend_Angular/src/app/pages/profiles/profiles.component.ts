@@ -118,7 +118,7 @@ export class ProfilesComponent implements OnInit {
 
     console.log("sadsfdf", this.profile);
     
-    const user = localStorage.getItem("user")
+    const user = sessionStorage.getItem("user")
     if (user) {
       this.authUser = JSON.parse(user)
       this.managerId = this.authUser.user.userId

@@ -1,6 +1,8 @@
 package com.example.talent_man.repos.succession;
 
 import com.example.talent_man.controllers.succession.SuccessionPlanResponseDto;
+import com.example.talent_man.models.Department;
+import com.example.talent_man.models.Position;
 import com.example.talent_man.models.succession.SuccessionPlan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +16,8 @@ import java.util.Optional;
 @Repository
 public interface
 SuccessionPlanRepository extends JpaRepository<SuccessionPlan, Integer> {
+
+    boolean existsByDepartmentAndPosition(Department department, Position position);
 
     @Query(value = "SELECT " +
             "    sp.plan_id AS planId, " +

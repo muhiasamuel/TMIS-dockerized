@@ -51,6 +51,7 @@ public class EmployeeController {
         res.setStatus(200);
         return res;
     }
+
     @PostMapping("/create-employees/{managerId}")
     public ApiResponse<List<User>> createEmployees(@RequestBody List<UserRequestDto> userDtos, @PathVariable int managerId) {
         List<User> createdEmployees = userService.createEmployees(userDtos, managerId);
@@ -84,6 +85,7 @@ public class EmployeeController {
         res.setItem(users);
         return res;
     }
+
     //GetAllEmployees
     @GetMapping("get/all_employees")
     public ApiResponse<List<UserDTO>> getAllEmployees() {
@@ -118,23 +120,40 @@ public class EmployeeController {
         res.setItem(userDetails);
         return res;
     }
+    // Update an employee
+    @PatchMapping("/employee/{employeeId}/{managerId}")
+    public ResponseEntity<ApiResponse<String>> updateEmployee(
+            @PathVariable int employeeId,@PathVariable int managerId, @RequestBody UserRequestDto userDto) {
 
-//    @GetMapping("/get/all_employees//details")
-//    public ApiResponse<List<UserDetailsDto>> getAllUserDetails() {
-//        // Fetching users from the service
-//        List<UserDetailsDto> users = userService.getAllUserDetails();
-//        ApiResponse<List<UserDetailsDto>> res = new ApiResponse<>();
-//
-//        // Checking if the list is empty
-//        if (users.isEmpty()) {
-//            res.setMessage("No employees found");
-//            res.setStatus(HttpStatus.NOT_FOUND.value()); // 404 if no employees are found
-//        } else {
-//            res.setMessage("Employees retrieved successfully");
-//            res.setStatus(HttpStatus.OK.value()); // 200 if employees are found
-//        }
-//
-//        res.setItem(users);
-//        return res;
-//    }
+        ApiResponse<String> response = new ApiResponse<>();
+        try {
+            userService.updateEmployee(employeeId,managerId, userDto);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Employee updated successfully");
+            response.setItem("Success");
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Failed to update employee: " + e.getMessage());
+        }
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    // Update a manager
+    @PatchMapping("/manager/{managerId}")
+    public ResponseEntity<ApiResponse<String>> updateManager(
+            @PathVariable int managerId, @RequestBody UserRequestDto userDto) {
+
+        ApiResponse<String> response = new ApiResponse<>();
+        try {
+            userService.updateManager(managerId, userDto);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Manager updated successfully");
+            response.setItem("Success");
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Failed to update manager: " + e.getMessage());
+        }
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
 }

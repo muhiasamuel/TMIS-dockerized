@@ -334,14 +334,14 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
     public interface UserPerformanceData {
         int getUserId();
         String getUsername();
-
         String getPf();
         String getUserFullName();
         String getDepartmentName();
         String getPositionName();
-        @Nullable
 
+        @Nullable
         String getPotentialAttribute();
+
         @Nullable
         Double getAveragePerformance();
         @Nullable
@@ -352,7 +352,6 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
         Integer geta();
         @Nullable
         Date getAssessmentDate();
-
         @Nullable
         Integer getPerformanceYear();
         @Nullable
@@ -364,7 +363,24 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
         @Nullable
         Double getPotentialRating();
 
+        // Default methods to return 0.0 if the values are null
+        default Double getManAssessmentAvgWithDefault() {
+            return (getManAssessmentAvg() != null) ? getManAssessmentAvg() : 0.0;
+        }
+
+        default Double getUserAssessmentAvgWithDefault() {
+            return (getUserAssessmentAvg() != null) ? getUserAssessmentAvg() : 0.0;
+        }
+
+        default Double getAveragePerformanceWithDefault() {
+            return (getAveragePerformance() != null) ? getAveragePerformance() : 0.0;
+        }
+
+        default Double getPotentialRatingWithDefault() {
+            return (getPotentialRating() != null) ? getPotentialRating() : 0.0;
+        }
     }
+
     public interface UserHIPOsData {
         int getUserId();
         String getUsername();

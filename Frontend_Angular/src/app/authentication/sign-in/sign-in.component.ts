@@ -42,7 +42,7 @@ export class SignInComponent {
         this.isLoading = false;
         if(response.status = 200){
           
-            // localStorage.setItem("user", JSON.stringify(this.systemUser));
+            // sessionStorage.setItem("user", JSON.stringify(this.systemUser));
             console.log(response)
             this.route.navigate(['/otp-verification'])
             this.snackbar.open(response.message, "Close", {duration:2000} )
@@ -50,7 +50,7 @@ export class SignInComponent {
       },
       (error: any) => {
         this.isLoading = false;
-        this.snackbar.open("could not authenticate user", "Close", {duration:2000} )
+        this.snackbar.open(error.error.message, "Close", {duration:2000} )
         console.log(error)
       }
     )

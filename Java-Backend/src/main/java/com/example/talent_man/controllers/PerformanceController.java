@@ -260,10 +260,7 @@ public class PerformanceController {
             System.out.println("Unrecognized potential attribute: " +dto.getPotentialAttributeName());
             // Set the manAssessmentAvg for the potentialAttribute
             // Assuming there's only one score per potential attribute for each user in this case we are using manager score.
-            if (manAssessmentAvg == null || manAssessmentAvg == 0 || manAssessmentAvg.isNaN()){
-                throw new RuntimeException("You have some  un assessed employees ");
 
-            } else {
                 switch (potentialAttribute.trim()) {
                     case "Drive":
                         item.setDriveScore(manAssessmentAvg);
@@ -281,7 +278,7 @@ public class PerformanceController {
                         // Log the unrecognized potential attribute names
                         System.out.println("Unrecognized potential attribute: " + potentialAttribute);
                         break;
-                }
+
             }
 
             // Put the updated item back into the combinedData map

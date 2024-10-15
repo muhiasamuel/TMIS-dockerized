@@ -48,7 +48,7 @@ import { map, Observable, startWith } from 'rxjs';
 
     
       
-      const user = localStorage.getItem("user");
+      const user = sessionStorage.getItem("user");
        if (user) {
          this.authUser = JSON.parse(user)
        }

@@ -41,7 +41,7 @@ lineChartOptions: any;
 
 
   ngOnInit(): void { 
-    const user = localStorage.getItem("user")
+    const user = sessionStorage.getItem("user")
     if (user) {
       this.authUser = JSON.parse(user)
     }
@@ -78,7 +78,7 @@ lineChartOptions: any;
       }),
       () =>{}
     )
-    const criticalSkills = localStorage.getItem("criticalSkills")
+    const criticalSkills = sessionStorage.getItem("criticalSkills")
 
    
   }

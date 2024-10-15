@@ -69,7 +69,7 @@ export class PerformanceLineGraphComponent {
   constructor(private http: HttpClient, private server: HttpServiceService) {}
 
   ngAfterViewInit(): void {
-    this.systemUser = JSON.parse(localStorage.getItem("user"))
+    this.systemUser = JSON.parse(sessionStorage.getItem("user"))
     console.log('system user',this.systemUser);
     
     this.loadPerformanceData(this.systemUser.user.pf); // Load performance data on init

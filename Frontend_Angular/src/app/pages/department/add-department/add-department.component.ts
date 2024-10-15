@@ -31,7 +31,7 @@ export class AddDepartmentComponent implements OnInit {
   }
 
   ngOnInit() {
-    const user = localStorage.getItem("user");
+    const user = sessionStorage.getItem("user");
     if (user) {
       this.authUser = JSON.parse(user);
     }

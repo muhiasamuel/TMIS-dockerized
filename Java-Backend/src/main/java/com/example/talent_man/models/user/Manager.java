@@ -8,6 +8,7 @@ import com.example.talent_man.models.Assessment;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,9 +28,10 @@ public class Manager extends User implements Serializable {
     @JoinColumn(name = "manager_id")
     private Set<PotentialAttribute> potentialAttributeSet = new HashSet<>();
 
-    @JsonBackReference
+    @JsonBackReference // Add this to avoid circular reference
     @OneToMany(mappedBy = "manager", fetch = FetchType.EAGER)
     private Set<Employee> employees = new HashSet<>();
+
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "manager_id")

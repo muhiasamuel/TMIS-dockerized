@@ -255,7 +255,7 @@ export class HttpServiceService {
   }
   //get user for token interceptor
   getUser() {
-    const systemUser = localStorage.getItem('user')
+    const systemUser = sessionStorage.getItem('user')
     const perseData = JSON.parse(systemUser)
     const authToken = perseData.authToken
     return authToken || ''

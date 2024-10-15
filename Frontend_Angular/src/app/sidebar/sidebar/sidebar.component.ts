@@ -41,7 +41,7 @@ export class SidebarComponent implements OnInit {
     constructor(private router: Router) {}
 
     ngOnInit() {
-        this.systemUser = JSON.parse(localStorage.getItem("user"));
+        this.systemUser = JSON.parse(sessionStorage.getItem("user"));
 
         if (this.systemUser) {
             const userPermissions = this.systemUser.permissions || [];
@@ -55,7 +55,7 @@ export class SidebarComponent implements OnInit {
     }
 
     logout() {
-        localStorage.clear();
+        sessionStorage.clear();
         this.router.navigate(['/']);
     }
 
