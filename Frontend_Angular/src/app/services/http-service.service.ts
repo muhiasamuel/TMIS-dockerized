@@ -30,7 +30,8 @@ export class HttpServiceService {
   //  serverUrl: string = 'http://192.168.88.241:8080/v1/api/';
   //serverUrl: string = 'http://192.168.89.134:8080/v1/api/';
 
-  serverUrl: string = 'http://172.16.10.233:8080/v1/api/';
+
+  serverUrl: string = 'http://172.16.9.46:8080/v1/api/';
 
   //serverUrl: string = environment.API_BASE_URL;
   //  serverUrl: string = 'http://192.168.2.21:8080';
@@ -381,5 +382,38 @@ getPerformances(pf: number):Observable<any>{
   const url =`${this.serverUrl}performances/get-by-user/${pf}`
   return this.http.get<any>(url)
 }
+
+getUserDetails():Observable<any>{
+// http://172.16.10.233:8080/v1/api/users/details
+
+const url =`${this.serverUrl}users/details`
+return this.http.get<any>(url)
+}
+// lock user account 
+//http://172.16.10.233:8080/v1/api/users/management/lock/234
+lockUserAcc(userId:number):Observable<any>{
+  //const url = `http://172.16.10.233:8080/v1/api/users/management/lock/34`
+  const url = `${this.serverUrl}users/management/lock/${userId}`
+  return this.http.patch(url,null)
 }
 
+unlockUseracc(userId:number):Observable<any>{
+  const url = `${this.serverUrl}users/management/unlock/${userId}`
+  return this.http.patch<any>(url, null)
+}
+
+enableUserAcc(userId:number){
+  // http://172.16.10.233:8080/v1/api/users/management/enable/2
+
+  const url =`${this.serverUrl}users/management/enable/${userId}`
+  return this.http.patch<any>(url,null)
+}
+
+disableUserAcc(userId:number){
+  // http://172.16.10.233:8080/v1/api/users/management/disable/2
+
+  const url =`${this.serverUrl}users/management/disable/${userId}`
+  return this.http.patch<any>(url,null)
+}
+
+}

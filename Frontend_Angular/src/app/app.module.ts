@@ -106,6 +106,9 @@ import { SuccessionDisplayComponent } from './pages/succession-plan/succession-d
 import { AddIndividualPerformanceComponent } from './pages/profiles/my-teams-profile/add-individual-performance/add-individual-performance.component';
 import { ViewSinglePlanComponent } from './pages/succession-plan/view-single-plan/view-single-plan.component';
 import { PerformanceLineGraphComponent } from './graphs/performance-line-graph/performance-line-graph.component';
+import { ConfigurationsComponent } from './configurations/configurations/configurations.component';
+import { UserDetailsComponent } from './configurations/user-details/user-details.component';
+import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
 
 
 
@@ -183,6 +186,9 @@ import { PerformanceLineGraphComponent } from './graphs/performance-line-graph/p
     AddIndividualPerformanceComponent,
     ViewSinglePlanComponent,
     PerformanceLineGraphComponent,
+    ConfigurationsComponent,
+    UserDetailsComponent,
+    CustomDialogComponent,
     
    
   ],

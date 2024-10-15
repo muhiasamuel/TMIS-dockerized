@@ -1,0 +1,18 @@
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+table {
+    width: 100%;
+    table-layout: auto;
+  }
+  
+  th.mat-header-cell, td.mat-cell {
+    text-align: left;
+    padding: 8px;
+  }
+  
+  .mat-elevation-z8 {
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.14);
+  }

@@ -23,7 +23,8 @@ export const ROUTES: RouteInfo[] = [
     { path: '/succession-plan', title: 'Succession Plans', icon: 'nc-bulb-63', class: '', userType: true, requiredPermissions: [] },
     { path: '/profiles', title: 'My Profile', icon: 'nc-single-02', class: '', userType: true, requiredPermissions: ['VIEW_OWN_PROFILE'] },
     { path: '/MyTeamsProfile', title: 'My Teams Profiles', icon: 'nc-badge', class: '', userType: true, requiredPermissions: [] },
-    { path: '/departments', title: 'Departments', icon: 'nc-bank', class: '', userType: true, requiredPermissions: [] }
+    { path: '/departments', title: 'Departments', icon: 'nc-bank', class: '', userType: true, requiredPermissions: [] },
+    { path: '/configuration', title: 'Configurations', icon:'nc-settings', class:'', userType:true, requiredPermissions:[]}
 ];
 
 @Component({
