@@ -38,7 +38,7 @@ export class ManagerAssessEmployeeComponent implements OnInit {
     private http: HttpClient, private snack: MatSnackBar) { }
 
   ngOnInit() { // Set the greeting message
-    this.systemUser = JSON.parse(sessionStorage.getItem('user')); // Get user data from local storage
+    this.systemUser = JSON.parse(localStorage.getItem('user')); // Get user data from local storage
     this.getNotDone(); // Fetch not done assessments
     this.route.paramMap.subscribe(params => {
       this.userId = params.get('id');

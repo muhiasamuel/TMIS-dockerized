@@ -25,7 +25,7 @@ export class TalentComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit() {
-    const user = sessionStorage.getItem("user");
+    const user = localStorage.getItem("user");
     this.managerId = JSON.parse(user);
     console.log("manager", this.managerId);
     this.route.paramMap.subscribe(params => {

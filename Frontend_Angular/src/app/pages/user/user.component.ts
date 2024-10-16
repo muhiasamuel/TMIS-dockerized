@@ -15,7 +15,7 @@ export class UserComponent implements OnInit{
 
     constructor(private router: Router, private http: HttpClient, private server: HttpServiceService){}
     ngOnInit(){
-        this.systemUser = JSON.parse(sessionStorage.getItem("user"))
+        this.systemUser = JSON.parse(localStorage.getItem("user"))
         if(this.systemUser.user.role.id == 1){
             this.managerId = this.systemUser.user.userId
             //console.log(this.systemUser)

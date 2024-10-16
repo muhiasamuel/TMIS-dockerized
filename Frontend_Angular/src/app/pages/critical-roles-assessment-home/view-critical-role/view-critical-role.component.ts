@@ -19,7 +19,7 @@ export class ViewCriticalRoleComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,private dialog:MatDialog, private http:HttpServiceService, private snack:MatSnackBar){}
 
     ngOnInit(): void {
-      const user = sessionStorage.getItem("user");
+      const user = localStorage.getItem("user");
 console.log('YESSSSSSSS', this.data);
       
       if(user){

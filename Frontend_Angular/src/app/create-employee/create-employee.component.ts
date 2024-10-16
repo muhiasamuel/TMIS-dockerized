@@ -25,7 +25,7 @@ export class CreateEmployeeComponent {
     private http: HttpClient, private service: HttpServiceService){}
 
   ngOnInit(): void{
-    const user = sessionStorage.getItem("user")
+    const user = localStorage.getItem("user")
     if (user) {
       this.manager = JSON.parse(user);
     }

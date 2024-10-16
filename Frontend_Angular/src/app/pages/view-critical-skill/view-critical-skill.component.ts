@@ -18,7 +18,7 @@ id:any
     @Inject(MAT_DIALOG_DATA) public data: any, private http: HttpServiceService, private snack:MatSnackBar) {}
 
   ngOnInit(): void {
-    const user = sessionStorage.getItem("user");
+    const user = localStorage.getItem("user");
     
     if(user){
       this.authUser = JSON.parse(user)

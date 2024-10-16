@@ -21,7 +21,7 @@ export class MyAssessmentsComponent {
     private server: HttpServiceService,
    private http: HttpClient){}
   ngOnInit(){
-    this.systemUser = JSON.parse(sessionStorage.getItem("user"))
+    this.systemUser = JSON.parse(localStorage.getItem("user"))
     this.route.params.subscribe(params => {
       this.assId = params['id']; // Access the 'id' parameter from the URL
       console.log('Test ID:', this.assId);

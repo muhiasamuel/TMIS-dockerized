@@ -62,7 +62,7 @@ export class SuccessionPlanComponent implements OnInit {
       proposedIntervention: ['']
     });
 
-    const user = sessionStorage.getItem("user");
+    const user = localStorage.getItem("user");
     if (user) {
       const authUser = JSON.parse(user);
     }
