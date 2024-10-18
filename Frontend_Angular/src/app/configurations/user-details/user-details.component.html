@@ -41,6 +41,11 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Manager Name </th>
         <td mat-cell *matCellDef="let element"> {{element.managerName}} </td>
       </ng-container>
+
+      <ng-container matColumnDef="transfer">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Transfer Employee </th>
+        <td mat-cell *matCellDef="let element"> <button (click)="openDialogBox()"><mat-icon>edit</mat-icon></button></td>
+      </ng-container>
   
      
     <!-- Enabled Column with Toggle -->

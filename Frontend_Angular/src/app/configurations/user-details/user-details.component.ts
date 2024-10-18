@@ -12,7 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class UserDetailsComponent {
   dataSource: MatTableDataSource<any>;
-  displayedColumns: string[] = ['userId', 'userFullName', 'userEmail', 'roleName', 'departmentName', 'managerName', 'isEnabled', 'isLocked'];
+  displayedColumns: string[] = ['userId', 'userFullName', 'userEmail', 'roleName', 'departmentName', 'managerName', 'isEnabled', 'isLocked', 'transfer'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -88,9 +88,7 @@ export class UserDetailsComponent {
         })
       )
     }
-    
-
   }
 
-
+  openDialogBox(){}
 }

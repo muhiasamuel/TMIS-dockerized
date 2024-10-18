@@ -30,7 +30,6 @@ export class HttpServiceService {
   //  serverUrl: string = 'http://192.168.88.241:8080/v1/api/';
   //serverUrl: string = 'http://192.168.89.134:8080/v1/api/';
 
-
   serverUrl: string = 'http://172.16.9.46:8080/v1/api/';
 
   //serverUrl: string = environment.API_BASE_URL;
