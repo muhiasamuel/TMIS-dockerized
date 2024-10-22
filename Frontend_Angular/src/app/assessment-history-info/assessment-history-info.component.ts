@@ -46,7 +46,7 @@ export class AssessmentHistoryInfoComponent implements OnInit {
      private server: HttpServiceService) { }
 
   ngOnInit(): void {
-    this.systemUser = JSON.parse(sessionStorage.getItem('user')); // Get user data from local storage
+    this.systemUser = JSON.parse(localStorage.getItem('user')); // Get user data from local storage
     //this.systemUser.user.userId
     console.log('Received ID:', this.id);
     if (this.id) {

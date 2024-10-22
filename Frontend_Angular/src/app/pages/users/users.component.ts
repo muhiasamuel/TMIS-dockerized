@@ -27,7 +27,7 @@ export class UsersComponent {
       console.log('Test ID:', this.userId);
     });
 
-      this.systemUser = JSON.parse(sessionStorage.getItem("user"))
+      this.systemUser = JSON.parse(localStorage.getItem("user"))
         if(this.systemUser.user.role.id == 1 && this.userId != this.systemUser.user.userId){
             this.managerId = this.systemUser.user.userId
             //console.log(this.systemUser)

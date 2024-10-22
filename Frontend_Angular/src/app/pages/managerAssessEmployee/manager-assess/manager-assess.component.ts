@@ -52,7 +52,7 @@ export class ManagerAssessComponent implements OnInit {
      private server: HttpServiceService) { }
 
   ngOnInit(): void {
-    this.systemUser = JSON.parse(sessionStorage.getItem('user') || '{}');
+    this.systemUser = JSON.parse(localStorage.getItem('user') || '{}');
     this.fetchUserAssessments();
   }
 

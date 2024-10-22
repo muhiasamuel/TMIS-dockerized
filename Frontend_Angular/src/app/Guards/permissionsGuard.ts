@@ -8,7 +8,7 @@ export class PermissionGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    const systemUser = sessionStorage.getItem('user');
+    const systemUser = localStorage.getItem('user');
     
     if (systemUser) {
       const user = JSON.parse(systemUser);

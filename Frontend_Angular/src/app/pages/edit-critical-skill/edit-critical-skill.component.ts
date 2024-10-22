@@ -50,7 +50,7 @@ export class EditCriticalSkillComponent implements OnInit{
   }
 
   ngOnInit() {
-   const user = sessionStorage.getItem("user");
+   const user = localStorage.getItem("user");
     if (user) {
       this.authUser = JSON.parse(user)
     }

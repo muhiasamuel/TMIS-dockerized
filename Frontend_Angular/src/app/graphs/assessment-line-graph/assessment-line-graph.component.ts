@@ -70,7 +70,7 @@ export class AssessmentLineGraphComponent implements AfterViewInit, OnDestroy {
   constructor(private http: HttpClient, private server: HttpServiceService) {}
 
   ngAfterViewInit(): void {
-    this.systemUser = JSON.parse(sessionStorage.getItem("user"));
+    this.systemUser = JSON.parse(localStorage.getItem("user"));
     const userId = this.systemUser.user.userId
     this.loadAssessments(userId); // Assume user ID 2 for this example
   }

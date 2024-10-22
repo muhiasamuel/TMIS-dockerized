@@ -36,7 +36,7 @@ export class DashboardComponent implements OnInit{
   ){}
 
   ngOnInit(): void {
-    const user = sessionStorage.getItem("user")
+    const user = localStorage.getItem("user")
     if (user) {
     
       
@@ -91,7 +91,7 @@ getAllCriticalSkills(){
     ((res)=>{
       console.log("roooooo", res);
       this.criticalSkills = res.item;
-      sessionStorage.setItem("criticalSkills", JSON.stringify(res.item))
+      localStorage.setItem("criticalSkills", JSON.stringify(res.item))
       const i = res.item?.filter(c=> c.averageRating >= 3.5)
       this.noOfCriticalSkills = i?.length
       console.log();
@@ -111,7 +111,7 @@ getAllCriticalSkills(){
 //       console.log("critiv", res.item);
       
 //       const data = res.item;
-//       sessionStorage.setItem("criticalRoles", JSON.stringify(res.item))
+//       localStorage.setItem("criticalRoles", JSON.stringify(res.item))
 //       const count = res.item.length;
 //     }),
 //     ((error)=>{

@@ -54,7 +54,7 @@ export class AsessMyTeamComponent {
   }
 
   ngOnInit(){
-    this.systemUser = JSON.parse(sessionStorage.getItem("user"))
+    this.systemUser = JSON.parse(localStorage.getItem("user"))
     this.route.params.subscribe(params => {
       this.assId = params['id']; // Access the 'id' parameter from the URL
       console.log('Test assID:', this.assId);

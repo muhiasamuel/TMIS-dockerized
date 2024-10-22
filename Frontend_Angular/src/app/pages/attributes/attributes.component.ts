@@ -49,7 +49,7 @@ export class AttributesComponent {
     private server: HttpServiceService) {}
 
   ngOnInit(){
-    this.systemUser = JSON.parse(sessionStorage.getItem("user"))
+    this.systemUser = JSON.parse(localStorage.getItem("user"))
     this.route.params.subscribe(params => {
       this.assId = params['assId']; // Access the 'id' parameter from the URL
       this.empId = params['id']

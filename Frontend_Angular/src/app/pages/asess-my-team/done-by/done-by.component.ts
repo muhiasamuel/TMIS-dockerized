@@ -59,7 +59,7 @@ userResponse: any;
     private server: HttpServiceService) {}
 
   ngOnInit(){
-    this.user = JSON.parse(sessionStorage.getItem("user"))
+    this.user = JSON.parse(localStorage.getItem("user"))
     this.systemUser = this.user.user
     this.route.params.subscribe(params => {
       this.assId = params['id']; // Access the 'id' parameter from the URL

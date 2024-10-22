@@ -105,7 +105,7 @@ export class OtpVerificationComponent {
           this.systemUser = res;
          
           
-          sessionStorage.setItem("user", JSON.stringify(this.systemUser))
+          localStorage.setItem("user", JSON.stringify(this.systemUser))
           console.log(res);
           this.route.navigate(['/dashboard'])
         }

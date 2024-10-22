@@ -95,7 +95,7 @@ export class HIPOsComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    const user = sessionStorage.getItem("user");
+    const user = localStorage.getItem("user");
     this.managerId = JSON.parse(user);
     console.log('managerid', this.managerId);
 

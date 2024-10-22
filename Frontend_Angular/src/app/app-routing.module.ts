@@ -41,6 +41,7 @@ import { TalentComponent } from './pages/talent-mapping/talent/talent.component'
 import { ViewSinglePlanComponent } from './pages/succession-plan/view-single-plan/view-single-plan.component';
 import { AuthGuard } from './Guards/authGuard';
 import { PermissionGuard } from './Guards/permissionsGuard';
+import { ConfigurationsComponent } from './configurations/configurations/configurations.component';
 
 
 const routes: Routes = [
@@ -92,8 +93,8 @@ const routes: Routes = [
       { path: 'add-attributes',      component: AddAssessmentQuestionsComponent },
       {path: 'departments', component:DepartmentComponent},
       { path: 'talent/:rating', component: TalentComponent},
-      { path: 'view/plan', component: ViewSinglePlanComponent}
-     
+      { path: 'view/plan', component: ViewSinglePlanComponent},
+      { path: 'configuration', component: ConfigurationsComponent}
   ]},
   {
     path: '**',

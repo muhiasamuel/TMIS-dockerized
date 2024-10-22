@@ -34,7 +34,7 @@ export class SingleAttributeComponent {
     
   }
   ngOnInit(){
-    this.systemUser = JSON.parse(sessionStorage.getItem("user"))
+    this.systemUser = JSON.parse(localStorage.getItem("user"))
     console.log(this.systemUser);
     
     this.route.params.subscribe(params => {

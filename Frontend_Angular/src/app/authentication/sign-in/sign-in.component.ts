@@ -42,7 +42,7 @@ export class SignInComponent {
         this.isLoading = false;
         if(response.status = 200){
           
-            // sessionStorage.setItem("user", JSON.stringify(this.systemUser));
+            // localStorage.setItem("user", JSON.stringify(this.systemUser));
             console.log(response)
             this.route.navigate(['/otp-verification'])
             this.snackbar.open(response.message, "Close", {duration:2000} )

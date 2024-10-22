@@ -15,7 +15,7 @@ export class TalentMappingComponent implements OnInit {
   constructor(private http:HttpServiceService, private route: Router) {}
 
   ngOnInit() {   
-    const user = sessionStorage.getItem("user");
+    const user = localStorage.getItem("user");
     
       this.managerId = JSON.parse(user)
     

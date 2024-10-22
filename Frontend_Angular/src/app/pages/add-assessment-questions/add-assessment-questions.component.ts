@@ -53,7 +53,7 @@ export class AddAssessmentQuestionsComponent implements OnInit{
   } 
 
   ngOnInit(): void {
-    const user = sessionStorage.getItem("user")
+    const user = localStorage.getItem("user")
     if (user) {
       this.user = JSON.parse(user)
       console.log(this.user);
