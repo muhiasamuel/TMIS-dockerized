@@ -110,6 +110,7 @@ import { ConfigurationsComponent } from './configurations/configurations/configu
 import { UserDetailsComponent } from './configurations/user-details/user-details.component';
 import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
 import { TransferEmployeeComponent } from './configurations/user-details/transfer-employee/transfer-employee.component';
+import { ConfirmPromptComponent } from './pages/confirm-prompt/confirm-prompt.component';
 
 
 
@@ -191,6 +192,7 @@ import { TransferEmployeeComponent } from './configurations/user-details/transfe
     UserDetailsComponent,
     CustomDialogComponent,
     TransferEmployeeComponent,
+    ConfirmPromptComponent,
     
    
   ],
