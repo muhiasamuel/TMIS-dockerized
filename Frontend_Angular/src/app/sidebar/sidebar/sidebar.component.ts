@@ -2,21 +2,36 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 export interface RouteInfo {
-    path: string;
+    path?: string; // Change to optional for groups
     title: string;
     icon: string;
     class: string;
     userType: boolean;
-    requiredPermissions: string[];  // Add this field to define the required permissions for each route
+    requiredPermissions: string[];
+    children?: RouteInfo[]; // Add this field for sub-routes
+    isOpen?: boolean; // Add isOpen property for controlling the dropdown
 }
 
 export const ROUTES: RouteInfo[] = [
     { path: '/dashboard', title: 'Dashboard', icon: 'nc-bank', class: 'text-dark', userType: true, requiredPermissions: [] },
-    { path: '/potential-attributes', title: 'Assessments', icon: 'nc-paper', class: 'text-dark', userType: true, requiredPermissions: [] },
-    { path: '/assess-my-potential', title: 'Assess My Potential', icon: 'nc-user-run', class: 'text-dark', userType: true, requiredPermissions: [] },
-    { path: '/assess-my-team', title: 'Assess My Team', icon: 'nc-zoom-split', class: 'text-dark', userType: true, requiredPermissions: [] },
-    { path: '/critical-roles-home', title: 'Assess Critical Roles', icon: 'nc-bulb-63', class: '', userType: true, requiredPermissions: [] },
-    { path: '/skills-view', title: 'Assess Critical Skills', icon: 'nc-diamond', class: '', userType: true, requiredPermissions: [] },
+
+    {
+        title: 'Assessments',
+        icon: 'nc-paper',
+        class: 'text-dark',
+        userType: true,
+        requiredPermissions: [],
+        children: [
+            { path: '/potential-attributes', title: 'Assessments', icon: 'nc-paper', class: '', userType: true, requiredPermissions: [] },
+            { path: '/assess-my-potential', title: 'Assess My Potential', icon: 'nc-user-run', class: '', userType: true, requiredPermissions: [] },
+            { path: '/assess-my-team', title: 'Assess My Team', icon: 'nc-zoom-split', class: '', userType: true, requiredPermissions: [] },
+            { path: '/critical-roles-home', title: 'Assess Critical Roles', icon: 'nc-bulb-63', class: '', userType: true, requiredPermissions: [] },
+            { path: '/skills-view', title: 'Assess Critical Skills', icon: 'nc-diamond', class: '', userType: true, requiredPermissions: [] },
+
+
+        ],
+        isOpen: false // Initialize isOpen property for the group
+    },
     { path: '/mvps', title: 'MVPs', icon: 'nc-money-coins', class: '', userType: true, requiredPermissions: [] },
     { path: '/HIPOs', title: 'HIPOs', icon: 'nc-money-coins', class: '', userType: true, requiredPermissions: [] },
     { path: '/talent-mapping', title: 'Talent Mapping', icon: 'nc-caps-small', class: '', userType: true, requiredPermissions: [] },
@@ -61,4 +76,8 @@ export class SidebarComponent implements OnInit {
     toggleSidebarVisibility() {
         this.isSidebarVisible = !this.isSidebarVisible;
     }
+    toggleMenu(menuItem: any) {
+        menuItem.isOpen = !menuItem.isOpen;
+      }
+      
 }

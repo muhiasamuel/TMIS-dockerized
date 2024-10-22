@@ -1,42 +1,55 @@
 <div class="sidebar-wrapper">
   <div class="logo">
     <a routerLink="dashboard" class="simple-text logo-mini">
-      <div class="logo-image-small">
-        <!-- <img src="assets/img/eq.png"> -->
-      </div>
+      <div class="logo-image-small"></div>
     </a>
-    <a routerLink="dashboard" style="color: rgb(163,42,41); font: 1.3em; font-weight: 800;" class="simple-text logo-normal">
-      <!-- Talent&#64;equity -->Talking Talent
+    <a routerLink="dashboard" style="color: rgb(163, 42, 41); font-size: 1.3em; font-weight: 800;" class="simple-text logo-normal">
+      Talking Talent
       <br>
     </a>
   </div>
+  
   <ul class="nav">
-    <!-- Main sidebar content -->
     <ng-container *ngIf="isSidebarVisible">
-      <li *ngFor="let menuItem of menuItems" routerLinkActive="active" class="{{menuItem.class}}">
-        <a [routerLink]="[menuItem.path]" *ngIf="menuItem.userType">
-          <i class="nc-icon {{menuItem.icon}}" style="color: white;"></i>
-          <p style="color: white; font-weight: 500; font-size: 12px;">{{menuItem.title}}</p>
-        </a>
+      <ng-container *ngFor="let menuItem of menuItems">
+        <!-- Group with sub-items -->
+        <li class="nav-item" *ngIf="menuItem.children && menuItem.children.length">
+          <a (click)="toggleMenu(menuItem)" class="nav-link" style="cursor: pointer;">
+            <i class="nc-icon {{menuItem.icon}}" style="color: white;"></i>
+            <p style="color: white; font-weight: 500; font-size: 12px;">
+              {{menuItem.title}} 
+              <span class="" style="justify-self: flex-end;">{{ menuItem.isOpen ? '▲' : '▼' }}</span> <!-- Caret logic -->
+            </p>
+          </a>
+          <!-- Submenu -->
+          <ul *ngIf="menuItem.isOpen" class="nav flex-column submenu">
+            <li *ngFor="let subItem of menuItem.children" routerLinkActive="active" class="{{subItem.class}}">
+              <a [routerLink]="[subItem.path]" class="nav-link">
+                <i class="nc-icon {{subItem.icon}}" style="color: rgba(255, 255, 255, 0.7);"></i>
+                <p style="color: rgba(255, 255, 255, 0.7); font-weight: 400; font-size: 11px;">
+                  {{subItem.title}}
+                </p>
+              </a>
+            </li>
+          </ul>
+        </li>
 
-      </li>
+        <!-- Regular item -->
+        <li *ngIf="!menuItem.children" routerLinkActive="active" class="{{menuItem.class}}">
+          <a [routerLink]="[menuItem.path]" *ngIf="menuItem.userType" class="nav-link">
+            <i class="nc-icon {{menuItem.icon}}" style="color: white;"></i>
+            <p style="color: white; font-weight: 500; font-size: 12px;">{{menuItem.title}}</p>
+          </a>
+        </li>
+      </ng-container>
+
+      <!-- Logout -->
       <li class="text-dark">
         <a (click)="logout()" style="display: flex; align-items: center;">
           <mat-icon style="color: white; zoom: 1.2; margin-left: 5px;">logout</mat-icon>
-          <p style="color: white; font-weight: 500; font-size: 12px; margin-left: 10px;">logout</p>
-
+          <p style="color: white; font-weight: 500; font-size: 12px; margin-left: 10px;">Logout</p>
         </a>
       </li>
     </ng-container>
   </ul>
-  <!-- Hidden sidebar content -->
-  <div class="sidebar-hidden active">
-    <!-- Place your additional sidebar content here -->
-    <li style="font-size: 10px !important;" *ngFor="let menuItem of menuItems" routerLinkActive="active" class="{{menuItem.class}}">
-      <a [routerLink]="[menuItem.path]" *ngIf="menuItem.userType">
-        <i class="nc-icon {{menuItem.icon}}" style="color: white;"></i>
-      </a>
-    </li>
-  </div>
-  
 </div>

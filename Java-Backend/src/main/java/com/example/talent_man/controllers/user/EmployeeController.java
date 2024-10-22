@@ -121,7 +121,7 @@ public class EmployeeController {
         return res;
     }
     // Update an employee
-    @PatchMapping("/employee/{employeeId}/{managerId}")
+    @PatchMapping("update/employee-details/{employeeId}/{managerId}")
     public ResponseEntity<ApiResponse<String>> updateEmployee(
             @PathVariable int employeeId,@PathVariable int managerId, @RequestBody UserRequestDto userDto) {
 
@@ -139,7 +139,7 @@ public class EmployeeController {
     }
 
     // Update a manager
-    @PatchMapping("/manager/{managerId}")
+    @PatchMapping("update/manager-details/{managerId}")
     public ResponseEntity<ApiResponse<String>> updateManager(
             @PathVariable int managerId, @RequestBody UserRequestDto userDto) {
 

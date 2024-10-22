@@ -12,7 +12,7 @@ $none:                       0   !default;
 $border-thin:                1px !default;
 $border-thick:               2px !default;
 
- $white-color:                rgb(163,42,41) !default;
+ $white-color:                rgb(25, 102, 104) !default;
 //$white-color:                rgb(255, 255, 255) !default;
 $white-bg:                   #0d0c0c !default;
 $orange-bg:                  #e95e38 !default;
@@ -60,7 +60,7 @@ $transparent-bg:             transparent !default;
 
 $placeholder-gray:           rgba(210, 210, 210, 1)  !default;
 
-$default-color:              #66615B !default;
+$default-color:              #3b7f7f !default;
 $default-bg:                 #66615B !default;
 $default-states-color:       #403D39 !default;
 
@@ -358,7 +358,7 @@ $social-linkedin: 			         #0077B5 !default;
 $social-linkedin-state-color:        darken(#0077B5, 5%) !default;
 
 // Sidebar variables
-$sidebar-width:              calc(100% - 260px) !default;
+$sidebar-width:              calc(100% - 280px) !default;
 $sidebar-mini-width:         calc(100% - 80px) !default;
 
 
