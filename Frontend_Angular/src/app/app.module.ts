@@ -109,8 +109,6 @@ import { PerformanceLineGraphComponent } from './graphs/performance-line-graph/p
 import { ConfigurationsComponent } from './configurations/configurations/configurations.component';
 import { UserDetailsComponent } from './configurations/user-details/user-details.component';
 import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
-import { TransferEmployeeComponent } from './configurations/user-details/transfer-employee/transfer-employee.component';
-
 
 
 @NgModule({
@@ -190,7 +188,6 @@ import { TransferEmployeeComponent } from './configurations/user-details/transfe
     ConfigurationsComponent,
     UserDetailsComponent,
     CustomDialogComponent,
-    TransferEmployeeComponent,
     
    
   ],
