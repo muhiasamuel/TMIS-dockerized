@@ -50,8 +50,5 @@ public class Manager extends User implements Serializable {
     @ToString.Exclude
     private Manager manager;
 
-    // Add a One-to-One relationship with Department
-    @OneToOne(mappedBy = "manager", fetch = FetchType.LAZY)
-    @JsonBackReference
-    private Department department;
+
 }

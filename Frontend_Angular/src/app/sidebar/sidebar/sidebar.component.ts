@@ -39,7 +39,16 @@ export const ROUTES: RouteInfo[] = [
     { path: '/profiles', title: 'My Profile', icon: 'nc-single-02', class: '', userType: true, requiredPermissions: ['VIEW_OWN_PROFILE'] },
     { path: '/MyTeamsProfile', title: 'My Teams Profiles', icon: 'nc-badge', class: '', userType: true, requiredPermissions: [] },
     { path: '/departments', title: 'Departments', icon: 'nc-bank', class: '', userType: true, requiredPermissions: [] },
-    { path: '/configuration', title: 'Configurations', icon:'nc-settings', class:'', userType:true, requiredPermissions:[]}
+    {
+        title: 'Configurations', 
+        icon:'nc-settings', 
+        class:'', 
+        userType:true, 
+        requiredPermissions:['ASSIGN_PERMISSIONS'],
+        children: [
+            { path: '/configuration', title: 'Users Management', icon:'nc-circle', class:'', userType:true, requiredPermissions:[]}
+        ]
+    }
 ];
 
 @Component({

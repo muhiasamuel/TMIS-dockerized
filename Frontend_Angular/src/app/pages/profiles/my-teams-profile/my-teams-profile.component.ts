@@ -176,8 +176,8 @@ export class MyTeamsProfileComponent implements OnInit {
   // Open dialog to add performance for a single employee
   openAddPerformanceDialogue(): void {
     const dialogRef: MatDialogRef<AddIndividualPerformanceComponent> = this.dialog.open(AddIndividualPerformanceComponent, {
-      width: '40%',
-      height: '80%',
+      width: '45%',
+      height: '60%',
       data: { emp: this.employees }
     });
 

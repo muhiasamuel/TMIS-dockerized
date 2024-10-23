@@ -1,12 +1,18 @@
-<div class="container-fluid justify-content-center align-items-center">
-    <ol class=" breadcrumb-arrow align-items-center">
-      <li><a>Configurations</a></li>
-      <li><a>Settings</a></li>
-      <li class="active" routerLink="/dashboard"><span>Home</span></li>
-    </ol>
-    <title>CONFIGURATIONS</title>
+<div class="container-fluid justify-content-center align-items-center mt-4">
+  <ol class="breadcrumb-arrow align-items-center position-relative">
+    <li><a>Users</a></li>
+    <li><a>Management</a></li>
+    <li class="active" routerLink="/dashboard"><span>Home</span></li>
+    <li>
+      <button (click)="toggleButtons()" class="add-employees-button">Add Employees</button>
+      <div *ngIf="showButtons" class="absolute-buttons">
+        <button (click)="addEmployee('admin')" class="btn-add-single">Add Single Employee</button>
+        <button class="btn-upload">Upload Employees</button>
+      </div>
+    </li>
+  </ol>
 
-    <div>
-        <app-user-details></app-user-details>
-    </div>
+  <div>
+    <app-user-details (employeesDataEmitter)="handleEmployeesData($event)"></app-user-details>
+  </div>
 </div>

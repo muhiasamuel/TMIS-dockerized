@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, EventEmitter, Output } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -18,7 +18,7 @@ openDialogBox() {
 throw new Error('Method not implemented.');
 }
   dataSource: MatTableDataSource<any>;
-  displayedColumns: string[] = ['userId', 'userFullName', 'userEmail', 'roleName', 'departmentName', 'managerName', 'isEnabled', 'isLocked', 'transfer'];
+  displayedColumns: string[] = ['count','userId', 'userFullName', 'userEmail', 'roleName', 'departmentName','Position', 'managerName', 'isEnabled', 'isLocked', 'Actions','transfer'];
   status:string="";
   globalFilterValue: string = '';
   departmentFilterValue: string = '';
@@ -31,6 +31,8 @@ throw new Error('Method not implemented.');
   filteredStates: Observable<any[]>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+
+  @Output() employeesDataEmitter = new EventEmitter<any[]>(); // Create an EventEmitter
 
   constructor(private http: HttpServiceService, private dialog: MatDialog) {
     this.filteredStates = this.stateCtrl.valueChanges.pipe(
@@ -62,7 +64,9 @@ throw new Error('Method not implemented.');
     this.http.getUserDetails().subscribe(
       (res) => {
         
-        this.employeesData = res.item.filter((employee) => employee.roleName === "TopManager")
+        this.employeesData = res.item.filter((employee) => employee.roleName === "TopManager" || employee.roleName === "HRManager" || employee.roleName === "SYS_ADMIN" )
+        this.employeesDataEmitter.emit(this.employeesData);
+
         this.dataSource = new MatTableDataSource(res.item);  // Wrap res.item in MatTableDataSource
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
