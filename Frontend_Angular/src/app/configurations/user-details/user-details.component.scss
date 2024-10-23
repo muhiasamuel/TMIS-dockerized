@@ -16,3 +16,29 @@ table {
   .mat-elevation-z8 {
     box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.14);
   }
+  /* Ensure full width for the input field */
+.example-full-width {
+  width: 100%;
+}
+
+/* Styling for the action buttons to ensure proper spacing */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+/* Adjust the mat-form-field for better layout and spacing */
+mat-form-field {
+  margin-right: 10px;
+}
+
+/* Responsive design for smaller screens */
+@media screen and (max-width: 600px) {
+  .button-container {
+    flex-direction: column;
+    button {
+      margin-bottom: 8px;
+    }
+  }
+}

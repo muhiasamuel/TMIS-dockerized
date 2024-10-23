@@ -109,6 +109,8 @@ import { PerformanceLineGraphComponent } from './graphs/performance-line-graph/p
 import { ConfigurationsComponent } from './configurations/configurations/configurations.component';
 import { UserDetailsComponent } from './configurations/user-details/user-details.component';
 import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
+import { ConfirmPromptComponent } from './pages/confirm-prompt/confirm-prompt.component';
+
 
 
 @NgModule({
@@ -188,6 +190,7 @@ import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
     ConfigurationsComponent,
     UserDetailsComponent,
     CustomDialogComponent,
+    ConfirmPromptComponent
     
    
   ],

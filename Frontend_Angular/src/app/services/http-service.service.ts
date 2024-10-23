@@ -25,12 +25,12 @@ export class HttpServiceService {
   // serverUrl: string = 'http://192.168.89.93:8080/v1/api/';
 
   // serverUrl
-  //serverUrl: string = 'http://localhost:8080/v1/api/';
+  // serverUrl: string = 'http://localhost:8080/v1/api/';
 
   //  serverUrl: string = 'http://192.168.88.241:8080/v1/api/';
   //serverUrl: string = 'http://192.168.89.134:8080/v1/api/';
 
-  serverUrl: string = 'http://172.16.11.17:8080/v1/api/';
+ serverUrl: string = 'http://172.16.11.17:8080/v1/api/';
 
   //serverUrl: string = environment.API_BASE_URL;
   //  serverUrl: string = 'http://192.168.2.21:8080';
@@ -43,6 +43,9 @@ export class HttpServiceService {
   }
   getData(url: string): Observable<any> {
     return this.http.get<any>(url);
+  }
+  patchData(url: string, data: any): Observable<any> {
+    return this.http.patch<any>(url, data);
   }
 
   createRoleAssessment(managerId: number, formData: any): Observable<any> {

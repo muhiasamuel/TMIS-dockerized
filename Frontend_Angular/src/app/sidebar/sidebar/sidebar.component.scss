@@ -1,28 +1,88 @@
-.logo{
-    background: white;
+// sidebar.component.scss
+
+* {
+  box-sizing: border-box; // Apply to all elements
+}
+
+.sidebar-wrapper {
+  background-color: rgb(47, 47, 47) !important; // Sidebar background
+  position: relative; // Ensure the wrapper maintains its position
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); // Add a shadow for depth
+}
+
+.logo {
+  background: white; // Logo background
 }
 
 p i {
-    color: aliceblue;
+  color: aliceblue; // Icon color
 }
-.simple-text{
-    font-weight: bold;
+
+.simple-text {
+  font-weight: bold; // Font weight for simple text
 }
-/* sidebar.component.scss */
+
+.nav {
+  list-style: none; // Remove default list styling
+  padding: 0; // Remove default padding
+  margin: 0; // Remove default margin
+}
+
+.nav-item {
+  position: relative; // Positioning for submenu
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1); // Hover effect for main menu items
+  }
+}
+
+.nav-link {
+  display: flex;
+  justify-content: flex-start; // Align items to the left
+  align-items: center;
+  padding: 10px 15px; // Padding for clickable areas
+  text-decoration: none; // Remove underline from links
+  color: white; // Color for links
+  font-weight: bold; // Bold font for links
+
+  i {
+    margin-right: 10px; // Space between icon and text
+  }
+}
+
+// Styling for sub-menu
+ul {
+  padding-left: 1em; // Indent sub-menu
+  display: none; // Initially hide sub-menu
+  &.active {
+    display: block; // Show when active
+  }
+
+  li {
+    padding-left: 1.5em; // Additional indentation for submenu items
+    background-color: transparent; // Transparent background for submenu items
+
+    // Styling for the submenu links
+    .nav-link {
+      font-size: 14px; // Smaller font size for submenus
+      color: rgba(255, 255, 255, 0.7); // Lighter text color for submenus
+      background-color: rgba(255, 255, 255, 0.05); // Slightly different background for submenus
+      font-weight: normal; // Regular font weight for submenus
+    }
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2); // Hover effect for submenu
+    }
+  }
+}
 
 .sidebar-hidden {
-    display: none; /* Initially hide the hidden sidebar content */
-  }
-  
-  .sidebar-wrapper {
-    background-color: rgb(80, 82, 81) !important;
-    position: relative; /* Ensure the wrapper maintains its position */
-  }
-  
-  .sidebar-visible .sidebar-hidden {
-    display: block; /* Show the hidden sidebar content when the sidebar is visible */
-  }
-  
-  .text-dark{
-    font-size: 15px !important;
-  }
+  display: none; // Initially hide the hidden sidebar content
+}
+
+.sidebar-visible .sidebar-hidden {
+  display: block; // Show the hidden sidebar content when the sidebar is visible
+}
+
+.text-dark {
+  font-size: 15px !important; // Font size for text
+}
