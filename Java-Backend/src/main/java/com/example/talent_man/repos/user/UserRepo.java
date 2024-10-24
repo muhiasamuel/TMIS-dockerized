@@ -64,6 +64,8 @@ public interface UserRepo extends JpaRepository<User, Integer> {
     @Query(value = "SELECT " +
             "u.user_id AS userId, " +
             "u.pf_no AS Pf, " +
+            "u.username AS userName, " +
+            "u.role_id AS roleId, " +
             "u.user_full_name AS userFullName, " +
             "u.email AS userEmail, " +
             "r.role_name AS roleName, " +
@@ -71,6 +73,8 @@ public interface UserRepo extends JpaRepository<User, Integer> {
             "u.locked AS isLocked, " +
             "u.user_type AS userType, " +
             "um.user_full_name AS managerName, " +
+            "um.pf_no AS managerPF, " +
+            "um.user_id AS managerId, " +
             "cd.department_name AS departmentName, " +
             "cd.department_id AS departmentId, " +
             "dp.position_name AS positionName, " +
@@ -90,11 +94,15 @@ public interface UserRepo extends JpaRepository<User, Integer> {
         String getPf();
         String getUserFullName();
         String getUserEmail();
+        String getUserName();
         String getRoleName();
+        Long getRoleId();
         Boolean getIsEnabled();
         Boolean getIsLocked();
         String getUserType();
         String getManagerName();
+        Long getManagerId();
+        String getManagerPF();
         String getDepartmentName();
         Long getDepartmentId();
         String getPositionName();

@@ -87,7 +87,7 @@ throw new Error('Method not implemented.');
 
   saveChanges(element: any): void {
 
-    if (element.roleName === "TopManager") {
+    if (element.roleName === "TopManager"  || element.roleName === "HRManager" || element.roleName === "SYS_ADMIN") {
       const url = `${this.http.serverUrl}users/management/transfer-manager/${element.userId}/manager/${this.managerId.userId}`
       this.http.patchData(url,{}).subscribe(
         ((res) => {

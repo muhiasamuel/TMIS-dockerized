@@ -212,7 +212,12 @@ export class SuccessionPlanComponent implements OnInit {
         });
       },
       error: err => {
-        console.log("Error", err);
+        this.snackBar.open(err.error.message, 'Close', {
+          duration: 8000,
+          panelClass: ['success-snackbar'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top'
+        });
       }
     });
   }

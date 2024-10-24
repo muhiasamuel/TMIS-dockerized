@@ -585,7 +585,9 @@ public User updateManager(int managerId, UserRequestDto userDto) {
     private UserDetailsDto mapToDto(UserRepo.UserDetailsProjection projection) {
         UserDetailsDto dto = new UserDetailsDto();
         dto.setUserId(projection.getUserId());
+        dto.setUserName(projection.getUserName());
         dto.setPf(projection.getPf());
+        dto.setRoleId(projection.getRoleId());
         dto.setUserFullName(projection.getUserFullName());
         dto.setUserEmail(projection.getUserEmail());
         dto.setRoleName(projection.getRoleName());
@@ -593,6 +595,8 @@ public User updateManager(int managerId, UserRequestDto userDto) {
         dto.setIsLocked(projection.getIsLocked());
         dto.setUserType(projection.getUserType());
         dto.setManagerName(projection.getManagerName());
+        dto.setManagerId(projection.getManagerId());
+        dto.setManagerPF(projection.getManagerPF());
         dto.setDepartmentName(projection.getDepartmentName());
         dto.setDepartmentId(projection.getDepartmentId());
         dto.setPositionName(projection.getPositionName());

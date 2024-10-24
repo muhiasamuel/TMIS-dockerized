@@ -27,6 +27,7 @@
                                     <th scope="col">Employee Career Priorities</th>
                                     <th scope="col">Current Assessment of Employee's Retention(Red, Amber, Green)</th>
                                     <th scope="col">Retention strategies to deploy</th>
+                                    <th scope="col" >Update</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -86,6 +87,11 @@
                                             <input type="text" placeholder="Retention Strategies"
                                                 (click)="addStrategies(item.userId)">
                                         </div>
+                                    </td>
+                                    <td>
+                                        <button [disabled]="!item.retentionState" class="btn btn-sm btn-primary">
+                                            update
+                                        </button>
                                     </td>
                                 </tr>
                             </tbody>
