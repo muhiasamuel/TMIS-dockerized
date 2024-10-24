@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmPromptComponent } from '../../pages/confirm-prompt/confirm-prompt.component';
 import { FormControl } from '@angular/forms';
 import { map, Observable, startWith } from 'rxjs';
+import { CreateEmployeeComponent } from '../../create-employee/create-employee.component';
 
 @Component({
   selector: 'app-user-details',
@@ -29,6 +30,7 @@ throw new Error('Method not implemented.');
   stateCtrl = new FormControl('');
   managerId:any;
   filteredStates: Observable<any[]>;
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -64,8 +66,14 @@ throw new Error('Method not implemented.');
     this.http.getUserDetails().subscribe(
       (res) => {
         
-        this.employeesData = res.item.filter((employee) => employee.roleName === "TopManager" || employee.roleName === "HRManager" || employee.roleName === "SYS_ADMIN" )
-        this.employeesDataEmitter.emit(this.employeesData);
+        this.employeesData = res.item.filter(
+          (employee) => 
+            (employee.roleName === "TopManager" || 
+             employee.roleName === "HRManager" || 
+             employee.roleName === "SYS_ADMIN") &&
+            employee.userId !== employee.managerId // Exclude where userId === managerId
+        );
+                this.employeesDataEmitter.emit(this.employeesData);
 
         this.dataSource = new MatTableDataSource(res.item);  // Wrap res.item in MatTableDataSource
         this.dataSource.paginator = this.paginator;
@@ -262,5 +270,24 @@ throw new Error('Method not implemented.');
     // Method to open the confirmation dialog
     openConfirmDialog(action: string) {
       
+    }
+
+    openUpdateDialog(element:any){
+      const dialogRef = this.dialog.open(CreateEmployeeComponent,{
+        width:"60%",
+        height:"80%",
+        data: {
+          record:element,
+          managers:this.employeesData
+        }
+      })
+
+      dialogRef.afterClosed().subscribe(
+        (results => {
+          if (results) {
+            this.displayUser()
+          }
+        })
+      )
     }
 }

@@ -102,7 +102,7 @@
                 </div>
                 <div class="col-md-6" *ngIf="data">
                     <mat-form-field class="example-full-width">
-                        <mat-label>Pf no./Name</mat-label>
+                        <mat-label> Manager Pf no./Name</mat-label>
                         <div matTooltip="Enter Manager's PF Number to whom you want to transfer the Employee" 
                              matTooltipPosition="above" 
                              matTooltipShowDelay="500">
@@ -123,10 +123,17 @@
                       </mat-form-field>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">
-                <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                <span *ngIf="!loading">Create Employee</span>
-            </button>
+            <div class="actions">
+                <button type="submit" class="btn btn-primary" *ngIf="!record">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <span *ngIf="!loading">Create Employee</span>
+                </button>           
+                 <button type="submit" class="btn btn-primary" *ngIf="record">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <span *ngIf="!loading">Update Employee</span>
+                </button>
+            </div>
+
         </form>
       </div>
 </div>
