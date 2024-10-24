@@ -23,6 +23,7 @@ export class CreateEmployeeComponent {
   url: string;
   stateCtrl = new FormControl('');
   managers: any;
+  record:any = null;
   selectedManager: any;
   filteredStates: Observable<any[]>;
   constructor(
@@ -30,6 +31,7 @@ export class CreateEmployeeComponent {
     @Inject(MAT_DIALOG_DATA) public data,
     private snackBar: MatSnackBar,
     private http: HttpClient, private service: HttpServiceService) {
+      
     this.filteredStates = this.stateCtrl.valueChanges.pipe(
       startWith(''),
       map(employee => (employee ? this._filterManagers(employee) : this.data.managers.slice())),
@@ -55,19 +57,46 @@ export class CreateEmployeeComponent {
     if (user) {
       this.manager = JSON.parse(user);
       if (this.data) {
-        console.log(this.data);
+        if (this.data.record) {
+          this.record = this.data.record
+          this.stateCtrl.setValue(this.data?.record?.managerPF || '');
+
+          // Then set the disabled state
+            if (!!this.data?.record) {
+              this.stateCtrl.disable(); // Disable if record exists
+            } else {
+              this.stateCtrl.enable();  // Enable if record does not exist
+            }
+
+          console.log("assdffd", this.stateCtrl);
+        }
+        console.log("data",this.data);     
+        console.log("record",this.record);
 
       }
     }
 
     this.createEmployeeForm = new FormGroup({
-      userFullName: new FormControl('', Validators.required),
-      pf: new FormControl('', Validators.required),
-      username: new FormControl('', Validators.required),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      roleId: new FormControl(0, Validators.required),
-      positionId: new FormControl(0, Validators.required),
-      departmentId: new FormControl(0, Validators.required)
+      userFullName: new FormControl(
+        { value: this.record?.userFullName || '', disabled: !!this.record }, 
+        Validators.required
+      ),
+      pf: new FormControl(
+        { value: this.record?.pf || '', disabled: !!this.record }, 
+        Validators.required
+      ),
+      username: new FormControl(
+        { value: this.record?.userName || '', disabled: !!this.record }, 
+        Validators.required
+      ),
+      email: new FormControl(
+        { value: this.record?.userEmail || '', disabled: !!this.record }, 
+        [Validators.required, Validators.email]
+      ),
+      roleId: new FormControl(this.record?.roleId, Validators.required),
+      positionId: new FormControl(this.record?.positionId, Validators.required),
+      departmentId: new FormControl(this.record?.departmentId, Validators.required),
+      
     });
 
     this.getDepartments();
@@ -79,8 +108,6 @@ export class CreateEmployeeComponent {
     this.http.get<{ item: { id: number, roleName: string }[] }>(url).subscribe(
       response => {
         this.roles = response.item;
-        console.log("qwert", response.item);
-
       },
       error => {
         console.error('Error fetching roles', error);
@@ -120,19 +147,49 @@ export class CreateEmployeeComponent {
     }
 
     console.log("data", data);
-    if (this.data) {
-      if (this.createEmployeeForm.value.roleId === 2) {
-        const url = `${this.service.serverUrl}users/create-employee/${this.selectedManager.userId}`;
-
-        this.postData(url, data)
+    if (this.record) {
+      if(this.record.roleName === "Employee"){
+        
+        this.service.updateEmployee(this.record.userId,this.record.managerId,data).subscribe(
+          ((res)=>{
+            console.log('updatedd',res);
+            this.loading = false
+          }),
+          ((error)=>{}),
+          ()=>{}
+        )
+      } else{
+        this.service.updateManager(this.record.userId, data).subscribe(
+          ((res)=>{
+            console.log('updatedManager',res);
+            this.loading = false;
+          }),
+          ((error)=>{}),
+          ()=>{}
+        )
+      }
+      
+    } else {
+      const data = {
+        ...this.createEmployeeForm.value,
+        "locked": false,
+        "enabled": true
+      }
+      if (this.data) {
+        if (this.createEmployeeForm.value.roleId === 2) {
+          const url = `${this.service.serverUrl}users/create-employee/${this.selectedManager.userId}`;
+  
+          this.postData(url, data)
+        } else {
+          const url = `${this.service.serverUrl}users/manager/${this.selectedManager.userId}`
+          this.postData(url, data)
+        }
       } else {
-        const url = `${this.service.serverUrl}users/manager/${this.selectedManager.userId}`
+        const url = `${this.service.serverUrl}users/create-employee/${this.manager.user.userId}`;
         this.postData(url, data)
       }
-    } else {
-      const url = `${this.service.serverUrl}users/create-employee/${this.manager.user.userId}`;
-      this.postData(url, data)
     }
+  
 
 
 

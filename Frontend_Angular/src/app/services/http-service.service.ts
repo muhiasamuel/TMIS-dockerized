@@ -418,4 +418,18 @@ disableUserAcc(userId:number){
   return this.http.patch<any>(url,{})
 }
 
+updateEmployee(employeeId: number,managerId:number, data:any):Observable<any>{
+  // http://172.16.11.17:8080/v1/api/users/update/employee-details/566/1000
+
+  const url =`${this.serverUrl}users/update/employee-details/${employeeId}/${managerId}`
+  return this.http.patch<any>(url,data)
+}
+
+updateManager(managerId:number,data:any):Observable<any>{
+  // http://172.16.11.17:8080/v1/api/users/update/manager-details/2
+
+  const url=`${this.serverUrl}users/update/manager-details/${managerId}`
+  return this.http.patch<any>(url,data)
+}
+
 }
