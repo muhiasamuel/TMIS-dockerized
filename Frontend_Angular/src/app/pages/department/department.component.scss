@@ -1,21 +1,114 @@
-.container{
-    border-radius: 5px;
-    padding: 25px;
-    background: rgb(234, 233, 233);
-}
-button{
-    color: white;
-}
-#submit{
-    position: relative;
-    float: right;
-    top: -7em;
-}
-
-.mat-elevation-z8 tbody tr:hover {
-    background-color: red;
-    color: white; 
-}
-
-
+/* Main container styling */
+.page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Breadcrumb Header Styling */
+  .breadcrumb-header {
+    background-color: #f8f9fa;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .breadcrumb-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .add-department-btn {
+    font-size: 0.9rem;
+    padding: 5px 15px;
+  }
+  
+  /* Department Cards Container */
+  .department-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
+  }
+  
+  /* Individual Card Styling */
+  .department-card {
+    flex: 1 1 calc(25% - 20px); /* Flex item for 4 cards per row with spacing */
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: 100%; /* Ensures uniform height across cards */
+    padding: 15px;
+  }
+  
+  /* Card Header and Title */
+  .card-header {
+    font-weight: bold;
+    font-size: 1.1rem;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .department-title {
+    margin: 0;
+    color: #333;
+  }
+  
+  /* Card Body Styling */
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+  }
+  
+  /* Positions Grid Styling */
+  .positions-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .position-item {
+    flex: 1 1 calc(33.33% - 10px); /* Col-4 equivalent */
+    font-size: 0.9rem;
+    color: #555;
+    padding: 4px;
+    background-color: #f1f1f1;
+    border-radius: 4px;
+    text-align: center;
+  }
+  
+  /* View More/Less Button Styling */
+  .view-more-btn {
+    color: #007bff;
+    font-size: 0.85rem;
+    text-align: left;
+    padding: 0;
+    margin-top: 10px;
+    align-self: flex-start;
+  }
+  
+  .view-more-btn:hover {
+    text-decoration: underline;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 992px) {
+    .department-card {
+      flex: 1 1 calc(50% - 20px); /* 2 cards per row on medium screens */
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .department-card {
+      flex: 1 1 100%; /* 1 card per row on small screens */
+    }
+  }
   

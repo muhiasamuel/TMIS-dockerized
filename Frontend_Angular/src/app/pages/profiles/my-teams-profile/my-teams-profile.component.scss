@@ -1,42 +1,135 @@
-.custom-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 16px;
-    text-align: left;
-  }
-  .header-cell {
-    background-color: #6c9040; /* Material blue color */
-    color: black;
-    font-weight: bold
-  }
-  .data-cell {
-    // padding: 10px 15px;
-    border-bottom: 1px solid #ddd;
-    font-size: 17px;
-    border-right: 1px solid #ddd;
-    font-weight: 500;
-  }
-  /* Hover effect for rows */
-tr:hover {
-    background-color: #f1f1f1;
-  }
-  
-  /* Alternate row background */
-  tr:nth-child(even) .data-cell {
-    background-color: #f9f9f9;
-  }
-  
-  /* Table row styling */
-  tr {
-    transition: background-color 0.3s;
-  }
-.text-bold{
-    // font-weight: bold;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
+.mat-tab-group {
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-/* Last column: remove right border to avoid double border issue */
-.data-cell:last-child, .header-cell:last-child {
-    border-right: none;
-  }
+
+.mat-tab-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #444;
+}
+
+.mat-tab-body-wrapper {
+  padding: 20px;
+  background-color: #f8f9fa;
+}
+
+.assessment-type, .performance-type {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.assessment-type .card-category,
+.performance-type .card-category {
+  font-weight: 500;
+  margin-right: 15px;
+  font-size: 14px;
+  color: #555;
+}
+
+.mat-form-field {
+  min-width: 250px;
+}
+
+.card {
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.card h5 {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.custom-table {
+  margin-top: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.custom-table th, .custom-table td {
+  font-size: 14px;
+  padding: 10px;
+  color: #141414;
+}
+
+.custom-table .header-cell {
+  background-color: #f7f8f9;
+  color: #181818;
+  font-weight: 600;
+}
+
+.custom-table .data-cell {
+  color: #555;
+}
+
+.custom-table .text-bold {
+  font-weight: bold;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: #fff;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.spinner-border {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.mt-3 {
+  margin-top: 1rem !important;
+}
+
+.d-flex {
+  display: flex !important;
+}
+
+.justify-content-between {
+  justify-content: space-between !important;
+}
+
+.align-items-center {
+  align-items: center !important;
+}
+
+.ms-3 {
+  margin-left: 1rem !important;
+}
+
+.col-md-6, .col-md-5 {
+  flex-basis: 50%;
+  max-width: 50%;
+}
+/* Method Selector Styles */
+.method-selector {
+  display: flex;
+  align-items: center;
+}
+
+.card-category {
+  font-weight: bold; /* Making the label more prominent */
+  color: #333; /* Darker color for better contrast */
+  font-size: 16px; /* Adjusting font size for better readability */
+}
+
+.mat-form-field {
+  margin-left: 16px; /* Space between label and dropdown */
+  flex-grow: 1; /* Allowing dropdown to take remaining space */
+}
+
+/* Optional: Add some margin to the bottom of the section */
+.method-selector {
+  margin-bottom: 16px; /* Space below the selector for better layout */
+}

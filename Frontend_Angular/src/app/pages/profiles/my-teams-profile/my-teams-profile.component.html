@@ -1,53 +1,46 @@
 <mat-tab-group class="mt-3" animationDuration="200ms">
+    <!-- Add Employees Tab -->
     <mat-tab label="Add Employees">
-        <div class="">
-            <div class="mt-3 d-flex justify-content-between">
-                <div class="assessment-type d-flex align-items-center justify-content-center">
-                    <p class="card-category">Select method to add employees:</p>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Select Method</mat-label>
-                        <mat-select>
-                            <mat-option (click)="select('excel')">Add Employees as Excel</mat-option>
-                            <mat-option (click)="select('single')" value="single">Add Single Employee</mat-option>
-                        </mat-select>
-                    </mat-form-field>
+        <div class="d-flex align-items-center mt-3 method-selector">
+            <p class="card-category mb-0 me-2">Select method to add employees:</p>
+            <mat-form-field appearance="fill" class="flex-grow-1">
+                <mat-label>Select Method</mat-label>
+                <mat-select [(value)]="selectedMethod">
+                    <mat-option value="excel">Add Employees as Excel</mat-option>
+                    <mat-option value="single">Add Single Employee</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
 
-                    <div class="card col-md-6 ms-3" *ngIf="selectedMethod === 'excel'">
-                        <h5 class="text-center py-1">Add Employees as Excel</h5>
-                        <div class="d-flex align-items-center">
-                            <div class="d-flex align-items-center">
-                                <input type="file" (change)="onFileSelected($event)" />
-                                <button class="btn btn-md btn-primary" (click)="onUpload()" *ngIf="!uploading">
-                                    Upload
-                                </button>
-                            </div>
-                            <div class="d-flex align-items-center" *ngIf="uploading">
-                                <div class="spinner-border btn-primary" role="status"></div>
-                                <span class="sr-only">Uploading...</span>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="card col-md-5 ms-3" *ngIf="selectedMethod === 'single'">
-                        <div>
-                            <h5>Add Single Employee</h5>
-                            <button class="btn btn-md btn-primary" (click)="openCreateEmployeeDialogue()">
-                                Create Employee
-                            </button>
-                        </div>
-                    </div>
+        <!-- Conditional Content for Adding Employees -->
+        <div class="d-flex mt-3">
+            <div class="card col-md-6 ms-3" *ngIf="selectedMethod === 'excel'">
+                <h5 class="text-center py-1">Add Employees as Excel</h5>
+                <div class="d-flex align-items-center">
+                    <input type="file" (change)="onFileSelected($event)" />
+                    <button class="btn btn-md btn-primary ms-2" (click)="onUpload()" *ngIf="!uploading">Upload</button>
+                    <div class="spinner-border btn-primary ms-2" *ngIf="uploading"></div>
                 </div>
+            </div>
+
+            <div class="card col-md-5 ms-3" *ngIf="selectedMethod === 'single'">
+                <h5>Add Single Employee</h5>
+                <button class="btn btn-md btn-primary" (click)="openCreateEmployeeDialogue()">Create Employee</button>
             </div>
         </div>
 
-        <div class="table">
+        <!-- Employees Table -->
+        <div class="table mt-4">
             <table class="table table-bordered table-striped">
                 <thead class="thead-dark">
-                    <th>#</th>
-                    <th>PF Number</th>
-                    <th>Employee Name</th>
-                    <th>Employee Type</th>
-                    <th>Action</th>
+                    <tr>
+                        <th>#</th>
+                        <th>PF Number</th>
+                        <th>Employee Name</th>
+                        <th>Employee Type</th>
+                        <th>Action</th>
+                    </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let employee of managerEmployees; let i = index">
@@ -58,7 +51,7 @@
                         <td>
                             <button class="btn btn-md btn-primary d-flex align-items-center"
                                 (click)="navigateToUserProfile(employee.userId)">
-                                <mat-icon> visibility </mat-icon> view profile
+                                <mat-icon>visibility</mat-icon> View Profile
                             </button>
                         </td>
                     </tr>
@@ -68,81 +61,74 @@
         </div>
     </mat-tab>
 
+    <!-- Add Performance Tab -->
     <mat-tab label="Add Performance">
-        <div class="performance-type mt-3 d-flex">
-            <p class="card-category">Select type of Performance to add:</p>
-            <mat-form-field appearance="fill">
+        <div class="d-flex align-items-center mt-3 performance-selector">
+            <p class="card-category mb-0 me-2">Select type of Performance to add:</p>
+            <mat-form-field appearance="fill" class="flex-grow-1">
                 <mat-label>Select Performance to add</mat-label>
-                <mat-select>
-                    <mat-option (click)="selectPerformance('excel')">Add Performance as Excel</mat-option>
-                    <mat-option (click)="selectPerformance('single')" value="single">Add performance of single
-                        Employee</mat-option>
+                <mat-select [(value)]="selectedPerformanceType">
+                    <mat-option value="excel">Add Performance as Excel</mat-option>
+                    <mat-option value="single">Add performance of single Employee</mat-option>
                 </mat-select>
             </mat-form-field>
+        </div>
 
+
+        <!-- Conditional Content for Adding Performance -->
+        <div class="d-flex mt-3">
             <div class="card col-md-6 ms-3" *ngIf="selectedPerformanceType === 'excel'">
                 <h5 class="text-center py-1">Add Performance as Excel</h5>
                 <div class="d-flex align-items-center">
-                    <div class="d-flex align-items-center">
-                        <input type="file" (change)="onFileSelected($event)" />
-                        <button class="btn btn-md btn-primary" (click)="performanceUpload()" *ngIf="!uploading">
-                            Upload
-                        </button>
-                    </div>
-                    <div class="d-flex align-items-center" *ngIf="uploading">
-                        <div class="spinner-border btn-primary" role="status"></div>
-                        <span class="sr-only">Uploading...</span>
-                    </div>
+                    <input type="file" (change)="onFileSelected($event)" />
+                    <button class="btn btn-md btn-primary ms-2" (click)="performanceUpload()"
+                        *ngIf="!uploading">Upload</button>
+                    <div class="spinner-border btn-primary ms-2" *ngIf="uploading"></div>
                 </div>
             </div>
 
             <div class="card col-md-5 ms-3" *ngIf="selectedPerformanceType === 'single'">
-                <div>
-                    <h5>Add performance of Single Employee</h5>
-                    <button class="btn btn-md btn-primary" (click)="openAddPerformanceDialogue()">
-                        Add performance
-                    </button>
-                </div>
+                <h5>Add Performance of Single Employee</h5>
+                <button class="btn btn-md btn-primary" (click)="openAddPerformanceDialogue()">Add Performance</button>
             </div>
         </div>
 
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 custom-table">
+        <!-- Performance Table -->
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 custom-table mt-4">
             <!-- ID Column -->
             <ng-container matColumnDef="id">
-              <th mat-header-cell *matHeaderCellDef class="header-cell"> ID </th>
-              <td mat-cell *matCellDef="let element; let i = index" class="data-cell"> {{ i + 1 }} </td>
+                <th mat-header-cell *matHeaderCellDef class="header-cell">ID</th>
+                <td mat-cell *matCellDef="let element; let i = index" class="data-cell">{{ i + 1 }}</td>
             </ng-container>
-          
+
             <!-- Employee Name Column -->
             <ng-container matColumnDef="employeeName">
-              <th mat-header-cell *matHeaderCellDef class="header-cell"> Employee Name </th>
-              <td mat-cell *matCellDef="let element" class="data-cell"> {{ element.userFullName }} </td>
+                <th mat-header-cell *matHeaderCellDef class="header-cell">Employee Name</th>
+                <td mat-cell *matCellDef="let element" class="data-cell">{{ element.userFullName }}</td>
             </ng-container>
-          
+
             <!-- Year Column -->
             <ng-container matColumnDef="year">
-              <th mat-header-cell *matHeaderCellDef class="header-cell"> Year </th>
-              <td mat-cell *matCellDef="let element" class="data-cell text-bold">
-                {{ element.performanceYear }}
-                <span *ngFor="let year of element.performances">
-                  <strong>{{ year.performanceYear + '' }}: ({{ '' + year.performanceRating.toFixed(2) }}) </strong> <br>                </span>
-              </td>
+                <th mat-header-cell *matHeaderCellDef class="header-cell">Year</th>
+                <td mat-cell *matCellDef="let element" class="data-cell text-bold">
+                    {{ element.performanceYear }}
+                    <div *ngFor="let year of element.performances">
+                        <strong>{{ year.performanceYear }}: ({{ year.performanceRating.toFixed(2) }})</strong><br>
+                    </div>
+                </td>
             </ng-container>
-          
+
             <!-- Performance Metric Column -->
             <ng-container matColumnDef="performanceMetric">
-              <th mat-header-cell *matHeaderCellDef class="header-cell"> Performance Metric </th>
-              <td mat-cell *matCellDef="let element" class="data-cell">
-                {{ element.totalPerformanceRating.toFixed(2) }}
-              </td>
+                <th mat-header-cell *matHeaderCellDef class="header-cell">Performance Metric</th>
+                <td mat-cell *matCellDef="let element" class="data-cell">{{ element.totalPerformanceRating.toFixed(2) }}
+                </td>
             </ng-container>
-          
-            <!-- Header and Rows -->
+
+            <!-- Table Rows -->
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          </table>
-          
-          <mat-paginator [pageSize]="21" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-
+        </table>
+        <mat-paginator [pageSize]="21" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
     </mat-tab>
 </mat-tab-group>

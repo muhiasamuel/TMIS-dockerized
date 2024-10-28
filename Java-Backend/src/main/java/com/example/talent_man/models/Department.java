@@ -30,10 +30,10 @@ public class Department implements Serializable {
     private List<Position> departmentPositions = new ArrayList<>();
 
     // Add a relationship to the Manager
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_id")
-    @JsonBackReference
-    private Manager manager;
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "manager_id")
+//    @JsonBackReference
+//    private Manager manager;
 
     @Override
     public int hashCode() {

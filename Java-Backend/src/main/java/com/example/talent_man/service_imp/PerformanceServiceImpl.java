@@ -374,11 +374,11 @@ public class PerformanceServiceImpl implements PerformanceService {
 
         double potential = talentInterface.getPotentialRating() != null ? talentInterface.getPotentialRating() : 0.0;
         // Determine potential rating based on average manAssessmentAvg
-        if (potential >= 1 && potential <= 1.9) {
+        if (potential >= 1.0 && potential <= 1.9) {
             return "C";
-        } else if (potential >= 2 && potential < 4) {
+        } else if (potential >= 2.0 && potential < 4.0) {
             return "B";
-        } else if((potential >= 4 && potential <= 6)){
+        } else if((potential >= 4.0 && potential <= 6.0)){
             return "A";
         }
         else {
@@ -392,30 +392,34 @@ public class PerformanceServiceImpl implements PerformanceService {
         double potential = talentInterface.getPotentialRating() != null ? talentInterface.getPotentialRating() : 0.0;
         double perfomance = talentInterface.getAveragePerformance();
 
-        if ((perfomance >= 4.1 && perfomance <= 5) && (potential >= 4 && potential <= 6)) {
+        // Check for out-of-bounds values first
+        if (perfomance < 1.0 || perfomance > 5.0 || potential < 1.0 || potential > 6.0) {
+            return "Y"; // Return "Low" for out-of-bounds values
+        }
 
+        // Evaluate based on performance and potential ranges
+        if ((perfomance >= 4.0 && perfomance <= 5.0) && (potential >= 4.0 && potential <= 6.0)) {
             return "A1";
-        } else if ((perfomance >= 4 && perfomance <= 5) && (potential >= 2 && potential < 4)) {
+        } else if ((perfomance >= 4.0 && perfomance <= 5.0) && (potential >= 2.0 && potential < 4.0)) {
             return "B1";
-        }  else if ((perfomance >= 4 && perfomance <= 5) && (potential >= 1 && potential <= 1.9)) {
+        } else if ((perfomance >= 4.0 && perfomance <= 5.0) && (potential >= 1.0 && potential <= 1.9)) {
             return "C1";
-        }else if ((perfomance >= 2.9 && perfomance <= 3.9) && (potential >= 4 && potential <= 6)) {
+        } else if ((perfomance >= 2.9 && perfomance <= 3.9) && (potential >= 4.0 && potential <= 6.0)) {
             return "A2";
-        }else if ((perfomance > 2.9 && perfomance <= 3.9) && (potential >= 2 && potential <= 3.9)) {
+        } else if ((perfomance >= 2.9 && perfomance <= 3.9) && (potential >= 2.0 && potential <= 3.9)) {
             return "B2";
-        }else if ((perfomance >= 2.9 && perfomance <= 3.9) && (potential >= 1 && potential <= 1.9)) {
+        } else if ((perfomance >= 2.9 && perfomance <= 3.9) && (potential >= 1.0 && potential <= 1.9)) {
             return "C2";
-        }else if ((perfomance >= 1 && perfomance < 2.9) && (potential >= 4 && potential <= 6)) {
+        } else if ((perfomance >= 1.0 && perfomance < 2.9) && (potential >= 4.0 && potential <= 6.0)) {
             return "A3";
-        }
-        else if ((perfomance >= 1 && perfomance < 2.9) && (potential >= 2 && potential <= 3.9)) {
+        } else if ((perfomance >= 1.0 && perfomance < 2.9) && (potential >= 2.0 && potential <= 3.9)) {
             return "B3";
-        }
-        else if ((perfomance >= 1 && perfomance < 2.9) && (potential >= 1 && potential <= 1.9)) {
+        } else if ((perfomance >= 1.0 && perfomance < 2.9) && (potential >= 1.0 && potential <= 1.9)) {
             return "C3";
-        }else {
-            return "Low";
         }
+
+        // If none of the conditions match, return "Low"
+        return "Y";
     }
 
 }

@@ -16,6 +16,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, forkJoin } from 'rxjs';
+import moment from 'moment';
 
 
 interface Employee {
@@ -63,7 +64,7 @@ export class HIPOsComponent implements OnInit {
   paginatedHIPOS: any[] = [];
   filterText: string = '';
   currentPage: number = 1;
-  itemsPerPage: number = 10;
+  itemsPerPage: number = 5;
   totalPages: number = 1;
   displayedColumns: string[] = [
     'userId',
@@ -212,13 +213,18 @@ export class HIPOsComponent implements OnInit {
           totalPages++;
         }
       }
+      // Get the current date
+    const now = moment();
+
+    // Format the date as "25th October 2024"
+    const formattedDate = now.format("Do MMMM YYYY");
   
       // Add title to first page
       pdf.setFillColor(163, 43, 41);
       pdf.rect(padding, padding, pdf.internal.pageSize.width - (2 * padding), titleHeight, 'F');
       pdf.setTextColor(255, 255, 255);
       pdf.setFontSize(16);
-      pdf.text('HIPOs Assessment Report', padding + 10, padding + 25);
+      pdf.text('HIPOs Assessment Report |' +  'Date:  '  + `${formattedDate}`, padding + 10, padding + 25);
   
      
   

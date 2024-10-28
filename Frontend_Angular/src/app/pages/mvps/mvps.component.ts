@@ -10,6 +10,7 @@ import { jsPDF } from 'jspdf';
 import * as XLSX from 'xlsx';
 
 import html2canvas from 'html2canvas';
+import moment from 'moment';
 
 @Component({
   selector: 'app-mvps',
@@ -35,7 +36,7 @@ export class MvpsComponent implements OnInit {
   paginatedMVPs: any[] = [];
   filterText: string = '';
   currentPage: number = 1;
-  itemsPerPage: number = 10;
+  itemsPerPage: number = 5;
   totalPages: number = 1;
   @ViewChild('pdf', {static:false}) el!:ElementRef
 
@@ -273,12 +274,17 @@ export class MvpsComponent implements OnInit {
           }
         }
     
+              // Get the current date
+    const now = moment();
+
+    // Format the date as "25th October 2024"
+    const formattedDate = now.format("Do MMMM YYYY");
         // Add title to first page
         pdf.setFillColor(163, 43, 41);
         pdf.rect(padding, padding, pdf.internal.pageSize.width - (2 * padding), titleHeight, 'F');
         pdf.setTextColor(255, 255, 255);
         pdf.setFontSize(16);
-        pdf.text('Most Valuable Players Assessments Report', padding + 10, padding + 25);
+        pdf.text('Most Valuable Players Assessments Report |' +  'Date:  '  + `${formattedDate}`, padding + 10, padding + 25);
     
         // Add pagination
         for (let i = 1; i <= totalPages; i++) {

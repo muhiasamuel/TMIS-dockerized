@@ -60,7 +60,7 @@ public class DepServiceImp implements DepService {
         }
 
         // Assign the user as the department leader
-        department.setManager((Manager) manager); // Assuming `Manager` extends `User`
+        //department.setManager((Manager) manager); // Assuming `Manager` extends `User`
         repo.save(department);
 
         return department;
