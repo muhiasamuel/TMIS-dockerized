@@ -47,10 +47,10 @@
               </ng-template>
             </td>
             <td>{{employee.name || 'userName'}}</td>
-            <td>{{(employee.aspiration || 0)| number:'1.2-2'}}</td>
-            <td>{{(employee.judgement || 0)| number:'1.2-2'}}</td>
-            <td>{{(employee.drive || 0)| number:'1.2-2'}}</td>
-            <td>{{(employee.changeAgility || 0)| number:'1.2-2'}}</td>
+            <td>{{(employee.aspiration || 0).toFixed(2)}}</td>
+            <td>{{(employee.judgement || 0).toFixed(2 )}}</td>
+            <td>{{(employee.drive || 0).toFixed(2 )}}</td>
+            <td>{{((employee.changeAgility || 0).toFixed(2))}}</td>
             <td>{{(employee.potentialAverage || 0).toFixed(2)}}</td>
             <td>{{employee.potentialRating || 'Z'}}</td>
             <td>

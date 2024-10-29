@@ -44,9 +44,9 @@ export const ROUTES: RouteInfo[] = [
         icon: 'nc-settings',
         class: '',
         userType: true,
-        requiredPermissions: ['SCHEDULE_SYSTEM_UPDATES'],
+        requiredPermissions: [],
         children: [
-            { path: '/configuration', title: 'Users Management', icon: 'nc-circle', class: '', userType: true, requiredPermissions: [] }
+            { path: '/configuration', title: 'Users Management', icon: 'nc-circle', class: '', userType: true, requiredPermissions: ['VIEW_USERS'] }
         ]
     }
 ];

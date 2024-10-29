@@ -191,8 +191,8 @@ export class MvpsComponent implements OnInit {
     this.filteredMVPs = this.fullData
       .filter(item => {
         console.log('Filtering item:', item);
-        return (item.yearsRatedCount >= 1 &&
-                item.threeYearsPerformanceRating >= 1 &&
+        return (item.yearsRatedCount >= 2 &&
+                item.threeYearsPerformanceRating >= 3 &&
                 (item.talentRating == 'A1' ||
                  item.talentRating == 'A2' ||
                  item.talentRating == 'B1' ||
