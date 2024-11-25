@@ -19,7 +19,7 @@ variables:
   imagePullSecret: 'talentsys192650dc-auth'
 
   # Agent VM image name
-  vmImageName: Talent
+  vmImageName: Hosted Agent
 
   # Name of the new namespace being created to deploy the PR changes.
   k8sNamespaceForPR: 'review-app-$(System.PullRequest.PullRequestId)'
